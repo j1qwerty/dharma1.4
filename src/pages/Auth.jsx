@@ -4,6 +4,7 @@ import { ArrowRight, Check, FlowerLotus } from "@phosphor-icons/react";
 import Brand from "../components/common/Brand";
 import Field from "../components/common/Field";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
+import { LeafBranch, LotusLine } from "../components/common/Decor";
 
 const art =
   "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1400&q=86";
@@ -17,7 +18,7 @@ export default function Auth({ mode = "login" }) {
         : "Verify your number.";
   return (
     <section className="auth-dt">
-      <aside className="auth-art-dt">
+      <aside className="auth-art-dt relative">
         <ParallaxImage src={art} alt="Temple" className="absolute inset-0 h-full" strength={20} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/30" />
         <div className="absolute left-8 right-8 top-8">

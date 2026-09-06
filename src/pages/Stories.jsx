@@ -4,6 +4,8 @@ import { MagnifyingGlass, ArrowUpRight, CalendarBlank } from "@phosphor-icons/re
 import { stories } from "../lib/data";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import { StoryMasonry } from "../components/common/Masonry";
+import SectionCurve from "../components/common/SectionCurve";
+import { LeafBranch, LotusLine, Conch, Yantra } from "../components/common/Decor";
 
 export default function Stories() {
   const [q, setQ] = useState("");
@@ -23,18 +25,25 @@ export default function Stories() {
   );
   const feature = items[0] || stories[0];
   return (
-    <section className="site-section">
-      <div className="container-dt">
-        <Reveal>
-          <div className="eyebrow">Stories</div>
-          <h1 className="display-dt mt-3 max-w-4xl text-6xl sm:text-7xl">
-            Stories that give the ritual some context.
-          </h1>
-          <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-dt">
-            Festival guides, temple histories, ritual explainers and experiences from devotees.
-          </p>
-        </Reveal>
-        <div className="mt-9 grid gap-3 lg:grid-cols-[1fr_auto]">
+    <>
+      <section className="ink-dt overflow-hidden has-decor-dt relative">
+        <div className="container-dt pt-24 pb-32">
+          <Reveal>
+            <div className="eyebrow !text-gold-300">Stories</div>
+            <h1 className="display-dt mt-3 max-w-4xl text-6xl sm:text-7xl">
+              Stories that give the ritual some context.
+            </h1>
+            <p className="mt-5 max-w-2xl text-sm leading-7 text-white/55">
+              Festival guides, temple histories, ritual explainers and experiences from devotees.
+            </p>
+          </Reveal>
+        </div>
+        <SectionCurve edge="bottom" />
+      </section>
+      <section className="site-section has-decor-dt">
+        <Conch className="decor-dt decor-tl hide-mobile soft-tone" />
+        <div className="container-dt">
+        <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
           <div className="flex items-center gap-3 rounded-full border border-dt surface-dt px-4 py-3">
             <MagnifyingGlass size={17} className="muted-dt" />
             <input
@@ -49,15 +58,26 @@ export default function Stories() {
           </button>
         </div>
         <div className="mt-5 flex gap-2 overflow-x-auto pb-1">
-          {cats.map((c) => (
-            <button
-              onClick={() => setCat(c)}
-              key={c}
-              className={`whitespace-nowrap rounded-full border px-4 py-2 text-[11px] font-semibold ${cat === c ? "border-gold-400 bg-gold-400/10 text-gold-600 dark:text-gold-300" : "border-dt muted-dt"}`}
-            >
-              {c}
-            </button>
-          ))}
+          {cats.map((c) => {
+            const count =
+              c === "All"
+                ? stories.length
+                : stories.filter((s) => s.category === c).length;
+            return (
+              <button
+                onClick={() => setCat(c)}
+                key={c}
+                className={`whitespace-nowrap inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[11px] font-semibold transition-colors ${cat === c ? "border-gold-400 bg-gold-400/10 text-gold-600 dark:text-gold-300" : "border-dt muted-dt hover:border-gold-400/50"}`}
+              >
+                {c}
+                <span
+                  className={`grid h-4 min-w-4 place-items-center rounded-full px-1 text-[9px] ${cat === c ? "bg-gold-400/30 text-gold-700 dark:text-gold-200" : "bg-surface-2-dt muted-dt"}`}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         <section className="mt-14">
@@ -115,7 +135,7 @@ export default function Stories() {
         </section>
 
         <section className="mt-20">
-          <div className="flex items-end justify-between gap-5">
+          <div className="flex items-end justify-between gap-5 flex-wrap">
             <div>
               <h2 className="display-dt text-5xl">The full journal</h2>
               <p className="mt-3 max-w-xl text-sm text-muted-dt">
@@ -123,8 +143,15 @@ export default function Stories() {
                 cards.
               </p>
             </div>
-            <div className="hidden sm:flex items-center gap-2 text-[10px] muted-dt">
-              <CalendarBlank size={14} /> Updated throughout the season
+            <div className="flex items-center gap-3 text-[10px] muted-dt">
+              <span className="inline-flex items-center gap-1.5">
+                <CalendarBlank size={14} /> Updated throughout the season
+              </span>
+              <span className="hidden sm:inline text-muted-dt/60">·</span>
+              <span className="hidden sm:inline font-semibold text-gold-600">
+                {items.length} {items.length === 1 ? "story" : "stories"}
+                {cat !== "All" && ` in ${cat}`}
+              </span>
             </div>
           </div>
           <div className="mt-8">
@@ -156,7 +183,8 @@ export default function Stories() {
           </div>
         </section>
 
-        <section className="mt-20 border-t border-dt pt-12">
+        <section className="mt-20 border-t border-dt pt-12 has-decor-dt">
+          <Yantra className="decor-dt decor-br hide-mobile soft-tone" />
           <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr] items-end">
             <Reveal>
               <div className="eyebrow">Keep reading</div>
@@ -184,5 +212,6 @@ export default function Stories() {
         </section>
       </div>
     </section>
+    </>
   );
 }

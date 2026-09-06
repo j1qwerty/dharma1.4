@@ -1,14 +1,31 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, ShareNetwork } from "@phosphor-icons/react";
+import { motion, useReducedMotion, useScroll, useSpring } from "motion/react";
 import { stories } from "../lib/data";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
+import SectionCurve from "../components/common/SectionCurve";
+import { LeafBranch, LotusLine, Peacock, Conch } from "../components/common/Decor";
 export default function StoryDetail() {
   const { id } = useParams();
   const s = stories.find((x) => x.id === id) || stories[0];
+  const articleRef = useRef(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: articleRef,
+    offset: ["start start", "end end"],
+  });
+  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 28, restDelta: 0.001 });
   return (
     <>
-      <section className="detail-hero-dt">
+      {!reduce && (
+        <motion.div
+          className="reading-progress-dt"
+          style={{ scaleX, width: "100%" }}
+          aria-hidden="true"
+        />
+      )}
+      <section className="detail-hero-dt has-decor-dt">
         <div className="detail-hero-media-dt">
           <ParallaxImage src={s.image} alt={s.title} className="h-full w-full" strength={24} />
         </div>
@@ -23,8 +40,11 @@ export default function StoryDetail() {
             </div>
           </Reveal>
         </div>
+        <SectionCurve edge="bottom" />
       </section>
-      <section className="site-section">
+      <section className="site-section has-decor-dt" ref={articleRef}>
+        <Peacock className="decor-dt decor-tr hide-mobile soft-tone" />
+        <Conch className="decor-dt decor-bl hide-mobile soft-tone" />
         <div className="container-dt grid gap-12 lg:grid-cols-[1fr_270px]">
           <main className="max-w-3xl">
             <Link

@@ -43,17 +43,23 @@ The homepage hero intentionally uses the same visual device shown in the referen
 
 The Story pages use a CSS masonry surface with Pretext-based text height estimation. The masonry collapses to a strict single column below 768px.
 
+## Phase 1.4 redesign notes
+
+A design pass improved the aesthetic, motion and detail layer on top of the existing Phase 1 structure. No information architecture, routes or content were changed.
+
+- **Hero coins refined.** The flat yellow balls at the bottom corners of the home hero are now layered gold `SacredMedallion` discs: raised outer rim, beaded edge, radial sunburst rays, an engraved lotus in the centre and a soft glow. They hang from the curve with a faint thread and float gently (reduced-motion safe).
+- **Transparent branch / sacred-motif decor.** A new `src/components/common/Decor.jsx` library renders low-opacity line-art `LeafBranch`, `LotusLine`, `MandalaRings`, `TempleArch`, `DiyaLamp` and `Kalash` motifs as section backgrounds across every page, tinted to the section (ink sections get gold-on-dark, light sections get soft brown).
+- **One rounded curve per secondary page.** A reusable `SectionCurve` (`src/components/common/SectionCurve.jsx`) drops the home-hero curve device onto exactly one hero/section per secondary page (About, Catalog, PujaDetail, Stories, StoryDetail, Dashboard, MyBookings), with mini medallions on the two side corners and a centre drop.
+- **Motion layer.** Added: hero ken-burns drift, a slow scroll-driven `SpinDecor` mandala, a 3D pointer-tracking `TiltCard` for festival and temple cards, a gold shimmer sweep on buttons, a single restrained festival marquee, stat-counter hover pop, temple-card gold-frame hover. All gated behind `prefers-reduced-motion`.
+- **Tailwind v4** unchanged (`@tailwindcss/vite`). All new styles live in `src/index.css` under a clearly marked Phase 1.4 section.
+
 ## Run
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev      # http://localhost:5183
+pnpm build    # outputs dist/
 ```
 
-Build:
+The `dist/` folder is included in the delivery zip so the production build can be previewed without re-running install. The build was executed and verified in this environment.
 
-```bash
-npm run build
-```
-
-The sandbox used for this delivery could not complete npm dependency installation because package-network access timed out, so a local production build could not be honestly reported as executed in this environment.

@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, CalendarBlank, Clock, MapPin } from "@phosphor-icons/react";
 import { Reveal, ParallaxImage } from "./Motion";
+import FavToggle from "./FavToggle";
 export default function PujaCard({ p, featured = false, index = 0 }) {
   return (
     <Reveal delay={index * 0.05}>
@@ -11,6 +12,9 @@ export default function PujaCard({ p, featured = false, index = 0 }) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
           <div className="absolute left-4 top-4 rounded-full border border-white/20 bg-black/25 px-2.5 py-1.5 text-[9px] font-bold text-white backdrop-blur">
             {p.tag}
+          </div>
+          <div className="absolute right-3 top-3">
+            <FavToggle id={p.id} title={p.title} variant="photo" size={15} className="!w-9 !h-9" />
           </div>
           <div className="absolute bottom-4 left-4 right-4 text-white">
             <div className="flex items-end justify-between gap-4">

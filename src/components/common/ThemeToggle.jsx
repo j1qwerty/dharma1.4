@@ -2,8 +2,9 @@ import React, { createContext, useEffect, useState } from "react";
 export const ThemeContext = createContext(null);
 export function ThemeProvider({ children }) {
   const [dark, setDark] = useState(() => {
+    // Default to light mode on first load; respect an explicit saved choice.
     const saved = localStorage.getItem("dt-theme");
-    return saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return saved === "dark";
   });
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);

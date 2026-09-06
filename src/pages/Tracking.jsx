@@ -9,6 +9,7 @@ import {
   CalendarBlank,
 } from "@phosphor-icons/react";
 import { Reveal } from "../components/common/Motion";
+import { LeafBranch, LotusLine, Conch, Trishul } from "../components/common/Decor";
 export default function Tracking() {
   const items = [
     ["Booking confirmed", "Sep 05, 2026 · 11:04 AM", 1],
@@ -19,7 +20,9 @@ export default function Tracking() {
     ["Video delivered", "After processing", 0],
   ];
   return (
-    <section className="site-section">
+    <section className="site-section has-decor-dt">
+      <Conch className="decor-dt decor-tl hide-mobile soft-tone" />
+      <Trishul className="decor-dt decor-br hide-mobile soft-tone" />
       <div className="container-dt max-w-[1200px]">
         <Reveal>
           <div className="eyebrow">Booking tracking</div>

@@ -11,6 +11,8 @@ import {
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionHeading from "../components/common/SectionHeading";
 import { ImageMasonry } from "../components/common/Masonry";
+import SectionCurve from "../components/common/SectionCurve";
+import { LeafBranch, LotusLine, MandalaRings, SpinDecor, Trishul, Bell, Hamsa, Peacock } from "../components/common/Decor";
 
 const gallery = [
   "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=800&q=84",
@@ -23,8 +25,8 @@ const gallery = [
 export default function About() {
   return (
     <>
-      <section className="ink-dt overflow-hidden">
-        <div className="container-dt grid min-h-[680px] items-end gap-10 py-20 lg:grid-cols-[1fr_.8fr]">
+      <section className="ink-dt overflow-hidden has-decor-dt relative">
+        <div className="container-dt grid min-h-[520px] items-end gap-10 py-20 lg:grid-cols-[1fr_.8fr]">
           <Reveal>
             <div>
               <div className="eyebrow !text-gold-300">About DharmaTribe</div>
@@ -42,12 +44,15 @@ export default function About() {
           </Reveal>
           <Reveal>
             <div className="overflow-hidden rounded-[24px]">
-              <ParallaxImage src={gallery[0]} alt="Temple" className="h-[420px]" strength={25} />
+              <ParallaxImage src={gallery[0]} alt="Temple" className="h-[340px]" strength={25} />
             </div>
           </Reveal>
         </div>
+        {/* single rounded bottom curve transitioning into the light page */}
+        <SectionCurve edge="bottom" />
       </section>
-      <section className="site-section">
+      <section className="site-section has-decor-dt">
+        <LotusLine className="decor-dt decor-tr hide-mobile soft-tone" />
         <div className="container-dt">
           <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
             <Reveal>
@@ -70,7 +75,10 @@ export default function About() {
           </div>
         </div>
       </section>
-      <section className="site-section surface-2-dt">
+      <section className="site-section surface-2-dt has-decor-dt">
+        <SpinDecor className="decor-dt decor-center hide-mobile" speed={0.35} reverse>
+          <MandalaRings style={{ width: 420, height: 420 }} className="soft-tone" />
+        </SpinDecor>
         <div className="container-dt">
           <SectionHeading
             title="What we keep visible"
@@ -94,7 +102,8 @@ export default function About() {
           </div>
         </div>
       </section>
-      <section className="site-section">
+      <section className="site-section has-decor-dt">
+        <Peacock className="decor-dt decor-bl hide-mobile soft-tone" />
         <div className="container-dt">
           <SectionHeading
             title="The visual language"
@@ -103,7 +112,8 @@ export default function About() {
           <ImageMasonry items={gallery} />
         </div>
       </section>
-      <section className="site-section ink-dt">
+      <section className="site-section ink-dt has-decor-dt">
+        <Bell className="decor-dt decor-tr hide-mobile ink-tone" />
         <div className="container-dt grid gap-10 lg:grid-cols-[1.1fr_.9fr] items-end">
           <Reveal>
             <div className="eyebrow !text-gold-300">Technology + tradition</div>
@@ -118,15 +128,15 @@ export default function About() {
           <Reveal>
             <div className="border-t border-white/10 pt-5">
               <div className="grid grid-cols-3 gap-4">
-                <div>
+                <div className="stat-dt">
                   <div className="display-dt text-4xl text-gold-300">50+</div>
                   <div className="mt-1 text-[10px] text-white/40">sample temples</div>
                 </div>
-                <div>
+                <div className="stat-dt">
                   <div className="display-dt text-4xl text-gold-300">200+</div>
                   <div className="mt-1 text-[10px] text-white/40">sample pujas</div>
                 </div>
-                <div>
+                <div className="stat-dt">
                   <div className="display-dt text-4xl text-gold-300">4.9</div>
                   <div className="mt-1 text-[10px] text-white/40">sample rating</div>
                 </div>
@@ -135,7 +145,8 @@ export default function About() {
           </Reveal>
         </div>
       </section>
-      <section className="site-section">
+      <section className="site-section has-decor-dt">
+        <Hamsa className="decor-dt decor-tl hide-mobile soft-tone" />
         <div className="container-dt text-center">
           <Reveal>
             <h2 className="display-dt text-5xl sm:text-6xl">Start with the next sacred date.</h2>

@@ -17,9 +17,26 @@ import {
 import { motion, useReducedMotion } from "motion/react";
 import SectionHeading from "../components/common/SectionHeading";
 import PujaCard from "../components/common/PujaCard";
-import { Reveal, ParallaxImage, Magnetic } from "../components/common/Motion";
+import { Reveal, ParallaxImage, Magnetic, TiltCard } from "../components/common/Motion";
 import { StoryMasonry } from "../components/common/Masonry";
-import { pujas, festivals, intentions, stories, social } from "../lib/data";
+import {
+  LeafBranch,
+  MandalaRings,
+  LotusLine,
+  SpinDecor,
+  SacredMedallion,
+  DiyaCluster,
+  Conch,
+  Rangoli,
+  Trishul,
+  Bell,
+  Toran,
+  Kalash,
+  Yantra,
+} from "../components/common/Decor";
+import FestivalCountdown from "../components/common/FestivalCountdown";
+import AcharyaCard from "../components/common/AcharyaCard";
+import { pujas, festivals, intentions, stories, social, acharyas } from "../lib/data";
 
 const TRUST_ITEMS = [
   { icon: Sparkle, label: "Authentic Rituals" },
@@ -53,21 +70,40 @@ const heroSlides = [
 
 export default function Home() {
   const [hero, setHero] = useState(0);
+  const [paused, setPaused] = useState(false);
   const reduce = useReducedMotion();
   const current = heroSlides[hero];
   useEffect(() => {
+    if (paused) return;
     const t = setInterval(() => setHero((v) => (v + 1) % heroSlides.length), 7000);
     return () => clearInterval(t);
-  }, []);
+  }, [paused]);
+
+  function onKey(e) {
+    if (e.key === "ArrowRight") setHero((v) => (v + 1) % heroSlides.length);
+    else if (e.key === "ArrowLeft")
+      setHero((v) => (v - 1 + heroSlides.length) % heroSlides.length);
+  }
+
   const [goldLine, whiteLine] = splitTitle(current.title);
   return (
     <>
-      <section className="hero-redesign-dt">
+      <section
+        className="hero-redesign-dt"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onKeyDown={onKey}
+        tabIndex={0}
+        role="group"
+        aria-roledescription="carousel"
+        aria-label="Featured rituals"
+      >
         <div className="hero-photo-dt" aria-hidden="true">
           <motion.img
             key={current.image}
             src={current.image}
             alt=""
+            className={reduce ? "" : "kb-dt"}
             initial={reduce ? false : { scale: 1.08, opacity: 0.6 }}
             animate={reduce ? undefined : { scale: 1, opacity: 1 }}
             transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1] }}
@@ -105,14 +141,19 @@ export default function Home() {
                 Watch Video
               </Link>
             </div>
-            <div className="hero-dots-dt">
+            <div className="hero-dots-dt" aria-label="Slides">
               {heroSlides.map((s, i) => (
                 <button
                   key={s.title}
                   aria-label={`Show ${i + 1}`}
+                  aria-current={hero === i}
                   onClick={() => setHero(i)}
                   className={hero === i ? "active" : undefined}
-                />
+                >
+                  {hero === i && !paused && !reduce && (
+                    <span className="hero-dot-fill-dt" key={hero} />
+                  )}
+                </button>
               ))}
             </div>
           </motion.div>
@@ -123,8 +164,16 @@ export default function Home() {
           <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
             <path d="M0,120 L0,18 C170,18 260,58 360,92 C460,124 620,128 720,128 C820,128 980,124 1080,92 C1180,58 1270,18 1440,18 L1440,120 Z" />
           </svg>
-          <span className="hero-curve-coin-dt coin-left-dt" />
-          <span className="hero-curve-coin-dt coin-right-dt" />
+          <span className="hero-curve-coin-dt coin-left-dt">
+            <span className="medallion-wrap">
+              <SacredMedallion size={74} />
+            </span>
+          </span>
+          <span className="hero-curve-coin-dt coin-right-dt">
+            <span className="medallion-wrap delay">
+              <SacredMedallion size={74} />
+            </span>
+          </span>
           <span className="hero-curve-drop-dt" />
         </div>
 
@@ -140,7 +189,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="assurance-dt">
+      <section className="assurance-dt has-decor-dt">
+        <LeafBranch className="decor-dt decor-tl hide-mobile soft-tone" />
         <div className="container-dt assurance-grid-dt">
           {[
             [CalendarBlank, "Dates and muhurat", "Choose before checkout"],
@@ -162,7 +212,38 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="site-section">
+      {/* Festival countdown — live, dynamic feature band */}
+      <section className="site-section has-decor-dt">
+        <DiyaCluster className="decor-dt decor-br hide-mobile soft-tone" />
+        <div className="container-dt">
+          <div className="grid gap-10 lg:grid-cols-[1fr_1fr] items-center">
+            <Reveal>
+              <div className="eyebrow eyebrow-line-dt">On the horizon</div>
+              <h2 className="display-dt mt-3 text-5xl sm:text-6xl">
+                The next festival is closer than you think.
+              </h2>
+              <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
+                Plan ahead so the muhurat, the Sankalp and the package are all settled before the
+                day arrives. The countdown keeps the calendar present without noise.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link className="btn-gold-dt" to="/pujas">
+                  Book before the window <ArrowRight size={15} />
+                </Link>
+                <Link className="btn-ghost-dt" to="/stories">
+                  Read festival guides <ArrowUpRight size={14} />
+                </Link>
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <FestivalCountdown />
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      <section className="site-section has-decor-dt">
+        <LotusLine className="decor-dt decor-tr hide-mobile soft-tone" />
         <div className="container-dt">
           <SectionHeading
             title="The dates people are booking"
@@ -180,7 +261,28 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="site-section ink-dt">
+      {/* Single restrained marquee: festival names drifting across the ink band */}
+      <section className="ink-dt py-6 overflow-hidden">
+        <div className="marquee-mask-dt">
+          <div className="marquee-dt display-dt text-3xl text-white/40">
+            {Array.from({ length: 2 }).map((_, k) => (
+              <span key={k} className="flex items-center gap-16">
+                {festivals.map((f) => (
+                  <span key={f.name + k} className="flex items-center gap-16">
+                    <span className="text-gold-300/70">{f.name}</span>
+                    <span className="text-white/25">·</span>
+                    <span className="text-white/30">{f.date}</span>
+                    <Sparkle size={14} className="text-gold-400/40" />
+                  </span>
+                ))}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="site-section ink-dt has-decor-dt">
+        <Trishul className="decor-dt decor-br hide-mobile ink-tone" />
         <div className="container-dt">
           <SectionHeading
             title="The calendar keeps moving"
@@ -190,6 +292,7 @@ export default function Home() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {festivals.map((f, i) => (
               <Reveal key={f.name} delay={i * 0.05}>
+                <TiltCard max={7}>
                 <Link
                   className="relative block h-[320px] overflow-hidden rounded-[20px] bg-black"
                   to="/pujas"
@@ -208,17 +311,19 @@ export default function Home() {
                     <p className="mt-1 text-xs text-white/55">{f.note}</p>
                   </div>
                 </Link>
+                </TiltCard>
               </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="site-section">
+      <section className="site-section has-decor-dt">
+        <LeafBranch className="decor-dt decor-bl hide-mobile soft-tone" />
         <div className="container-dt">
           <div className="intent-grid-dt">
             <Reveal>
-              <div className="eyebrow">Start with the intention</div>
+              <div className="eyebrow eyebrow-line-dt">Start with the intention</div>
               <h2 className="display-dt mt-3 text-5xl sm:text-6xl">What are you here to mark?</h2>
               <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
                 Browse by purpose when you know what you want to focus on, even before you know the
@@ -242,7 +347,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="site-section surface-2-dt">
+      <section className="site-section surface-2-dt has-decor-dt">
+        <SpinDecor className="decor-dt decor-center hide-mobile" speed={0.4}>
+          <MandalaRings style={{ width: 280, height: 280 }} className="soft-tone" />
+        </SpinDecor>
         <div className="container-dt">
           <SectionHeading
             title="A ritual journey with no hidden steps"
@@ -331,7 +439,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="site-section">
+      <section className="site-section has-decor-dt">
+        <Conch className="decor-dt decor-br hide-mobile soft-tone" />
         <div className="container-dt">
           <SectionHeading
             title="Stories, in the shape of a real journal"
@@ -364,7 +473,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="site-section surface-2-dt">
+      <section className="site-section surface-2-dt has-decor-dt">
+        <LotusLine className="decor-dt decor-tr hide-mobile soft-tone" />
         <div className="container-dt">
           <SectionHeading
             title="The wider DharmaTribe feed"
@@ -404,11 +514,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="site-section">
+      <section className="site-section has-decor-dt">
+        <Kalash className="decor-dt decor-bl hide-mobile soft-tone" />
         <div className="container-dt">
           <div className="grid gap-10 lg:grid-cols-[.9fr_1.1fr] items-end">
             <Reveal>
-              <div className="eyebrow">Year-long and recurring</div>
+              <div className="eyebrow eyebrow-line-dt">Year-long and recurring</div>
               <h2 className="display-dt mt-3 text-5xl sm:text-6xl">Keep one intention going.</h2>
               <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
                 The Phase 3 subscription surfaces are not part of this launch, but the homepage
@@ -439,7 +550,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="site-section surface-2-dt">
+      <section className="site-section surface-2-dt has-decor-dt">
+        <LotusLine className="decor-dt decor-tl hide-mobile soft-tone" />
         <div className="container-dt">
           <SectionHeading
             title="A temple network, presented with context"
@@ -447,63 +559,79 @@ export default function Home() {
             soft
           />
           <div className="grid gap-5 md:grid-cols-3">
-            <Reveal>
-              <div className="rounded-[22px] overflow-hidden bg-black">
-                <ParallaxImage
-                  src="https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1000&q=86"
-                  className="h-72"
-                  strength={14}
-                />
-                <div className="p-5 text-white">
-                  <div className="text-[10px] text-gold-300">Varanasi</div>
-                  <h3 className="mt-2 text-3xl display-dt">Kashi Vishwanath</h3>
-                  <p className="mt-2 text-xs text-white/50">
-                    Temple context, available pujas and upcoming moments.
-                  </p>
+            {[
+              [
+                "Varanasi",
+                "Kashi Vishwanath",
+                "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1000&q=86",
+                "Temple context, available pujas and upcoming moments.",
+              ],
+              [
+                "Ayodhya",
+                "Ram Janmabhoomi Seva",
+                "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=1000&q=86",
+                "A place-led route into rituals and devotional content.",
+              ],
+              [
+                "Somnath",
+                "Somnath Temple",
+                "https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&w=1000&q=86",
+                "A future temple detail route with seva and story content.",
+              ],
+            ].map(([place, name, img, note], i) => (
+              <Reveal key={name} delay={i * 0.05}>
+                <TiltCard max={6}>
+                <div className="temple-card-dt">
+                  <ParallaxImage src={img} className="h-72" strength={14} />
+                  <div className="p-5 text-white">
+                    <div className="text-[10px] text-gold-300">{place}</div>
+                    <h3 className="mt-2 text-3xl display-dt">{name}</h3>
+                    <p className="mt-2 text-xs text-white/50">{note}</p>
+                  </div>
                 </div>
-              </div>
-            </Reveal>
-            <Reveal delay={0.05}>
-              <div className="rounded-[22px] overflow-hidden bg-black">
-                <ParallaxImage
-                  src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=1000&q=86"
-                  className="h-72"
-                  strength={14}
-                />
-                <div className="p-5 text-white">
-                  <div className="text-[10px] text-gold-300">Ayodhya</div>
-                  <h3 className="mt-2 text-3xl display-dt">Ram Janmabhoomi Seva</h3>
-                  <p className="mt-2 text-xs text-white/50">
-                    A place-led route into rituals and devotional content.
-                  </p>
-                </div>
-              </div>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <div className="rounded-[22px] overflow-hidden bg-black">
-                <ParallaxImage
-                  src="https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&w=1000&q=86"
-                  className="h-72"
-                  strength={14}
-                />
-                <div className="p-5 text-white">
-                  <div className="text-[10px] text-gold-300">Somnath</div>
-                  <h3 className="mt-2 text-3xl display-dt">Somnath Temple</h3>
-                  <p className="mt-2 text-xs text-white/50">
-                    A future temple detail route with seva and story content.
-                  </p>
-                </div>
-              </div>
-            </Reveal>
+                </TiltCard>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="site-section">
+      {/* Acharyas preview — dynamic slider */}
+      <section className="site-section has-decor-dt">
+        <LeafBranch className="decor-dt decor-tr hide-mobile soft-tone" />
+        <div className="container-dt">
+          <div className="flex items-end justify-between gap-5 flex-wrap section-head-dt">
+            <Reveal className="section-head-copy-dt">
+              <h2 className="display-dt text-5xl sm:text-6xl title-soft">
+                The people who carry the tradition.
+              </h2>
+              <p>
+                Scholars and practitioners behind every ritual, with their learning, traditions and
+                areas of expertise clearly presented.
+              </p>
+            </Reveal>
+            <Link className="btn-ghost-dt shrink-0" to="/acharyas">
+              Meet all acharyas <ArrowUpRight size={14} />
+            </Link>
+          </div>
+          <Reveal>
+            <div className="acharya-slider-dt mt-8">
+              {acharyas.map((a) => (
+                <div key={a.id} className="acharya-slide-dt">
+                  <AcharyaCard a={a} />
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="site-section has-decor-dt">
+        <Bell className="decor-dt decor-br hide-mobile soft-tone" />
         <div className="container-dt">
           <div className="grid gap-8 lg:grid-cols-[1fr_1fr] items-end border-t border-dt pt-14">
             <Reveal>
-              <div className="eyebrow">Stay connected</div>
+              <div className="eyebrow eyebrow-line-dt">Stay connected</div>
               <h2 className="display-dt title-soft mt-3 text-5xl sm:text-6xl">
                 Know what is coming next.
               </h2>

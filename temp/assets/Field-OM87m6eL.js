@@ -1,0 +1,1 @@
+import{j as s}from"./react-CL_ZT5kP.js";function a({label:i,helper:e,...l}){return s.jsxs("div",{className:"field",children:[s.jsx("label",{children:i}),s.jsx("input",{...l}),e&&s.jsx("small",{className:"text-muted",children:e})]})}export{a as F};

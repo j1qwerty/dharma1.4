@@ -10,15 +10,19 @@ import {
 import { useBooking } from "../lib/booking";
 import { pujas } from "../lib/data";
 import { Reveal } from "../components/common/Motion";
+import { LeafBranch, LotusLine, DiyaCluster, Conch } from "../components/common/Decor";
 export default function BookingConfirmation() {
   const { booking } = useBooking();
   const p = pujas.find((x) => x.id === booking.pujaId) || pujas[0];
   return (
-    <section className="site-section">
+    <section className="site-section has-decor-dt">
+      <DiyaCluster className="decor-dt decor-tl hide-mobile soft-tone" />
+      <Conch className="decor-dt decor-br hide-mobile soft-tone" />
       <div className="container-dt max-w-[1100px]">
         <Reveal>
           <div className="panel-dt overflow-hidden">
-            <div className="ink-dt p-9 sm:p-12">
+            <div className="ink-dt p-9 sm:p-12 relative overflow-hidden">
+              <div className="relative z-10">
               <CheckCircle size={38} className="text-gold-300" weight="fill" />
               <div className="eyebrow mt-6 !text-gold-300">Booking confirmed</div>
               <h1 className="display-dt mt-3 text-6xl">Your ritual is on the calendar.</h1>
@@ -36,6 +40,7 @@ export default function BookingConfirmation() {
                 >
                   My account
                 </Link>
+              </div>
               </div>
             </div>
             <div className="grid gap-5 p-7 sm:p-9 md:grid-cols-2">

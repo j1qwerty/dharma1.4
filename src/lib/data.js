@@ -285,3 +285,84 @@ export const social = [
     copy: "Festival reminders and live updates.",
   },
 ];
+
+export const acharyas = [
+  {
+    id: "ramesh-shastri",
+    name: "Pt. Ramesh Shastri",
+    tradition: "Vedic / Sanatan",
+    place: "Kashi Vishwanath, Varanasi",
+    approach: "Knowledge · Discipline · Authenticity",
+    expertise: "Rudrabhishek · Mahamrityunjaya Jaap",
+    lineage: "Krishna Yajurveda, Taittiriya shakha",
+    experience: "32 years",
+    image:
+      "https://images.unsplash.com/photo-1604608672516-f1b9b1d5a5e1?auto=format&fit=crop&w=900&q=80",
+    bio: "Trained in the traditional gurukula of Kashi, Pt. Shastri carries the Rudra recitation in its full padapatha. He leads Rudrabhishek and Mahamrityunjaya observances with the discipline of a daily practitioner.",
+  },
+  {
+    id: "srinivasa-dikshitar",
+    name: "Acharya Srinivasa Dikshitar",
+    tradition: "Vedic / Sanatan",
+    place: "Sringeri Sharada Peetham, Karnataka",
+    approach: "Knowledge · Discipline · Authenticity",
+    expertise: "Navagraha Shanti · Homam",
+    lineage: "Rigveda, Shakala shakha",
+    experience: "27 years",
+    image:
+      "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=900&q=80",
+    bio: "A scholar of the Sringeri lineage, Acharya Dikshitar specialises in Navagraha pacification and fire rituals. His recitation follows the Shakala rigvedic metre with strict phonetic fidelity.",
+  },
+  {
+    id: "lakshmi-narayana-bhatt",
+    name: "Sri Lakshmi Narayana Bhatt",
+    tradition: "Pancharatra Agama",
+    place: "Tirumala Tirupati, Andhra Pradesh",
+    approach: "Knowledge · Discipline · Authenticity",
+    expertise: "Archana · Kalyanam · Satyanarayan Katha",
+    lineage: "Vaikhanasa / Pancharatra agama",
+    experience: "24 years",
+    image:
+      "https://images.unsplash.com/photo-1567591414240-e6c5a0a0a0c4?auto=format&fit=crop&w=900&q=80",
+    bio: "Serving at one of the busiest Vaishnava temples, Sri Bhatt conducts daily archana and the Satyanarayan Katha in the Pancharatra tradition, with attention to each devotee's Sankalp.",
+  },
+  {
+    id: "devendra-giri",
+    name: "Pt. Devendra Giri",
+    tradition: "Vedic / Sanatan",
+    place: "Kashi & beyond, Varanasi",
+    approach: "Knowledge · Discipline · Authenticity",
+    expertise: "Mahamrityunjaya · Laghu Rudra",
+    lineage: "Shaiva, Jyotirlinga parampara",
+    experience: "29 years",
+    image:
+      "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=900&q=80",
+    bio: "A Mahadev upasaka from the ghats of Kashi, Pt. Giri's observances centre on the Mahamrityunjaya mantra and Laghu Rudra. He is known for the clarity of his Sankalp narration.",
+  },
+  {
+    id: "anandi-joshi",
+    name: "Acharya Anandi Prasad Joshi",
+    tradition: "Smarta",
+    place: "Mahakaleshwar, Ujjain",
+    approach: "Knowledge · Discipline · Authenticity",
+    expertise: "Ganesh pujas · Navagraha · Sankalp",
+    lineage: "Smarta, Shankara sampradaya",
+    experience: "21 years",
+    image:
+      "https://images.unsplash.com/photo-1532968961962-8a0b3a6b6fc6?auto=format&fit=crop&w=900&q=80",
+    bio: "Based at Mahakaleshwar, Acharya Joshi conducts Ganesh observances and family Sankalp rituals in the Smarta tradition. He is patient with first-time devotees explaining each step.",
+  },
+  {
+    id: "lakshmi-devi-sharma",
+    name: "Smt. Lakshmi Devi Sharma",
+    tradition: "Devi Upasana",
+    place: "Kamakshi Amman, Kanchipuram",
+    approach: "Knowledge · Discipline · Authenticity",
+    expertise: "Durga Saptashati · Lakshmi pujas",
+    lineage: "Devi upasana, Srividya",
+    experience: "26 years",
+    image:
+      "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80",
+    bio: "One of the few women acharyas leading Devi recitations, Smt. Sharma leads Durga Saptashati Path and Mahalakshmi observances. Her Saptashati recitation follows the Markandeya metre.",
+  },
+];

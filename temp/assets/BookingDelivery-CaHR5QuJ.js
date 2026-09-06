@@ -1,0 +1,1 @@
+import{j as t}from"./react-CL_ZT5kP.js";import{a as r,c as a}from"./router-By4GM9pb.js";import"./vendor-7OC5HNn7.js";function m(){const{id:o}=r();return t.jsx(a,{to:`/booking/${o}/payment`,replace:!0})}export{m as default};

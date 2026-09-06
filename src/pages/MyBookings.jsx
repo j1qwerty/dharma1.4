@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, MagnifyingGlass } from "@phosphor-icons/react";
 import { Reveal } from "../components/common/Motion";
+import SectionCurve from "../components/common/SectionCurve";
+import { LeafBranch, LotusLine, Kalash, Trishul } from "../components/common/Decor";
 const bookings = [
   ["Maha Rudrabhishek", "Sep 09, 2026", "Confirmed"],
   ["Ganesh Vighnaharta Puja", "Sep 10, 2026", "Confirmed"],
@@ -19,16 +21,23 @@ export default function MyBookings() {
       x[0].toLowerCase().includes(q.toLowerCase())
   );
   return (
-    <section className="site-section">
-      <div className="container-dt max-w-[1200px]">
-        <Reveal>
-          <div className="eyebrow">My bookings</div>
-          <h1 className="display-dt mt-3 text-6xl">Every ritual, one place.</h1>
-          <p className="mt-4 max-w-xl text-sm leading-7 muted-dt">
-            Search, track, rebook, and open the media attached to each ceremony.
-          </p>
-        </Reveal>
-        <div className="mt-8 flex gap-2 overflow-x-auto">
+    <>
+      <section className="ink-dt overflow-hidden has-decor-dt relative">
+        <div className="container-dt pt-20 pb-28">
+          <Reveal>
+            <div className="eyebrow !text-gold-300">My bookings</div>
+            <h1 className="display-dt mt-3 text-6xl">Every ritual, one place.</h1>
+            <p className="mt-4 max-w-xl text-sm leading-7 text-white/55">
+              Search, track, rebook, and open the media attached to each ceremony.
+            </p>
+          </Reveal>
+        </div>
+        <SectionCurve edge="bottom" />
+      </section>
+      <section className="site-section has-decor-dt">
+        <Kalash className="decor-dt decor-tr hide-mobile soft-tone" />
+        <div className="container-dt max-w-[1200px]">
+        <div className="flex gap-2 overflow-x-auto">
           {tabs.map((t) => (
             <button
               key={t}
@@ -100,5 +109,6 @@ export default function MyBookings() {
         </div>
       </div>
     </section>
+    </>
   );
 }
