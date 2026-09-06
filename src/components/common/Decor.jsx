@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { motion, useReducedMotion, useScroll, useTransform, useMotionValueEvent } from "motion/react";
 
 /* ------------------------------------------------------------------ *
  * DharmaTribe decorative SVG system.
@@ -316,24 +316,85 @@ export function DiyaCluster({ className = "" }) {
   );
 }
 
-/* 2. Swastika — the ancient auspicious Hindu symbol (right-facing). */
-export function Swastika({ className = "" }) {
+/* 2. Swastika — the ancient auspicious Hindu symbol (right-facing).
+ * Variants: clean / footed / extended (tapered 45° tips). Stars are the
+ * four auspicious dots rendered as curved 4-point stars. */
+const PATHS = {
+  clean: [
+    "M60 60 V15 H90 V45",
+    "M60 60 H105 V90 H75",
+    "M60 60 V105 H30 V75",
+    "M60 60 H15 V30 H45",
+  ],
+  footed: [
+    "M60 60 V15 H90 V45 H105",
+    "M60 60 H105 V90 H75 V105",
+    "M60 60 V105 H30 V75 H15",
+    "M60 60 H15 V30 H45 V15",
+  ],
+  // hooks only — the 45° feet are now tapered fills, not strokes
+  extended: [
+    "M60 60 V20 H100",
+    "M60 60 H100 V100",
+    "M60 60 V100 H20",
+    "M60 60 H20 V20",
+  ],
+};
+
+// pointed foot along the 45° diagonal: base = stroke width (3), apex at the tip.
+// base corners are tip ± 1.5 perpendicular to the diagonal (1.5/√2 ≈ 1.06)
+const TIP = "M98.94 18.94 L101.06 21.06 L110 10 Z";
+const TIP_ROTATIONS = [0, 90, 180, 270];
+
+function starPath(cx, cy, r = 7) {
+  return [
+    `M${cx} ${cy - r}`,
+    `Q${cx} ${cy} ${cx + r} ${cy}`,
+    `Q${cx} ${cy} ${cx} ${cy + r}`,
+    `Q${cx} ${cy} ${cx - r} ${cy}`,
+    `Q${cx} ${cy} ${cx} ${cy - r}`,
+    "Z",
+  ].join(" ");
+}
+
+const STARS = [
+  [77, 43],
+  [77, 77],
+  [43, 77],
+  [43, 43],
+];
+
+export function Swastika({
+  className = "",
+  stroke: strokeProp = "currentColor",
+  variant = "extended",
+  stars = true,
+}) {
   return (
     <svg className={className} viewBox="0 0 120 120" fill="none" aria-hidden="true">
-      <g stroke={stroke} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none">
-        <path d="M60 14 L60 106" />
-        <path d="M14 60 L106 60" />
-        <path d="M60 14 L84 14 L84 38" />
-        <path d="M60 106 L36 106 L36 82" />
-        <path d="M106 60 L106 84 L82 84" />
-        <path d="M14 60 L14 36 L38 36" />
+      <g stroke={strokeProp} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+        {PATHS[variant].map((d) => (
+          <path key={d} d={d} />
+        ))}
       </g>
-      <g stroke={stroke} strokeWidth="1.2" strokeLinecap="round" fill="none" opacity="0.6">
-        <path d="M84 38 L94 38" />
-        <path d="M36 82 L26 82" />
-        <path d="M82 84 L82 94" />
-        <path d="M38 36 L38 26" />
-      </g>
+
+      {variant === "extended" && (
+        <g fill={strokeProp}>
+          {TIP_ROTATIONS.map((deg) => (
+            <path key={deg} d={TIP} transform={deg ? `rotate(${deg} 60 60)` : undefined} />
+          ))}
+        </g>
+      )}
+
+      {stars && (
+        <g fill={strokeProp}>
+          {STARS.map(([cx, cy]) => (
+            <path key={`${cx}-${cy}`} d={starPath(cx, cy)} />
+          ))}
+        </g>
+      )}
+
+      <circle cx={60} cy={60} r={2.5} fill={strokeProp} />
     </svg>
   );
 }
@@ -867,57 +928,103 @@ export function DrawDecor({ children, className = "", delay = 0 }) {
  * Use directly as the button background; pointer-events none so the
  * button stays clickable.
  * ------------------------------------------------------------------ */
-export function BackToTopHalo({ size = 68, className = "", speed = 0.7, idleMs = 480 }) {
+
+
+export function BackToTopHalo({ 
+  size = 68, 
+  className = "", 
+  speed = 0.7, 
+  idleMs = 480 
+}) {
+  // Framer Motion has a built-in useReducedMotion hook
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll();
   const rotate = useTransform(scrollYProgress, [0, 1], [0, 360 * speed]);
+
   const [scrolling, setScrolling] = useState(false);
-  useEffect(() => {
+  const timeoutRef = useRef(null);
+
+  // 1. Native Framer Motion scroll listening (replaces window 'scroll' event)
+  useMotionValueEvent(scrollYProgress, "change", () => {
     if (reduce) return;
-    let t = null;
-    function onScroll() {
-      setScrolling(true);
-      clearTimeout(t);
-      t = setTimeout(() => setScrolling(false), idleMs);
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
+    setScrolling(true);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setScrolling(false), idleMs);
+  });
+
+  // Cleanup timeout on unmount to prevent memory leaks
+  useEffect(() => {
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      clearTimeout(t);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [reduce, idleMs]);
+  }, []);
+
   const visible = reduce ? true : scrolling;
+
+  // 2. Memoize heavy trigonometry calculations so they don't run on every render
+  const geometry = useMemo(() => {
+    const beads = Array.from({ length: 28 }).map((_, i) => {
+      const a = (i / 28) * Math.PI * 2;
+      return { cx: 50 + Math.cos(a) * 41, cy: 50 + Math.sin(a) * 41 };
+    });
+
+    const ticks = Array.from({ length: 16 }).map((_, i) => {
+      const a = (i / 16) * Math.PI * 2;
+      return {
+        x1: 50 + Math.cos(a) * 33, y1: 50 + Math.sin(a) * 33,
+        x2: 50 + Math.cos(a) * 38, y2: 50 + Math.sin(a) * 38,
+      };
+    });
+
+    const petals = Array.from({ length: 8 }).map((_, i) => ({
+      transform: `rotate(${(i / 8) * 360} 50 50)`,
+    }));
+
+    return { beads, ticks, petals };
+  }, []);
+
   return (
-    <motion.span
-      className={className}
+    <span
       aria-hidden="true"
-      animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0.86 }}
-      transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
       style={{
         position: "absolute",
-        left: "50%",
-        top: "50%",
-        width: size,
-        height: size,
-        marginLeft: -size / 2,
-        marginTop: -size / 2,
+        inset: 0,
         display: "grid",
         placeItems: "center",
         pointerEvents: "none",
       }}
     >
-      {/* solid disc bg — same as button core so halo is readable in light mode */}
+      <motion.span
+        className={className}
+        aria-hidden="true"
+        animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0.86 }}
+        transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          width: size,
+          height: size,
+          marginLeft: -size / 2,
+          marginTop: -size / 2,
+          display: "grid",
+          placeItems: "center",
+          pointerEvents: "none",
+        }}
+      >
+      {/* Solid disc background with CSS variable fallbacks */}
       <span
         style={{
           position: "absolute",
           inset: 0,
           borderRadius: "50%",
-          background: "color-mix(in srgb, var(--deep) 88%, var(--gold) 12%)",
+          background: "color-mix(in srgb, var(--deep, #111827) 88%, var(--gold, #e7b631) 12%)",
           border: "1px solid rgba(231,182,49,0.35)",
           boxShadow: "0 8px 24px rgba(0,0,0,0.28)",
         }}
       />
-      {/* soft outer glow — sits behind the disc */}
+
+      {/* Soft outer glow */}
       <span
         style={{
           position: "absolute",
@@ -929,6 +1036,8 @@ export function BackToTopHalo({ size = 68, className = "", speed = 0.7, idleMs =
           zIndex: -1,
         }}
       />
+
+      {/* Rotating SVG Layer */}
       <motion.span
         style={{
           display: "grid",
@@ -939,58 +1048,37 @@ export function BackToTopHalo({ size = 68, className = "", speed = 0.7, idleMs =
         }}
       >
         <svg viewBox="0 0 100 100" fill="none" style={{ width: "100%", height: "100%" }}>
-          {/* outer thin ring */}
+          {/* Outer thin ring */}
           <circle cx="50" cy="50" r="46" stroke="rgba(231,182,49,0.5)" strokeWidth="0.9" />
-          {/* beaded ring */}
-          {Array.from({ length: 28 }).map((_, i) => {
-            const a = (i / 28) * Math.PI * 2;
-            return (
-              <circle
-                key={i}
-                cx={50 + Math.cos(a) * 41}
-                cy={50 + Math.sin(a) * 41}
-                r="0.9"
-                fill="rgba(231,182,49,0.9)"
-              />
-            );
-          })}
-          {/* tick ring */}
-          {Array.from({ length: 16 }).map((_, i) => {
-            const a = (i / 16) * Math.PI * 2;
-            const x1 = 50 + Math.cos(a) * 33;
-            const y1 = 50 + Math.sin(a) * 33;
-            const x2 = 50 + Math.cos(a) * 38;
-            const y2 = 50 + Math.sin(a) * 38;
-            return (
-              <line
-                key={`t${i}`}
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
-                stroke="rgba(231,182,49,0.55)"
-                strokeWidth="0.75"
-                strokeLinecap="round"
-              />
-            );
-          })}
-          {/* inner lotus 8 petals */}
-          {Array.from({ length: 8 }).map((_, i) => {
-            const a = (i / 8) * 360;
-            return (
+
+          {/* 4. Grouped elements to reduce DOM attribute repetition */}
+          <g fill="rgba(231,182,49,0.9)">
+            {geometry.beads.map((bead, i) => (
+              <circle key={i} cx={bead.cx} cy={bead.cy} r="0.9" />
+            ))}
+          </g>
+
+          <g stroke="rgba(231,182,49,0.55)" strokeWidth="0.75" strokeLinecap="round">
+            {geometry.ticks.map((tick, i) => (
+              <line key={i} x1={tick.x1} y1={tick.y1} x2={tick.x2} y2={tick.y2} />
+            ))}
+          </g>
+
+          <g stroke="rgba(231,182,49,0.45)" strokeWidth="0.7" fill="rgba(255,240,180,0.06)">
+            {geometry.petals.map((petal, i) => (
               <path
-                key={`p${i}`}
+                key={i}
                 d="M50 29 C52.5 22 52.5 16 50 11 C47.5 16 47.5 22 50 29 Z"
-                stroke="rgba(231,182,49,0.45)"
-                strokeWidth="0.7"
-                fill="rgba(255,240,180,0.06)"
-                transform={`rotate(${a} 50 50)`}
+                transform={petal.transform}
               />
-            );
-          })}
+            ))}
+          </g>
+
+          {/* Inner boundary */}
           <circle cx="50" cy="50" r="22" stroke="rgba(231,182,49,0.22)" strokeWidth="0.6" />
         </svg>
       </motion.span>
-    </motion.span>
+      </motion.span>
+    </span>
   );
 }
