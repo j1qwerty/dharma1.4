@@ -9,7 +9,7 @@ import {
   Check,
 } from "@phosphor-icons/react";
 import Brand from "./Brand";
-import { BackToTopHalo } from "./Decor";
+import { BackToTopHalo } from "./decor";
 
 export default function Footer() {
   const [showTop, setShowTop] = useState(false);

@@ -1,6 +1,6 @@
 import React from "react";
 import { Reveal } from "../components/common/Motion";
-import { LotusLine, OmSymbol, Yantra } from "../components/common/Decor";
+import { LotusLine, OmSymbol, Yantra, SectionDecor } from "../components/common/decor";
 const content = {
   terms: {
     title: "Terms & Conditions",
@@ -60,6 +60,7 @@ export default function Legal({ type }) {
   const d = content[type];
   return (
     <section className="site-section has-decor-dt">
+        <SectionDecor />
       <OmSymbol className="decor-dt decor-tl hide-mobile soft-tone" />
       <Yantra className="decor-dt decor-br hide-mobile soft-tone" />
       <div className="container-dt max-w-[1200px]">

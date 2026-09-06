@@ -1,5 +1,5 @@
 import React from "react";
-import { SacredMedallion } from "./Decor";
+import { SacredMedallion } from "./decor";
 
 /* ------------------------------------------------------------------ *
  * SectionCurve - the reusable "rounded side-corner" device used on

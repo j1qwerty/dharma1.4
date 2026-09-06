@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight, FlowerLotus, Sparkle } from "@phosphor-icons/react";
 import { Reveal } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
-import { LeafBranch, LotusLine, OmSymbol, Swastika } from "../components/common/Decor";
+import { LeafBranch, LotusLine, OmSymbol, Swastika, SectionDecor } from "../components/common/decor";
 import AcharyaCard from "../components/common/AcharyaCard";
 import { acharyas } from "../lib/data";
 
@@ -19,6 +19,7 @@ export default function Acharyas() {
   return (
     <>
       <section className="ink-dt overflow-hidden has-decor-dt relative">
+        <SectionDecor />
         <div className="container-dt pt-24 pb-28">
           <Reveal>
             <div className="eyebrow !text-gold-300">Our Acharyas</div>
@@ -69,6 +70,7 @@ export default function Acharyas() {
         id="acharya-network"
         className="site-section has-decor-dt"
       >
+        <SectionDecor />
         <OmSymbol className="decor-dt decor-tr hide-mobile soft-tone" />
         <div className="container-dt">
           <Reveal>

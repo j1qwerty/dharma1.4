@@ -10,12 +10,13 @@ import {
 import { useBooking } from "../lib/booking";
 import { pujas } from "../lib/data";
 import { Reveal } from "../components/common/Motion";
-import { LeafBranch, LotusLine, DiyaCluster, Conch } from "../components/common/Decor";
+import { LeafBranch, LotusLine, DiyaCluster, Conch, SectionDecor } from "../components/common/decor";
 export default function BookingConfirmation() {
   const { booking } = useBooking();
   const p = pujas.find((x) => x.id === booking.pujaId) || pujas[0];
   return (
     <section className="site-section has-decor-dt">
+        <SectionDecor />
       <DiyaCluster className="decor-dt decor-tl hide-mobile soft-tone" />
       <Conch className="decor-dt decor-br hide-mobile soft-tone" />
       <div className="container-dt max-w-[1100px]">

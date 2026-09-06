@@ -5,7 +5,7 @@ import { motion, useReducedMotion, useScroll, useSpring } from "motion/react";
 import { stories } from "../lib/data";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
-import { LeafBranch, LotusLine, Peacock, Conch } from "../components/common/Decor";
+import { LeafBranch, LotusLine, Peacock, Conch, SectionDecor } from "../components/common/decor";
 export default function StoryDetail() {
   const { id } = useParams();
   const s = stories.find((x) => x.id === id) || stories[0];
@@ -26,6 +26,7 @@ export default function StoryDetail() {
         />
       )}
       <section className="detail-hero-dt has-decor-dt">
+        <SectionDecor />
         <div className="detail-hero-media-dt">
           <ParallaxImage src={s.image} alt={s.title} className="h-full w-full" strength={24} />
         </div>
@@ -43,6 +44,7 @@ export default function StoryDetail() {
         <SectionCurve edge="bottom" />
       </section>
       <section className="site-section has-decor-dt" ref={articleRef}>
+        <SectionDecor />
         <Peacock className="decor-dt decor-tr hide-mobile soft-tone" />
         <Conch className="decor-dt decor-bl hide-mobile soft-tone" />
         <div className="container-dt grid gap-12 lg:grid-cols-[1fr_270px]">

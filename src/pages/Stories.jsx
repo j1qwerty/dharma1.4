@@ -5,7 +5,7 @@ import { stories } from "../lib/data";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import { StoryMasonry } from "../components/common/Masonry";
 import SectionCurve from "../components/common/SectionCurve";
-import { LeafBranch, LotusLine, Conch, Yantra } from "../components/common/Decor";
+import { LeafBranch, LotusLine, Conch, Yantra, SectionDecor } from "../components/common/decor";
 
 export default function Stories() {
   const [q, setQ] = useState("");
@@ -27,6 +27,7 @@ export default function Stories() {
   return (
     <>
       <section className="ink-dt overflow-hidden has-decor-dt relative">
+        <SectionDecor />
         <div className="container-dt pt-24 pb-32">
           <Reveal>
             <div className="eyebrow !text-gold-300">Stories</div>
@@ -41,6 +42,7 @@ export default function Stories() {
         <SectionCurve edge="bottom" />
       </section>
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <Conch className="decor-dt decor-tl hide-mobile soft-tone" />
         <div className="container-dt">
         <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
@@ -184,6 +186,7 @@ export default function Stories() {
         </section>
 
         <section className="mt-20 border-t border-dt pt-12 has-decor-dt">
+        <SectionDecor />
           <Yantra className="decor-dt decor-br hide-mobile soft-tone" />
           <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr] items-end">
             <Reveal>

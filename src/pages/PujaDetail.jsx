@@ -14,7 +14,7 @@ import { pujas, stories } from "../lib/data";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionHeading from "../components/common/SectionHeading";
 import SectionCurve from "../components/common/SectionCurve";
-import { LeafBranch, LotusLine, DiyaCluster, Kalash } from "../components/common/Decor";
+import { LeafBranch, LotusLine, DiyaCluster, Kalash, SectionDecor } from "../components/common/decor";
 import FavToggle from "../components/common/FavToggle";
 import { useToast } from "../components/common/Toast";
 import FaqAccordion from "../components/common/FaqAccordion";
@@ -33,6 +33,7 @@ export default function PujaDetail() {
   return (
     <>
       <section className="detail-hero-dt has-decor-dt">
+        <SectionDecor />
         <div className="detail-hero-media-dt">
           <ParallaxImage src={p.image} alt={p.title} className="h-full w-full" strength={28} />
         </div>
@@ -83,6 +84,7 @@ export default function PujaDetail() {
         <SectionCurve edge="bottom" />
       </section>
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <DiyaCluster className="decor-dt decor-tr hide-mobile soft-tone" />
         <div className="container-dt">
           <div className="grid gap-8 lg:grid-cols-[1.2fr_.8fr] items-start">
@@ -172,7 +174,8 @@ export default function PujaDetail() {
           </div>
         </div>
       </section>
-      <section className="site-section surface-2-dt">
+      <section className="site-section has-decor-dt surface-2-dt">
+        <SectionDecor />
         <div className="container-dt">
           <SectionHeading
             title="What you receive"
@@ -196,6 +199,7 @@ export default function PujaDetail() {
         </div>
       </section>
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <Kalash className="decor-dt decor-br hide-mobile soft-tone" />
         <div className="container-dt">
           <div className="grid gap-8 lg:grid-cols-[.8fr_1.2fr] items-start">
@@ -218,7 +222,8 @@ export default function PujaDetail() {
           </div>
         </div>
       </section>
-      <section className="site-section surface-2-dt">
+      <section className="site-section has-decor-dt surface-2-dt">
+        <SectionDecor />
         <div className="container-dt">
           <SectionHeading
             title="Past ritual moments"
@@ -270,7 +275,8 @@ export default function PujaDetail() {
           </div>
         </div>
       </section>
-      <section className="site-section">
+      <section className="site-section has-decor-dt">
+        <SectionDecor />
         <div className="container-dt">
           <SectionHeading title="Questions devotees ask" />
           <FaqAccordion

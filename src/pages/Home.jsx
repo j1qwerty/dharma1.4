@@ -33,7 +33,8 @@ import {
   Toran,
   Kalash,
   Yantra,
-} from "../components/common/Decor";
+  SectionDecor,
+} from "../components/common/decor";
 import FestivalCountdown from "../components/common/FestivalCountdown";
 import AcharyaCard from "../components/common/AcharyaCard";
 import { pujas, festivals, intentions, stories, social, acharyas } from "../lib/data";
@@ -190,6 +191,7 @@ export default function Home() {
       </section>
 
       <section className="assurance-dt has-decor-dt">
+        <SectionDecor />
         <LeafBranch className="decor-dt decor-tl hide-mobile soft-tone" />
         <div className="container-dt assurance-grid-dt">
           {[
@@ -214,6 +216,7 @@ export default function Home() {
 
       {/* Festival countdown — live, dynamic feature band */}
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <DiyaCluster className="decor-dt decor-br hide-mobile soft-tone" />
         <div className="container-dt">
           <div className="grid gap-10 lg:grid-cols-[1fr_1fr] items-center">
@@ -243,6 +246,7 @@ export default function Home() {
       </section>
 
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <LotusLine className="decor-dt decor-tr hide-mobile soft-tone" />
         <div className="container-dt">
           <SectionHeading
@@ -282,6 +286,7 @@ export default function Home() {
       </section>
 
       <section className="site-section ink-dt has-decor-dt">
+        <SectionDecor />
         <Trishul className="decor-dt decor-br hide-mobile ink-tone" />
         <div className="container-dt">
           <SectionHeading
@@ -319,6 +324,7 @@ export default function Home() {
       </section>
 
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <LeafBranch className="decor-dt decor-bl hide-mobile soft-tone" />
         <div className="container-dt">
           <div className="intent-grid-dt">
@@ -348,6 +354,7 @@ export default function Home() {
       </section>
 
       <section className="site-section surface-2-dt has-decor-dt">
+        <SectionDecor />
         <SpinDecor className="decor-dt decor-center hide-mobile" speed={0.4}>
           <MandalaRings style={{ width: 280, height: 280 }} className="soft-tone" />
         </SpinDecor>
@@ -391,7 +398,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="site-section ink-dt trust-band-dt">
+      <section className="site-section has-decor-dt ink-dt trust-band-dt">
+        <SectionDecor />
         <div className="container-dt trust-band-inner-dt">
           <Reveal>
             <div>
@@ -440,6 +448,7 @@ export default function Home() {
       </section>
 
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <Conch className="decor-dt decor-br hide-mobile soft-tone" />
         <div className="container-dt">
           <SectionHeading
@@ -474,6 +483,7 @@ export default function Home() {
       </section>
 
       <section className="site-section surface-2-dt has-decor-dt">
+        <SectionDecor />
         <LotusLine className="decor-dt decor-tr hide-mobile soft-tone" />
         <div className="container-dt">
           <SectionHeading
@@ -515,6 +525,7 @@ export default function Home() {
       </section>
 
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <Kalash className="decor-dt decor-bl hide-mobile soft-tone" />
         <div className="container-dt">
           <div className="grid gap-10 lg:grid-cols-[.9fr_1.1fr] items-end">
@@ -551,6 +562,7 @@ export default function Home() {
       </section>
 
       <section className="site-section surface-2-dt has-decor-dt">
+        <SectionDecor />
         <LotusLine className="decor-dt decor-tl hide-mobile soft-tone" />
         <div className="container-dt">
           <SectionHeading
@@ -598,6 +610,7 @@ export default function Home() {
 
       {/* Acharyas preview — dynamic slider */}
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <LeafBranch className="decor-dt decor-tr hide-mobile soft-tone" />
         <div className="container-dt">
           <div className="flex items-end justify-between gap-5 flex-wrap section-head-dt">
@@ -627,6 +640,7 @@ export default function Home() {
       </section>
 
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <Bell className="decor-dt decor-br hide-mobile soft-tone" />
         <div className="container-dt">
           <div className="grid gap-8 lg:grid-cols-[1fr_1fr] items-end border-t border-dt pt-14">

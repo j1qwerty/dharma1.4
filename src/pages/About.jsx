@@ -12,7 +12,7 @@ import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionHeading from "../components/common/SectionHeading";
 import { ImageMasonry } from "../components/common/Masonry";
 import SectionCurve from "../components/common/SectionCurve";
-import { LeafBranch, LotusLine, MandalaRings, SpinDecor, Trishul, Bell, Hamsa, Peacock } from "../components/common/Decor";
+import { LeafBranch, LotusLine, MandalaRings, SpinDecor, Trishul, Bell, Hamsa, Peacock, SectionDecor } from "../components/common/decor";
 
 const gallery = [
   "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=800&q=84",
@@ -26,6 +26,7 @@ export default function About() {
   return (
     <>
       <section className="ink-dt overflow-hidden has-decor-dt relative">
+        <SectionDecor />
         <div className="container-dt grid min-h-[520px] items-end gap-10 py-20 lg:grid-cols-[1fr_.8fr]">
           <Reveal>
             <div>
@@ -52,6 +53,7 @@ export default function About() {
         <SectionCurve edge="bottom" />
       </section>
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <LotusLine className="decor-dt decor-tr hide-mobile soft-tone" />
         <div className="container-dt">
           <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
@@ -76,6 +78,7 @@ export default function About() {
         </div>
       </section>
       <section className="site-section surface-2-dt has-decor-dt">
+        <SectionDecor />
         <SpinDecor className="decor-dt decor-center hide-mobile" speed={0.35} reverse>
           <MandalaRings style={{ width: 420, height: 420 }} className="soft-tone" />
         </SpinDecor>
@@ -103,6 +106,7 @@ export default function About() {
         </div>
       </section>
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <Peacock className="decor-dt decor-bl hide-mobile soft-tone" />
         <div className="container-dt">
           <SectionHeading
@@ -113,6 +117,7 @@ export default function About() {
         </div>
       </section>
       <section className="site-section ink-dt has-decor-dt">
+        <SectionDecor />
         <Bell className="decor-dt decor-tr hide-mobile ink-tone" />
         <div className="container-dt grid gap-10 lg:grid-cols-[1.1fr_.9fr] items-end">
           <Reveal>
@@ -146,6 +151,7 @@ export default function About() {
         </div>
       </section>
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <Hamsa className="decor-dt decor-tl hide-mobile soft-tone" />
         <div className="container-dt text-center">
           <Reveal>

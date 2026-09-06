@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, MagnifyingGlass } from "@phosphor-icons/react";
 import { Reveal } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
-import { LeafBranch, LotusLine, Kalash, Trishul } from "../components/common/Decor";
+import { LeafBranch, LotusLine, Kalash, Trishul, SectionDecor } from "../components/common/decor";
 const bookings = [
   ["Maha Rudrabhishek", "Sep 09, 2026", "Confirmed"],
   ["Ganesh Vighnaharta Puja", "Sep 10, 2026", "Confirmed"],
@@ -23,6 +23,7 @@ export default function MyBookings() {
   return (
     <>
       <section className="ink-dt overflow-hidden has-decor-dt relative">
+        <SectionDecor />
         <div className="container-dt pt-20 pb-28">
           <Reveal>
             <div className="eyebrow !text-gold-300">My bookings</div>
@@ -35,6 +36,7 @@ export default function MyBookings() {
         <SectionCurve edge="bottom" />
       </section>
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <Kalash className="decor-dt decor-tr hide-mobile soft-tone" />
         <div className="container-dt max-w-[1200px]">
         <div className="flex gap-2 overflow-x-auto">

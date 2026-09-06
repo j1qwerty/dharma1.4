@@ -13,7 +13,7 @@ import {
 } from "@phosphor-icons/react";
 import { Reveal } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
-import { LeafBranch, LotusLine, Bell, Kalash } from "../components/common/Decor";
+import { LeafBranch, LotusLine, Bell, Kalash, SectionDecor } from "../components/common/decor";
 import { useFavorites } from "../lib/favorites";
 import { pujas } from "../lib/data";
 export default function Dashboard() {
@@ -22,6 +22,7 @@ export default function Dashboard() {
   return (
     <>
       <section className="ink-dt overflow-hidden has-decor-dt relative">
+        <SectionDecor />
         <div className="container-dt pt-20 pb-16">
           <Reveal>
             <div className="grid gap-6 lg:grid-cols-[1.2fr_.8fr]">
@@ -49,6 +50,7 @@ export default function Dashboard() {
         <SectionCurve edge="bottom" />
       </section>
     <section className="site-section has-decor-dt">
+        <SectionDecor />
       <Bell className="decor-dt decor-tr hide-mobile soft-tone" />
       <div className="container-dt">
         <div className="mt-10 grid gap-4 md:grid-cols-3">

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Copy, Check, PaintBrush, Sparkle, ArrowLeft } from "@phosphor-icons/react";
-import {
-  LeafBranch,
+import { LeafBranch,
   LotusLine,
   MandalaRings,
   TempleArch,
@@ -23,8 +22,7 @@ import {
   SacredMedallion,
   SpinDecor,
   DrawDecor,
-  BackToTopHalo,
-} from "../components/common/Decor";
+  BackToTopHalo, SectionDecor } from "../components/common/decor";
 
 const ITEMS = [
   { name: "LeafBranch", Comp: LeafBranch, desc: "Peepal / bodhi branch — pair of mirrored leaves with vein accents.", code: "<LeafBranch />", extra: { flip: false } },
@@ -309,8 +307,8 @@ export default function DecorPreview() {
           </div>
 
           <div className="mt-6 rounded-[16px] border border-dt bg-[var(--surface-2)] px-4 py-3 text-xs leading-5 text-[var(--muted)]">
-            Import from <code className="font-mono font-bold">src/components/common/Decor.jsx</code> — e.g.{" "}
-            <code className="font-mono bg-ink-950 text-gold-200 px-2 py-0.5 rounded-full text-[11px]">import {"{ MandalaRings }"} from "@/components/common/Decor"</code>
+            Import from <code className="font-mono font-bold">src/components/common/decor</code> — e.g.{" "}
+            <code className="font-mono bg-ink-950 text-gold-200 px-2 py-0.5 rounded-full text-[11px]">import {"{ MandalaRings }"} from "@/components/common/decor"</code>
           </div>
         </div>
       </section>

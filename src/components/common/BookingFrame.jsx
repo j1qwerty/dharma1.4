@@ -10,6 +10,7 @@ import {
 } from "@phosphor-icons/react";
 import { pujas } from "../../lib/data";
 import { useBooking } from "../../lib/booking";
+import { SectionDecor } from "./decor";
 
 const steps = [
   ["date", "Date & slot", CalendarBlank],
@@ -23,7 +24,8 @@ export default function BookingFrame({ active, children, summary = true }) {
   const p = pujas.find((x) => x.id === id) || pujas[0];
   const activeIndex = steps.findIndex((x) => x[0] === active);
   return (
-    <section className="booking-shell">
+    <section className="booking-shell has-decor-dt">
+      <SectionDecor />
       <div className="container-dt">
         <div className="mb-8">
           <div className="text-center text-[10px] uppercase tracking-[.17em] text-gold-600">

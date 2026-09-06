@@ -1,10 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "../components/common/Icons";
-import { LotusLine, MandalaRings, SpinDecor } from "../components/common/Decor";
+import { LotusLine, MandalaRings, SpinDecor, SectionDecor } from "../components/common/decor";
 export default function NotFound() {
   return (
     <section className="site-section has-decor-dt">
+        <SectionDecor />
       <SpinDecor className="decor-dt decor-center hide-mobile" speed={0.3}>
         <MandalaRings style={{ width: 420, height: 420 }} className="soft-tone" />
       </SpinDecor>

@@ -13,7 +13,7 @@ import PujaCard from "../components/common/PujaCard";
 import SectionHeading from "../components/common/SectionHeading";
 import { Reveal } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
-import { LeafBranch, LotusLine, Rangoli, Toran } from "../components/common/Decor";
+import { LeafBranch, LotusLine, Rangoli, Toran, SectionDecor } from "../components/common/decor";
 
 const SORTS = [
   { key: "popular", label: "Sort by Popular" },
@@ -96,6 +96,7 @@ export default function Catalog() {
   return (
     <>
       <section className="ink-dt overflow-hidden has-decor-dt relative">
+        <SectionDecor />
         <div className="container-dt pt-24 pb-32">
           <Reveal>
             <div className="eyebrow !text-gold-300">Pujas</div>
@@ -111,6 +112,7 @@ export default function Catalog() {
         <SectionCurve edge="bottom" />
       </section>
       <section className="site-section has-decor-dt">
+        <SectionDecor />
         <LotusLine className="decor-dt decor-tr hide-mobile soft-tone" />
         <div className="container-dt">
           <div className="grid gap-3 lg:grid-cols-[1fr_auto]">
@@ -264,6 +266,7 @@ export default function Catalog() {
           </div>
 
           <section className="mt-20 has-decor-dt">
+        <SectionDecor />
             <Rangoli className="decor-dt decor-bl hide-mobile soft-tone" />
             <SectionHeading
               title="Seasonal shelves"
