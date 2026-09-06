@@ -1670,7 +1670,6 @@ html.dark .ink-dt .decor-tone-yellow {
   height: 92px;
   z-index: 2;
   pointer-events: none;
-  transform: scaleY(-1);
 }
 .curve-wrap-bottom-dt .curve-svg-dt svg {
   display: block;
@@ -1695,9 +1694,9 @@ html.dark .ink-dt .decor-tone-yellow {
   z-index: 3;
 }
 .curve-wrap-bottom-dt .curve-drop-dt {
-  bottom: auto;
-  top: -8px;
-  transform: translateX(-50%) scaleY(-1);
+  bottom: -8px;
+  top: auto;
+  transform: translateX(-50%);
 }
 
 /* small medallion accents on curve corners for other pages */
@@ -1716,11 +1715,11 @@ html.dark .ink-dt .decor-tone-yellow {
 .curve-coin-mini-dt.right {
   right: 26px;
 }
-.curve-wrap-bottom-dt .curve-coin-mini-dt {
-  top: 8px;
-}
+/* coins sit on top edge of the curve, same as home hero */
+.curve-wrap-bottom-dt .curve-coin-mini-dt,
 .curve-wrap-top-dt .curve-coin-mini-dt {
-  bottom: 8px;
+  top: 8px;
+  bottom: auto;
 }
 
 /* --- Hero photo grain + gentle ken-burns drift (decorative) --- */
@@ -2320,32 +2319,123 @@ html.dark .ink-dt .decor-tone-yellow {
   }
 }
 
-/* --- Acharya preview slider (home) --- */
-.acharya-slider-dt {
+/* --- Acharya preview slider (home) — slider not scrollbar --- */
+.acharya-carousel-dt {
+  --acharya-slide-w: 260px;
+  outline: none;
+}
+.acharya-carousel-dt:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--gold) 35%, transparent);
+  border-radius: 18px;
+}
+.acharya-viewport-dt {
+  overflow: hidden;
+  width: 100%;
+  border-radius: 18px;
+  /* subtle edge fade hint — masks track overflow */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 14px, black calc(100% - 14px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, black 14px, black calc(100% - 14px), transparent 100%);
+}
+.acharya-track-dt {
   display: flex;
   gap: 18px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 12px;
-  scrollbar-width: thin;
+  will-change: transform;
+  transition: transform 0.54s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: grab;
+  user-select: none;
 }
-.acharya-slider-dt::-webkit-scrollbar {
-  height: 6px;
-}
-.acharya-slider-dt::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--gold) 40%, transparent);
-  border-radius: 999px;
-}
-.acharya-slider-dt::-webkit-scrollbar-track {
-  background: transparent;
+.acharya-track-dt:active {
+  cursor: grabbing;
 }
 .acharya-slide-dt {
-  scroll-snap-align: start;
   flex: none;
-  width: 260px;
+  width: var(--acharya-slide-w);
 }
 .acharya-slide-dt .acharya-card-dt {
   height: 100%;
+}
+@media (max-width: 639px) {
+  .acharya-carousel-dt { --acharya-slide-w: 100%; }
+}
+@media (min-width: 640px) and (max-width: 899px) {
+  .acharya-carousel-dt { --acharya-slide-w: calc((100% - 18px) / 2); }
+}
+@media (min-width: 900px) and (max-width: 1149px) {
+  .acharya-carousel-dt { --acharya-slide-w: calc((100% - 36px) / 3); }
+}
+.acharya-controls-dt {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+.acharya-dots-dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-height: 22px;
+}
+.acharya-dots-dt button {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--gold) 18%, var(--surface));
+  cursor: pointer;
+  transition: width 0.22s ease, background 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
+}
+.acharya-dots-dt button.active,
+.acharya-dots-dt button[aria-current="true"] {
+  width: 22px;
+  background: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--gold) 35%, transparent);
+}
+.acharya-dots-dt button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.acharya-arrows-dt {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.acharya-arrow-dt {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease, transform 0.22s ease, opacity 0.22s ease;
+}
+.acharya-arrow-dt:hover:not(:disabled) {
+  background: var(--gold);
+  color: #1a1406;
+  border-color: var(--gold);
+  transform: translateY(-1px);
+}
+.acharya-arrow-dt:active:not(:disabled) {
+  transform: translateY(0);
+}
+.acharya-arrow-dt:disabled {
+  opacity: 0.36;
+  cursor: default;
+}
+.acharya-arrow-dt:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+/* legacy class — hide scrollbar if still rendered somewhere */
+.acharya-slider-dt { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .acharya-track-dt { transition: none; }
 }
 
 /* --- Header scroll-shrink + Pujas mega-menu --- */

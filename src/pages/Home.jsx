@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
   ArrowUpRight,
   CalendarBlank,
+  CaretLeft,
+  CaretRight,
   CheckCircle,
   Clock,
   Heart,
@@ -68,6 +70,152 @@ const heroSlides = [
     date: "Diwali · October 20",
   },
 ];
+
+function AcharyasHomeSlider() {
+  const trackRef = useRef(null);
+  const [index, setIndex] = useState(0);
+  const [perView, setPerView] = useState(4);
+  const [paused, setPaused] = useState(false);
+  const reduce = useReducedMotion();
+
+  const total = acharyas.length;
+
+  const calcPerView = useCallback(() => {
+    const w = window.innerWidth;
+    if (w < 640) return 1;
+    if (w < 900) return 2;
+    if (w < 1150) return 3;
+    return 4;
+  }, []);
+
+  useEffect(() => {
+    const onResize = () => setPerView(calcPerView());
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [calcPerView]);
+
+  const maxIndex = Math.max(0, total - perView);
+
+  useEffect(() => {
+    if (index > maxIndex) setIndex(maxIndex);
+  }, [maxIndex, index]);
+
+  const go = useCallback((dir) => setIndex((v) => (v + dir + (maxIndex + 1)) % (maxIndex + 1 || 1)), [maxIndex]);
+  const goTo = useCallback((i) => setIndex(((i % (maxIndex + 1)) + (maxIndex + 1)) % (maxIndex + 1 || 1)), [maxIndex]);
+
+  // touch / drag
+  const startX = useRef(0);
+  const dragDx = useRef(0);
+  const dragging = useRef(false);
+  function onPointerDown(e) {
+    dragging.current = true;
+    startX.current = e.touches ? e.touches[0].clientX : e.clientX;
+    dragDx.current = 0;
+    if (trackRef.current) trackRef.current.style.transition = "none";
+  }
+  function onPointerMove(e) {
+    if (!dragging.current) return;
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    dragDx.current = x - startX.current;
+    if (trackRef.current) {
+      const gap = 18;
+      const slideW = trackRef.current.firstChild ? trackRef.current.firstChild.getBoundingClientRect().width + gap : 278;
+      trackRef.current.style.transform = `translateX(calc(${-index * slideW}px + ${dragDx.current}px))`;
+    }
+  }
+  function onPointerUp() {
+    if (!dragging.current) return;
+    dragging.current = false;
+    if (trackRef.current) trackRef.current.style.transition = "";
+    const thresh = 56;
+    if (dragDx.current < -thresh) go(1);
+    else if (dragDx.current > thresh) go(-1);
+    else if (trackRef.current) {
+      const gap = 18;
+      const slideW = trackRef.current.firstChild ? trackRef.current.firstChild.getBoundingClientRect().width + gap : 278;
+      trackRef.current.style.transform = `translateX(${-index * slideW}px)`;
+    }
+  }
+
+  // autoplay — every 2s slide one card, loop on end; pause on hover
+  useEffect(() => {
+    if (paused || reduce || maxIndex === 0) return;
+    const t = setInterval(() => setIndex((v) => (v + 1) % (maxIndex + 1)), 2000);
+    return () => clearInterval(t);
+  }, [paused, reduce, maxIndex]);
+
+  function onKeyDown(e) {
+    if (e.key === "ArrowRight") go(1);
+    else if (e.key === "ArrowLeft") go(-1);
+  }
+
+  return (
+    <div
+      className="acharya-carousel-dt mt-8"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onKeyDown={onKeyDown}
+      tabIndex={0}
+      role="group"
+      aria-roledescription="carousel"
+      aria-label="Acharyas"
+    >
+      <div className="acharya-viewport-dt">
+        <div
+          ref={trackRef}
+          className="acharya-track-dt"
+          style={{ transform: `translateX(calc(-${index} * (var(--acharya-slide-w) + 18px)))` }}
+          onTouchStart={onPointerDown}
+          onTouchMove={onPointerMove}
+          onTouchEnd={onPointerUp}
+          onMouseDown={onPointerDown}
+          onMouseMove={onPointerMove}
+          onMouseUp={onPointerUp}
+          onMouseLeave={onPointerUp}
+        >
+          {acharyas.map((a) => (
+            <div key={a.id} className="acharya-slide-dt" role="group" aria-roledescription="slide" aria-label={a.name}>
+              <AcharyaCard a={a} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="acharya-controls-dt">
+        <div className="acharya-dots-dt" aria-label="Slider pagination">
+          {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+            <button
+              key={i}
+              aria-label={`Go to slide ${i + 1}`}
+              aria-current={index === i}
+              className={index === i ? "active" : undefined}
+              onClick={() => goTo(i)}
+            />
+          ))}
+        </div>
+        <div className="acharya-arrows-dt">
+          <button
+            className="acharya-arrow-dt"
+            aria-label="Previous acharyas"
+            onClick={() => go(-1)}
+            disabled={maxIndex === 0}
+          >
+            <CaretLeft size={16} weight="bold" />
+          </button>
+          <button
+            className="acharya-arrow-dt"
+            aria-label="Next acharyas"
+            onClick={() => go(1)}
+            disabled={maxIndex === 0}
+          >
+            <CaretRight size={16} weight="bold" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const [hero, setHero] = useState(0);
@@ -628,13 +776,7 @@ export default function Home() {
             </Link>
           </div>
           <Reveal>
-            <div className="acharya-slider-dt mt-8">
-              {acharyas.map((a) => (
-                <div key={a.id} className="acharya-slide-dt">
-                  <AcharyaCard a={a} />
-                </div>
-              ))}
-            </div>
+            <AcharyasHomeSlider />
           </Reveal>
         </div>
       </section>
