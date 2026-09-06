@@ -9,6 +9,7 @@ import {
   Check,
 } from "@phosphor-icons/react";
 import Brand from "./Brand";
+import { BackToTopHalo } from "./Decor";
 
 export default function Footer() {
   const [showTop, setShowTop] = useState(false);
@@ -136,12 +137,11 @@ export default function Footer() {
         </div>
       </div>
       {showTop && (
-        <button
-          onClick={scrollTop}
-          aria-label="Back to top"
-          className="back-to-top-dt"
-        >
-          <ArrowUp size={16} weight="bold" />
+        <button onClick={scrollTop} aria-label="Back to top" className="back-to-top-dt">
+          <BackToTopHalo size={72} speed={0.6} />
+          <span className="back-to-top-core-dt">
+            <ArrowUp size={16} weight="bold" />
+          </span>
         </button>
       )}
     </footer>

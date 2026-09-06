@@ -23,6 +23,7 @@ import {
   SacredMedallion,
   SpinDecor,
   DrawDecor,
+  BackToTopHalo,
 } from "../components/common/Decor";
 
 const ITEMS = [
@@ -286,6 +287,24 @@ export default function DecorPreview() {
                 {"<DrawDecor delay={0.1}>\n  <LotusLine className=\"w-[160px] h-[120px]\" />\n</DrawDecor>"}
               </code>
               <div className="mt-2 text-[11px] text-[var(--muted)]">Fades in when scrolled into view. Respects prefers-reduced-motion.</div>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-[20px] border border-dt bg-[var(--surface)] p-6">
+            <div className="text-[11px] font-bold tracking-[.14em] uppercase text-gold-600">BackToTopHalo — floating button halo</div>
+            <div className="mt-4 flex justify-center py-8 bg-ink-950 rounded-[14px] relative overflow-hidden">
+              <span className="relative grid place-items-center w-11 h-11">
+                <BackToTopHalo size={72} speed={0.6} />
+                <span className="relative z-[1] grid place-items-center w-11 h-11 rounded-full border border-gold-400/50 bg-[color-mix(in_srgb,#0f0f0c_88%,#e7b631_12%)] text-gold-300">
+                  ↑
+                </span>
+              </span>
+            </div>
+            <code className="mt-4 block rounded-xl bg-ink-950 text-gold-200 px-4 py-3 text-[11px] font-mono leading-5">
+              {'<button className="back-to-top-dt">\n  <BackToTopHalo size={72} speed={0.6} />\n  <span className="back-to-top-core-dt"><ArrowUp /></span>\n</button>'}
+            </code>
+            <div className="mt-2 text-[11px] text-[var(--muted)]">
+              72px halo behind the 44px button · scroll-linked spin like <code>SpinDecor speed=0.6</code> · glow + beaded ring + lotus petals. Respects reduced-motion.
             </div>
           </div>
 

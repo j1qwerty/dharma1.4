@@ -969,6 +969,7 @@ html.dark .hero-trust-item-dt svg {
   height: max-content;
 }
 
+/* Floating stack: WhatsApp + Back-to-top share one vertical column, center-aligned */
 .whatsapp-dt {
   position: fixed;
   right: 16px;
@@ -993,6 +994,24 @@ html.dark .hero-trust-item-dt svg {
   background: #25d366;
   color: #073f1e;
   animation: floatwa 3s ease-in-out infinite;
+}
+/* Back-to-top sits directly above WhatsApp, same horizontal center (16 + 26 = 42 = 16 + 22) */
+.back-to-top-dt {
+  position: fixed;
+  right: 20px; /* 16 + (52-44)/2 so 44px core aligns center with 52px WhatsApp */
+  bottom: 80px; /* 16 + 52 + 12 gap */
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  overflow: visible;
+  animation: backtop-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.25s;
 }
 
 @keyframes floatwa {
@@ -2354,25 +2373,25 @@ html.dark .decor-dt.soft-tone {
 }
 
 /* --- Back-to-top floating button (footer) --- */
-.back-to-top-dt {
-  position: fixed;
-  right: 16px;
-  bottom: 76px;
-  z-index: 45;
+/* (position defined with Whatsapp as a shared center-aligned stack near line 990) */
+.back-to-top-core-dt {
+  position: relative;
+  z-index: 1;
   display: grid;
   place-items: center;
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 1px solid rgba(231, 182, 49, 0.4);
+  border: 1px solid rgba(231, 182, 49, 0.5);
   background: color-mix(in srgb, var(--deep) 88%, var(--gold) 12%);
   color: var(--gold);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-  animation: backtop-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  transition: transform 0.25s, border-color 0.25s;
+  transition: border-color 0.25s;
 }
 .back-to-top-dt:hover {
   transform: translateY(-3px);
+}
+.back-to-top-dt:hover .back-to-top-core-dt {
   border-color: var(--gold);
 }
 @keyframes backtop-in {
