@@ -28,6 +28,7 @@ const Stories = lazy(() => import("./pages/Stories"));
 const StoryDetail = lazy(() => import("./pages/StoryDetail"));
 const Auth = lazy(() => import("./pages/Auth"));
 const Legal = lazy(() => import("./pages/Legal"));
+const DecorPreview = lazy(() => import("./pages/DecorPreview"));
 
 function PageFallback() {
   return (
@@ -193,6 +194,14 @@ function App() {
                   element={
                     <Suspense fallback={<PageFallback />}>
                       <Legal type="privacy" />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/decor"
+                  element={
+                    <Suspense fallback={<PageFallback />}>
+                      <DecorPreview />
                     </Suspense>
                   }
                 />

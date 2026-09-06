@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { MagnifyingGlass, List, X, Sun, Moon, CaretDown } from "@phosphor-icons/react";
+import { MagnifyingGlass, List, X, Sun, Moon, CaretDown, PaintBrush } from "@phosphor-icons/react";
 import Brand from "./Brand";
 import { deities } from "../../lib/data";
 
@@ -67,12 +67,12 @@ export default function Header() {
   return (
     <>
       <div id="header-sentinel-dt" aria-hidden="true" style={{ height: 1 }} />
-      <div className="h-8 bg-ink-950 text-gold-300 flex items-center justify-center text-[10px] tracking-[.09em]">
+      {/* <div className="h-8 bg-ink-950 text-gold-300 flex items-center justify-center text-[10px] tracking-[.09em]">
         Ganesh Chaturthi bookings are open{" "}
         <Link className="ml-4 font-bold underline underline-offset-4" to="/pujas">
           Explore pujas
         </Link>
-      </div>
+      </div> */}
       <header className={`header-dt ${scrolled ? "header-scrolled-dt" : ""}`}>
         <div className="container-dt flex h-[70px] items-center justify-between gap-5">
           <Link to="/" aria-label="DharmaTribe home">
@@ -149,6 +149,14 @@ export default function Header() {
             )}
           </nav>
           <div className="flex items-center gap-2">
+            <Link
+              to="/decor"
+              className="hidden sm:grid place-items-center h-9 w-9 rounded-full border border-dt hover:border-gold-400 hover:text-gold-600 transition"
+              aria-label="Decor preview"
+              title="Decor preview"
+            >
+              <PaintBrush size={16} weight="duotone" />
+            </Link>
             <button
               className="hidden sm:grid place-items-center h-9 w-9 rounded-full border border-dt"
               aria-label="Search"
@@ -200,6 +208,15 @@ export default function Header() {
               >
                 My account
               </Link>
+              <NavLink
+                onClick={() => setOpen(false)}
+                className={({ isActive }) =>
+                  `py-3 text-xl display-dt border-b border-dt mobile-nav-dt${isActive ? " active" : ""} inline-flex items-center gap-2`
+                }
+                to="/decor"
+              >
+                <PaintBrush size={18} weight="duotone" /> Decor preview
+              </NavLink>
               <Link onClick={() => setOpen(false)} className="btn-gold-dt mt-3" to="/pujas">
                 Book a puja
               </Link>
