@@ -5,7 +5,7 @@ import { motion, useReducedMotion, useScroll, useTransform, useMotionValueEvent 
  * Slightly larger than the 44px button (default 68px) with a soft
  * outer glow. The mandala ring spins with page scroll exactly like
  * <SpinDecor> (scrollYProgress → rotate), respects reduced-motion. */
-export function BackToTopHalo({ size = 68, className = "", speed = 0.7, idleMs = 480 }) {
+export function BackToTopHalo({ size = 68, className = "", speed = 0.7, idleMs = 300 }) {
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll();
   const rotate = useTransform(scrollYProgress, [0, 1], [0, 360 * speed]);
