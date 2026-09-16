@@ -17,6 +17,7 @@ Points to cover (as shared):
 
 ---
 
+
 ## 1. WhatsApp numbers — booking vs inquiry (confirm this number)
 
 All WhatsApp buttons across the site use **one centralized number**:
