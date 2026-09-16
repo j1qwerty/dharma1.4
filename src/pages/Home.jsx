@@ -257,6 +257,20 @@ export default function Home() {
   const [hero, setHero] = useState(0);
   const [paused, setPaused] = useState(false);
   const reduce = useReducedMotion();
+  // Spin the hero curve medallions only while the hero is on screen —
+  // stops the infinite SVG animations once scrolled past.
+  const heroRef = useRef(null);
+  const [heroInView, setHeroInView] = useState(true);
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => setHeroInView(entry.isIntersecting), {
+      threshold: 0,
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  const heroSpin = heroInView && !reduce;
   const current = heroSlides[hero];
   useEffect(() => {
     if (paused) return;
@@ -275,6 +289,7 @@ export default function Home() {
   return (
     <>
       <section
+        ref={heroRef}
         className={`hero-redesign-dt${lang === "hi" ? " lang-hi" : ""}`}
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
@@ -351,14 +366,14 @@ export default function Home() {
           <span className="hero-curve-coin-dt coin-left-dt">
             <span className="medallion-wrap">
               {/* <SacredMedallion size={75} glow={false} rays={false} /> */}
-                            <SacredMedallion size={75} spin spinSpeed={1.2} />
+                            <SacredMedallion size={75} spin={heroSpin} spinSpeed={1.2} />
 
 
             </span>
           </span>
           <span className="hero-curve-coin-dt coin-right-dt">
             <span className="medallion-wrap delay">
-              <SacredMedallion size={75} spin spinSpeed={1.2} />
+              <SacredMedallion size={75} spin={heroSpin} spinSpeed={1.2} />
 
             </span>
           </span>

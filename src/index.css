@@ -996,10 +996,10 @@ html.dark .hero-trust-item-dt svg {
   height: max-content;
 }
 
-/* Floating stack: WhatsApp + Back-to-top share one vertical column, center-aligned */
+/* Floating stack: WhatsApp + Back-to-top share one vertical column, center-aligned (left side) */
 .whatsapp-dt {
   position: fixed;
-  right: 16px;
+  left: 16px;
   bottom: 16px;
   z-index: 50;
   display: grid;
@@ -1022,10 +1022,10 @@ html.dark .hero-trust-item-dt svg {
   color: #073f1e;
   animation: floatwa 3s ease-in-out infinite;
 }
-/* Back-to-top sits directly above WhatsApp, same horizontal center (16 + 26 = 42 = 16 + 22) */
+/* Back-to-top sits above the viewport edge on the right (44px core) */
 .back-to-top-dt {
   position: fixed;
-  right: 20px; /* 16 + (52-44)/2 so 44px core aligns center with 52px WhatsApp */
+  right: 20px;
   bottom: 80px; /* 16 + 52 + 12 gap */
   z-index: 45;
   display: grid;
@@ -1044,10 +1044,16 @@ html.dark .hero-trust-item-dt svg {
 @keyframes floatwa {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-2px) rotate(-6deg);
   }
   50% {
-    transform: translateY(-3px);
+    transform: translateY(-3px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-2px) rotate(6deg);
   }
 }
 
@@ -1400,7 +1406,7 @@ html.dark .hero-trust-item-dt svg {
 }
 .whatsapp-fab {
   position: fixed;
-  right: 16px;
+  left: 16px;
   bottom: 16px;
   z-index: 50;
   display: flex;
