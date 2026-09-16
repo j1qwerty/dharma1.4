@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "./components/common/ThemeToggle";
 import { LanguageProvider } from "./components/common/LanguageToggle";
 import Layout from "./components/common/Layout";
@@ -63,7 +63,7 @@ function PageFallback() {
 
 function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <ThemeProvider>
         <LanguageProvider>
           <ToastProvider>
@@ -248,7 +248,7 @@ function App() {
           </ToastProvider>
         </LanguageProvider>
       </ThemeProvider>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
