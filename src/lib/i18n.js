@@ -323,6 +323,7 @@ export const STRINGS = {
   "detail.faq4A": {
     en: "Nothing is lost. The recorded ceremony stays in your account under My Blessings, and you can revisit the Sankalp and video at any time afterwards.",
     hi: "पूजा का अनुभव आपसे छूटेगा नहीं। पूजा का रिकॉर्ड किया गया वीडियो आपकी प्रोफ़ाइल में सुरक्षित रहेगा, जिसे आप बाद में कभी भी देख सकते हैं।",
+  },
 
   // Booking frame & flow
   "booking.bookPuja": { en: "Book your puja", hi: "अपनी पूजा बुक करें" },
@@ -658,6 +659,5 @@ export const STRINGS = {
   // Common
   "common.closest": { en: "Closest", hi: "सबसे नज़दीकी" },
   "common.all": { en: "All", hi: "सभी" },
-},
 };
 export const LANGS = ["en", "hi"];

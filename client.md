@@ -23,14 +23,14 @@ All WhatsApp buttons across the site use **one centralized number**:
 
 | Purpose | Number | Message sent |
 |---|---|---|
-| Puja booking (payment step → “Complete booking on WhatsApp”) | **919958728666** | Full booking summary: puja code, puja name (EN+Hindi), deity, temple, date, muhurat, package + price, add-ons, devotee name, gotra, purpose, family members, total amount |
-| Per-puja inquiry (“Ask on WhatsApp” on every puja detail page) | **919958728666** | Short message naming that exact puja: puja name (EN+Hindi), puja code, temple |
-| Shraadh → “Speak to a Vedacharya” | **919958728666** | Shraadh-specific inquiry (code PUJA-009, temple) |
-| Shraadh → “Plan Your Gaya Ji Experience” | **919958728666** | Dedicated Gaya Ji message (place: Gaya Ji, asks for Tithi/Vidhi guidance) |
-| Floating WhatsApp bubble (all pages) | **919958728666** | Generic: “Namaste DharmaTribe, I need help with a puja booking.” |
-| Footer → “WhatsApp support” | **919958728666** (chat open, no pre-filled text) | — |
+| Puja booking (payment step → “Complete booking on WhatsApp”) | **911234567890** | Full booking summary: puja code, puja name (EN+Hindi), deity, temple, date, muhurat, package + price, add-ons, devotee name, gotra, purpose, family members, total amount |
+| Per-puja inquiry (“Ask on WhatsApp” on every puja detail page) | **911234567890** | Short message naming that exact puja: puja name (EN+Hindi), puja code, temple |
+| Shraadh → “Speak to a Vedacharya” | **911234567890** | Shraadh-specific inquiry (code PUJA-009, temple) |
+| Shraadh → “Plan Your Gaya Ji Experience” | **911234567890** | Dedicated Gaya Ji message (place: Gaya Ji, asks for Tithi/Vidhi guidance) |
+| Floating WhatsApp bubble (all pages) | **911234567890** | Generic: “Namaste DharmaTribe, I need help with a puja booking.” |
+| Footer → “WhatsApp support” | **911234567890** (chat open, no pre-filled text) | — |
 
-**Client action:** confirm **919958728666** is the correct business number. If booking
+**Client action:** confirm **911234567890** is the correct business number. If booking
 and general inquiry should go to *different* numbers, tell us which is which.
 
 ---

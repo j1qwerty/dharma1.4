@@ -1,4 +1,4 @@
-export const WHATSAPP_NUMBER = '919958728666'
+export const WHATSAPP_NUMBER = '1234567890'
 
 export const pujas = [
   {
