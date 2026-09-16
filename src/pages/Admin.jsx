@@ -42,6 +42,11 @@ export default function Admin() {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 mt-6">
+        <div className="panel-dt p-5">
+          <h3 className="text-xl">Settings</h3>
+          <p className="text-[11px] muted-dt">Login options, feature flags</p>
+          <p className="mt-3"><Link to="/admin/settings" className="underline text-sm font-semibold">Open settings →</Link></p>
+        </div>
         {LINKS.map(([label, note, coll]) => (
           <CollectionCard key={label} label={label} note={note} path={coll} />
         ))}

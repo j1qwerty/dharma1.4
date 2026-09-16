@@ -4,8 +4,12 @@ import { useAuth } from "../lib/auth";
 import PhoneLogin from "../components/common/PhoneLogin";
 import GoogleIcon from "../components/common/GoogleIcon";
 
+import { useSiteSettings, isPhoneEnabled } from "../lib/settings";
+
 export default function AdminLogin() {
-  const { user, isAdmin, loading, signInWithGoogle, signInWithEmail } = useAuth();
+  const { user, isAdmin, loading, configured, signInWithGoogle, signInWithEmail } = useAuth();
+  const { settings } = useSiteSettings();
+  const showPhone = configured && isPhoneEnabled(settings, "admin");
   const [err, setErr] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +36,7 @@ export default function AdminLogin() {
     <section style={{ maxWidth: 480, margin: "8vh auto", padding: 24 }}>
       <div className="eyebrow">CMS access</div>
       <h1 className="display-dt" style={{ fontSize: 40, marginTop: 8 }}>Admin login</h1>
-      <p className="mt-4 text-sm leading-7 muted-dt">Sign in with an authorized Google account. First-time UIDs must be added to Firestore <code>admins</code> (see firebase.md).</p>
+      <p className="mt-4 text-sm leading-7 muted-dt">Sign in with an authorized Google account.</p>
       {!loading && user && !isAdmin && (
         <p style={{ color: "#b3261e", fontSize: 13 }}>Signed in as {user.email} — not an admin. Ask a super-admin to add your UID.</p>
       )}
@@ -51,10 +55,12 @@ export default function AdminLogin() {
           className="h-11 rounded-xl border border-dt bg-transparent px-3 text-sm outline-none" />
         <button type="submit" className="btn-ghost-dt w-full">Sign in with email</button>
       </form>
-      <div className="mt-6 border-t border-dt pt-5">
-        <div className="eyebrow mb-3">or sign in with phone</div>
-        <PhoneLogin onDone={() => nav(from, { replace: true })} />
-      </div>
+      {showPhone && (
+        <div className="mt-6 border-t border-dt pt-5">
+          <div className="eyebrow mb-3">or sign in with phone</div>
+          <PhoneLogin onDone={() => nav(from, { replace: true })} />
+        </div>
+      )}
       <p className="mt-4 text-xs muted-dt"><Link to="/" className="underline">Back to site</Link></p>
     </section>
   );

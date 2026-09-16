@@ -31,6 +31,7 @@ const Stories = lazy(() => import("./pages/Stories"));
 const StoryDetail = lazy(() => import("./pages/StoryDetail"));
 const Auth = lazy(() => import("./pages/Auth"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+const AdminSettings = lazy(() => import("./pages/AdminSettings"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Legal = lazy(() => import("./pages/Legal"));
 const DecorPreview = lazy(() => import("./pages/DecorPreview"));
@@ -235,6 +236,16 @@ function App() {
                         <Suspense fallback={<PageFallback />}>
                           <RequireAdmin>
                             <Admin />
+                          </RequireAdmin>
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/admin/settings"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <RequireAdmin>
+                            <AdminSettings />
                           </RequireAdmin>
                         </Suspense>
                       }
