@@ -3587,3 +3587,8 @@ input[type="radio"]:focus-visible {
   max-width: 60%;
   word-break: break-word;
 }
+
+/* --- Client review page --- */
+.review-block-dt {
+  border-left: 3px solid color-mix(in srgb, var(--gold) 65%, transparent);
+}

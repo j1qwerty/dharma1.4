@@ -8,6 +8,7 @@ export const STRINGS = {
   "nav.acharyas": { en: "Acharyas", hi: "आचार्यगण" },
   "nav.stories": { en: "Stories", hi: "धर्म-कथाएँ" },
   "nav.about": { en: "About", hi: "हमारे बारे में" },
+  "nav.review": { en: "Review", hi: "समीक्षा" },
   "nav.account": { en: "My account", hi: "मेरी पूजाएँ" },
   "nav.bookPuja": { en: "Book a puja", hi: "पूजा बुक करें" },
   "nav.decorPreview": { en: "Decor preview", hi: "पूजा सजावट देखें" },

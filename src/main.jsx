@@ -30,6 +30,7 @@ const StoryDetail = lazy(() => import("./pages/StoryDetail"));
 const Auth = lazy(() => import("./pages/Auth"));
 const Legal = lazy(() => import("./pages/Legal"));
 const DecorPreview = lazy(() => import("./pages/DecorPreview"));
+const Review = lazy(() => import("./pages/Review"));
 
 function PageFallback() {
   return (
@@ -204,6 +205,14 @@ function App() {
                       element={
                         <Suspense fallback={<PageFallback />}>
                           <DecorPreview />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/review"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <Review />
                         </Suspense>
                       }
                     />

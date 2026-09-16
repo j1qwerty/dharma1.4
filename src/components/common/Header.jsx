@@ -39,6 +39,7 @@ export default function Header() {
     ["nav.acharyas", "/acharyas", false],
     ["nav.stories", "/stories", false],
     ["nav.about", "/about", false],
+    ["nav.review", "/review", false],
   ];
 
   // Scroll-aware shrink via IntersectionObserver on a top sentinel.
