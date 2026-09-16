@@ -1,33 +1,46 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../lib/auth";
+import { useAdminCollection, purgeExpiredTrash } from "../../lib/cmsAdmin";
 import { useCollection } from "../../lib/cms";
 import { getActiveFestivals, getPreviewNow } from "../../lib/schedule";
 
 const LINKS = [
-  ["Pujas", "/admin/pujas (next)", "pujas"],
-  ["Festivals + scheduling", "/admin/festivals (next)", "festivals"],
-  ["Homepage sections", "/admin/homepage (next)", "homepage_sections"],
-  ["Stories", "/admin/stories (next)", "stories"],
-  ["Acharyas", "/admin/acharyas (next)", "acharyas"],
-  ["Testimonials", "/admin/testimonials (next)", "testimonials"],
-  ["Bookings (read-only)", "/admin/bookings (next)", "bookings"],
-  ["Users (read-only)", "/admin/users (next)", "users"],
+  ["Pujas", "/admin/pujas", "pujas", "Catalogue, detail + home preview"],
+  ["Festivals + scheduling", "/admin/festivals", "festivals", "Countdown, marquee, calendar"],
+  ["Homepage sections", "/admin/homepage", "homepage_sections", "Order = home order"],
+  ["Stories", "/admin/stories", "stories", "Journal + home preview"],
+  ["Acharyas", "/admin/acharyas", "acharyas", "Profiles + home preview"],
+  ["Testimonials", "/admin/testimonials", "testimonials", "Social proof"],
+  ["Bookings", "/admin/bookings", "bookings", "Read-only"],
+  ["Inquiries", "/admin/inquiries", "inquiries", "Read-only"],
+  ["Users", "/admin/users", "users", "Read-only"],
+  ["Trash (30 days)", "/admin/trash", null, "Soft-deleted items"],
+  ["Settings", "/admin/settings", null, "Site-wide flags"],
 ];
 
 export default function Admin() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [previewDate, setPreviewDate] = useState("");
   const { data: festivals } = useCollection("festivals");
   const { now } = getPreviewNow();
   const active = getActiveFestivals(festivals || [], previewDate ? new Date(previewDate) : now);
   const previewHref = (path) => (previewDate ? `${path}?cmsPreview=${encodeURIComponent(new Date(previewDate).toISOString())}` : path);
+  const [purged, setPurged] = useState(null);
+
+  const purgeAll = async () => {
+    let total = 0;
+    for (const c of ["pujas", "festivals", "homepage_sections", "stories", "acharyas", "testimonials"]) {
+      try { total += await purgeExpiredTrash(c); } catch { /* ignore */ }
+    }
+    setPurged(`Purged ${total} expired trash doc(s).`);
+  };
 
   return (
-    <section style={{ maxWidth: 960, margin: "6vh auto", padding: 24 }}>
-      <div className="eyebrow">CMS · v1 foundation</div>
+    <section>
+      <div className="eyebrow">CMS · dashboard</div>
       <h1 className="display-dt" style={{ fontSize: 44, marginTop: 8 }}>Dashboard</h1>
-      <p className="text-sm muted-dt">Signed in as {user?.email} · <button className="underline" onClick={logout}>Sign out</button></p>
+      <p className="text-sm muted-dt">Signed in as {user?.email}</p>
 
       <div className="panel-dt p-6 mt-6">
         <h2 className="text-2xl">Preview as of (scheduling test)</h2>
@@ -42,27 +55,29 @@ export default function Admin() {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 mt-6">
-        <div className="panel-dt p-5">
-          <h3 className="text-xl">Settings</h3>
-          <p className="text-[11px] muted-dt">Login options, feature flags</p>
-          <p className="mt-3"><Link to="/admin/settings" className="underline text-sm font-semibold">Open settings →</Link></p>
-        </div>
-        {LINKS.map(([label, note, coll]) => (
-          <CollectionCard key={label} label={label} note={note} path={coll} />
+        {LINKS.map(([label, path, coll, desc]) => (
+          <div key={label} className="panel-dt p-5">
+            <h3 className="text-xl">{label}</h3>
+            <p className="text-[11px] muted-dt">{desc}</p>
+            {coll ? <CollectionCount path={coll} /> : <p className="text-[11px] mt-2 muted-dt">—</p>}
+            <p className="mt-3"><Link to={path} className="underline text-sm font-semibold">Open →</Link></p>
+          </div>
         ))}
       </div>
-      <p className="text-xs muted-dt mt-6">Full CRUD editors land next (Pujas → Festivals → Homepage). Collections read live above; empty = not seeded yet (<code>node scripts/seedFirestore.mjs</code>).</p>
+
+      <div className="panel-dt p-5 mt-6">
+        <h3 className="text-xl">Trash maintenance</h3>
+        <p className="text-[11px] muted-dt">Soft-deleted docs auto-delete after 30 days. Purge expired now:</p>
+        <p className="mt-3"><button className="btn-ghost-dt text-xs" onClick={purgeAll}>Purge expired trash</button></p>
+        {purged && <p className="text-xs muted-dt mt-2">{purged}</p>}
+      </div>
     </section>
   );
 }
 
-function CollectionCard({ label, note, path }) {
-  const { data, loading, remote } = useCollection(path);
-  return (
-    <div className="panel-dt p-5">
-      <h3 className="text-xl">{label}</h3>
-      <p className="text-[11px] muted-dt">{note}</p>
-      <p className="text-[11px] mt-2">{!remote ? "Firebase not configured" : loading ? "Loading…" : `${data?.length || 0} docs`}</p>
-    </div>
-  );
+function CollectionCount({ path }) {
+  const { rows, loading, remote } = useAdminCollection(path);
+  if (!remote) return <p className="text-[11px] mt-2">Firebase not configured</p>;
+  if (loading) return <p className="text-[11px] mt-2">Loading…</p>;
+  return <p className="text-[11px] mt-2">{rows?.length || 0} docs</p>;
 }
