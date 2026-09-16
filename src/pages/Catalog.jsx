@@ -8,7 +8,7 @@ import {
   X,
   House,
 } from "@phosphor-icons/react";
-import { pujas, festivals, intentions, deities } from "../lib/data";
+import { pujas, festivals, intentions, deities, deityHi } from "../lib/data";
 import PujaCard from "../components/common/PujaCard";
 import SectionHeading from "../components/common/SectionHeading";
 import { Reveal } from "../components/common/Motion";
@@ -168,7 +168,11 @@ export default function Catalog() {
                         onClick={() => setDeity(d)}
                         className={`flex items-center justify-between border-b border-dt py-2 text-left text-sm transition-colors ${deity === d ? "text-gold-600" : "muted-dt hover:text-ink"}`}
                       >
-                        {d}
+                        {d === "All"
+                          ? t("common.all")
+                          : lang === "hi"
+                            ? deityHi[d] || d
+                            : d}
                         {deity === d && <CheckCircle size={14} />}
                       </button>
                     ))}
@@ -233,7 +237,7 @@ export default function Catalog() {
                       onClick={f.clear}
                       className="inline-flex items-center gap-1.5 rounded-full border border-gold-400/40 bg-gold-400/8 px-3 py-1.5 text-[11px] font-semibold text-gold-600 dark:text-gold-300 hover:bg-gold-400/15 transition-colors"
                     >
-                      {f.label}
+                      {f.key === "deity" && lang === "hi" ? deityHi[f.label] || f.label : f.label}
                       <X size={11} />
                     </button>
                   ))}

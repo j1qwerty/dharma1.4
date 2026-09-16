@@ -27,6 +27,7 @@ import FaqAccordion from "../components/common/FaqAccordion";
 import { GalleryTile } from "../components/common/Lightbox";
 import { useLanguage } from "../components/common/LanguageToggle";
 import ShraadhContent from "../components/common/ShraadhContent";
+import { buildInquiryHref } from "../lib/booking";
 
 export default function PujaDetail() {
   const { id } = useParams();
@@ -79,6 +80,15 @@ export default function PujaDetail() {
               <Link className="btn-gold-dt" to={`/booking/${p.id}/date`}>
                 {t("detail.proceedBooking")} <ArrowRight size={15} />
               </Link>
+              <a
+                className="btn-ghost-dt !border-white/20 !bg-white/10 !text-white"
+                href={buildInquiryHref(p, lang)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {lang === "hi" ? "WhatsApp पर पूछें" : "Ask on WhatsApp"}{" "}
+                <ArrowUpRight size={14} />
+              </a>
               <FavToggle
                 id={p.id}
                 title={title}

@@ -4,11 +4,13 @@ import { ArrowUpRight, CalendarBlank, Clock, MapPin } from "@phosphor-icons/reac
 import { Reveal, ParallaxImage } from "./Motion";
 import FavToggle from "./FavToggle";
 import { useLanguage } from "./LanguageToggle";
+import { deityHi } from "../../lib/data";
 
 export default function PujaCard({ p, featured = false, index = 0 }) {
   const { lang, t } = useLanguage();
   const title = lang === "hi" && p.titleHi ? p.titleHi : p.title;
   const desc = lang === "hi" && p.descHi ? p.descHi : p.desc;
+  const deityLabel = lang === "hi" ? deityHi[p.deity] || p.deity : p.deity;
   return (
     <Reveal delay={index * 0.05}>
       <Link to={`/pujas/${p.id}`} className="card-dt block">
@@ -26,7 +28,7 @@ export default function PujaCard({ p, featured = false, index = 0 }) {
               <div>
                 <h3 className="display-dt text-3xl">{title}</h3>
                 <div className="mt-1 text-[11px] text-white/65">
-                  {p.deity} · {p.temple}
+                  {deityLabel} · {p.temple}
                 </div>
               </div>
               <div className="font-semibold text-sm">

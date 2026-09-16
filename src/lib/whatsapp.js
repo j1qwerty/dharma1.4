@@ -1,4 +1,5 @@
 import { WHATSAPP_NUMBER } from './site.js'
+import { buildInquiryMessage } from './booking.jsx'
 
 function line(label, value) {
   if (value === undefined || value === null || value === '') return ''
@@ -42,4 +43,13 @@ export function buildWhatsAppMessage({ booking, puja }) {
 export function openWhatsApp(message) {
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
   window.open(url, '_blank', 'noopener,noreferrer')
+}
+
+/** Per-puja inquiry message (kept here for non-booking surfaces). */
+export function buildPujaInquiryMessage(puja, lang = 'en') {
+  return buildInquiryMessage(puja, lang)
+}
+
+export function openPujaInquiry(puja, lang = 'en') {
+  openWhatsApp(buildInquiryMessage(puja, lang))
 }

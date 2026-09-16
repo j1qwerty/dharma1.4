@@ -1,13 +1,14 @@
 import React from "react";
 import { WhatsappLogo } from "@phosphor-icons/react";
 import { useLanguage } from "./LanguageToggle";
+import { WHATSAPP_NUMBER } from "../../lib/site";
 export default function WhatsApp() {
   const { t } = useLanguage();
   const message = encodeURIComponent(t("wa.defaultMessage"));
   return (
     <a
       className="whatsapp-dt"
-      href={`https://wa.me/919999999999?text=${message}`}
+      href={`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`}
       target="_blank"
       rel="noreferrer"
       aria-label={t("wa.label")}

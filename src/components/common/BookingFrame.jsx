@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -21,11 +21,20 @@ const steps = [
 ];
 export default function BookingFrame({ active, children, summary = true }) {
   const { id } = useParams();
-  const { booking } = useBooking();
+  const { booking, update } = useBooking();
   const { t, lang } = useLanguage();
   const p = pujas.find((x) => x.id === id) || pujas[0];
+  // Keep stored booking in sync with the URL puja so the WhatsApp message
+  // always reflects the puja the user actually selected (not stale storage).
+  useEffect(() => {
+    if (id && booking.pujaId !== id && pujas.some((x) => x.id === id)) {
+      update({ pujaId: id });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
   const activeIndex = steps.findIndex((x) => x[0] === active);
-  const waHref = buildBookingWhatsAppHref(booking, lang);
+  const effectiveBooking = id ? { ...booking, pujaId: id } : booking;
+  const waHref = buildBookingWhatsAppHref(effectiveBooking, lang);
 
   return (
     <section className="booking-shell has-decor-dt">

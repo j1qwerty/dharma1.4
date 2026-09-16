@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { WhatsappLogo } from "@phosphor-icons/react";
 import BookingFrame from "../components/common/BookingFrame";
 import { CheckCircle, LockKey } from "../components/common/Icons";
@@ -9,10 +9,12 @@ import { useLanguage } from "../components/common/LanguageToggle";
 
 export default function BookingPayment() {
   const { booking } = useBooking();
+  const { id } = useParams();
   const nav = useNavigate();
   const { t, lang } = useLanguage();
-  const p = pujas.find((x) => x.id === booking.pujaId) || pujas[0];
-  const waHref = buildBookingWhatsAppHref(booking, lang);
+  const p = pujas.find((x) => x.id === (id || booking.pujaId)) || pujas[0];
+  const effectiveBooking = { ...booking, pujaId: p.id };
+  const waHref = buildBookingWhatsAppHref(effectiveBooking, lang);
   const family = Number(booking?.sankalp?.family) || 0;
   const addons = Array.isArray(booking.addons) ? booking.addons : [];
   const total = booking.packagePrice || p.price || 0;

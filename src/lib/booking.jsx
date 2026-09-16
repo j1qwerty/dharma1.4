@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { pujas } from "./data";
+import { WHATSAPP_NUMBER } from "./site";
 
 const C = createContext(null);
 const initial = {
@@ -121,8 +122,76 @@ export function buildBookingWhatsAppMessage(booking, lang = "en") {
 
 /**
  * Build a wa.me link for the current booking.
+ * Always pass the effective booking (with the URL pujaId merged in) so the
+ * message reflects the puja the user actually selected, not stale storage.
  */
-export function buildBookingWhatsAppHref(booking, lang = "en", phone = "919999999999") {
+export function buildBookingWhatsAppHref(booking, lang = "en", phone = WHATSAPP_NUMBER) {
   const msg = buildBookingWhatsAppMessage(booking, lang);
   return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+}
+
+/**
+ * Short per-puja inquiry message (used for "Ask / Speak to Vedacharya" CTAs).
+ * Keeps puja code + titles so support knows which puja the question is about.
+ */
+export function buildInquiryMessage(puja, lang = "en") {
+  const hi = lang === "hi";
+  const title = puja?.title || "";
+  const titleHi = puja?.titleHi || "";
+  const code = puja?.code || "";
+  const temple = puja?.temple || "";
+  if (hi) {
+    return [
+      "नमस्ते DharmaTribe, मुझे इस पूजा के बारे में पूछना है।",
+      "",
+      `— पूजा: ${title}${titleHi ? ` · ${titleHi}` : ""}`,
+      code ? `— पूजा कोड: ${code}` : "",
+      temple ? `— मंदिर: ${temple}` : "",
+      "",
+      "कृपया विवरण साझा करें। धन्यवाद।",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+  return [
+    "Namaste DharmaTribe, I have a question about this puja.",
+    "",
+    `— Puja: ${title}${titleHi ? ` · ${titleHi}` : ""}`,
+    code ? `— Puja code: ${code}` : "",
+    temple ? `— Temple: ${temple}` : "",
+    "",
+    "Please share the details. Thank you.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+export function buildInquiryHref(puja, lang = "en", phone = WHATSAPP_NUMBER) {
+  return `https://wa.me/${phone}?text=${encodeURIComponent(buildInquiryMessage(puja, lang))}`;
+}
+
+/** Dedicated Gaya Ji experience inquiry (Shraadh flow). */
+export function buildGayaJiMessage(lang = "en") {
+  if (lang === "hi") {
+    return [
+      "नमस्ते DharmaTribe, मुझे गया जी में श्राद्ध अनुभव की योजना बनानी है।",
+      "",
+      "— पूजा: Shraadh · श्राद्ध",
+      "— स्थान: Gaya Ji",
+      "",
+      "कृपया तिथि, विधि और व्यवस्था के बारे में मार्गदर्शन दें। धन्यवाद।",
+    ].join("\n");
+  }
+  return [
+    "Namaste DharmaTribe, I want to plan a Gaya Ji Shradh experience.",
+    "",
+    "— Puja: Shraadh",
+    "— Place: Gaya Ji",
+    "",
+    "Please guide me on Tithi, Vidhi and arrangements. Thank you.",
+  ].join("\n");
+}
+
+export function buildGayaJiHref(lang = "en", phone = WHATSAPP_NUMBER) {
+  return `https://wa.me/${phone}?text=${encodeURIComponent(buildGayaJiMessage(lang))}`;
 }

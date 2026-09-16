@@ -11,7 +11,7 @@ import {
   Globe,
 } from "@phosphor-icons/react";
 import Brand from "./Brand";
-import { deities } from "../../lib/data";
+import { deities, deityHi } from "../../lib/data";
 import { ThemeContext } from "./ThemeToggle";
 import { useLanguage } from "./LanguageToggle";
 
@@ -126,7 +126,7 @@ export default function Header() {
                               onClick={() => setPujasOpen(false)}
                             >
                               <span className="megamenu-dot-dt" />
-                              {d}
+                              {lang === "hi" ? deityHi[d] || d : d}
                             </Link>
                           ))}
                         </div>

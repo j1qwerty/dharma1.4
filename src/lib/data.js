@@ -1,6 +1,26 @@
 // Puja catalogue. Each puja carries an English + Hindi title/desc so the UI
 // can render in either language without branching logic in the page.
+// Shraadh stays first so Catalog + Home "dates people are booking" lead with it.
 export const pujas = [
+  {
+    id: "shraadh",
+    code: "PUJA-009",
+    title: "Shraadh",
+    titleHi: "श्राद्ध",
+    deity: "Pitru",
+    temple: "At Home · Temple · Gaya Ji",
+    date: "Pitru Paksha",
+    time: "Per Tithi",
+    price: 2101,
+    tag: "Ancestral",
+    purpose: "Ancestral peace",
+    type: "Shraadh",
+    image:
+      "https://images.unsplash.com/photo-1604608672516-f1b9c7f84d1c?auto=format&fit=crop&w=1500&q=86",
+    desc: "Ancestral observance performed with śraddhā — at home with a Vedacharya, on your behalf from a temple, or at Gaya Ji.",
+    descHi:
+      "श्रद्धा के साथ संपन्न होने वाला पितृ अनुष्ठान — घर पर वेदाचार्य के साथ, आपकी ओर से मंदिर से, या गया जी में।",
+  },
   {
     id: "mahadeva-rudra",
     code: "PUJA-001",
@@ -144,25 +164,6 @@ export const pujas = [
       "https://images.unsplash.com/photo-1532968961962-8a0e2b6fc5f6?auto=format&fit=crop&w=1500&q=86",
     desc: "A traditional mantra jaap experience with Sankalp and post-puja video delivery.",
     descHi: "संकल्प और पूजा के बाद वीडियो डिलीवरी के साथ एक पारंपरिक मंत्र जाप अनुभव।",
-  },
-  {
-    id: "shraadh",
-    code: "PUJA-009",
-    title: "Shraadh",
-    titleHi: "श्राद्ध",
-    deity: "Pitru",
-    temple: "At Home · Temple · Gaya Ji",
-    date: "Pitru Paksha",
-    time: "Per Tithi",
-    price: 2101,
-    tag: "Ancestral",
-    purpose: "Ancestral peace",
-    type: "Shraadh",
-    image:
-      "https://images.unsplash.com/photo-1604608672516-f1b9c7f84d1c?auto=format&fit=crop&w=1500&q=86",
-    desc: "Ancestral observance performed with śraddhā — at home with a Vedacharya, on your behalf from a temple, or at Gaya Ji.",
-    descHi:
-      "श्रद्धा के साथ संपन्न होने वाला पितृ अनुष्ठान — घर पर वेदाचार्य के साथ, आपकी ओर से मंदिर से, या गया जी में।",
   },
 ];
 export const festivals = [
@@ -326,6 +327,20 @@ export const deities = [
   "Navagraha",
   "Pitru",
 ];
+// Hindi labels for deity filters / menus. Keys stay English so URLs + filtering
+// keep working across languages.
+export const deityHi = {
+  Shiva: "शिव",
+  Vishnu: "विष्णु",
+  Krishna: "कृष्ण",
+  Ganesh: "गणेश",
+  Lakshmi: "लक्ष्मी",
+  Durga: "दुर्गा",
+  Hanuman: "हनुमान",
+  Kali: "काली",
+  Navagraha: "नवग्रह",
+  Pitru: "पितृ",
+};
 export const social = [
   {
     label: "Instagram",

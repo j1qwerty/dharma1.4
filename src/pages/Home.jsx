@@ -504,6 +504,28 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Acharyas preview — right after the calendar section */}
+      <section className="site-section has-decor-dt">
+        <SectionDecor />
+        <LeafBranch className="decor-dt decor-tr hide-mobile soft-tone" />
+        <div className="container-dt">
+          <div className="flex items-end justify-between gap-5 flex-wrap section-head-dt">
+            <Reveal className="section-head-copy-dt">
+              <h2 className="display-dt text-5xl sm:text-6xl title-soft">
+                {t("home.peopleTradition")}
+              </h2>
+              <p>{t("home.peopleTraditionCopy")}</p>
+            </Reveal>
+            <Link className="btn-ghost-dt shrink-0" to="/acharyas">
+              {t("home.meetAllAcharyas")} <ArrowUpRight size={14} />
+            </Link>
+          </div>
+          <Reveal>
+            <AcharyasHomeSlider />
+          </Reveal>
+        </div>
+      </section>
+
       <section className="site-section has-decor-dt">
         <SectionDecor />
         <LeafBranch className="decor-dt decor-bl hide-mobile soft-tone" />
@@ -786,28 +808,6 @@ export default function Home() {
               </Reveal>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Acharyas preview — dynamic slider */}
-      <section className="site-section has-decor-dt">
-        <SectionDecor />
-        <LeafBranch className="decor-dt decor-tr hide-mobile soft-tone" />
-        <div className="container-dt">
-          <div className="flex items-end justify-between gap-5 flex-wrap section-head-dt">
-            <Reveal className="section-head-copy-dt">
-              <h2 className="display-dt text-5xl sm:text-6xl title-soft">
-                {t("home.peopleTradition")}
-              </h2>
-              <p>{t("home.peopleTraditionCopy")}</p>
-            </Reveal>
-            <Link className="btn-ghost-dt shrink-0" to="/acharyas">
-              {t("home.meetAllAcharyas")} <ArrowUpRight size={14} />
-            </Link>
-          </div>
-          <Reveal>
-            <AcharyasHomeSlider />
-          </Reveal>
         </div>
       </section>
 

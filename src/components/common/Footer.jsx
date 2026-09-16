@@ -11,6 +11,7 @@ import {
 import Brand from "./Brand";
 import { BackToTopHalo } from "./decor";
 import { useLanguage } from "./LanguageToggle";
+import { WHATSAPP_NUMBER } from "../../lib/site";
 
 export default function Footer() {
   const [showTop, setShowTop] = useState(false);
@@ -84,7 +85,7 @@ export default function Footer() {
             <div className="mt-4 grid gap-3 text-sm text-white/55">
               <Link to="/terms">{t("footer.terms")}</Link>
               <Link to="/privacy">{t("footer.privacy")}</Link>
-              <a href="https://wa.me/919999999999">{t("footer.whatsapp")}</a>
+              <a href={`https://wa.me/${WHATSAPP_NUMBER}`}>{t("footer.whatsapp")}</a>
             </div>
           </div>
           <div className="col-span-2 lg:col-span-1">

@@ -10,11 +10,14 @@ import { Plus } from "@phosphor-icons/react";
 export default function FaqAccordion({ items = [] }) {
   const [open, setOpen] = useState(0);
   return (
-    <div className="grid gap-3 md:grid-cols-2">
+    <div className="grid gap-3 md:grid-cols-2 items-start">
       {items.map((it, i) => {
         const isOpen = open === i;
         return (
-          <div className={`faq-item-dt ${isOpen ? "is-open" : ""}`} key={it.q}>
+          <div
+            className={`faq-item-dt ${isOpen ? "is-open md:col-span-2" : ""}`}
+            key={it.q}
+          >
             <button
               className="faq-q-dt"
               onClick={() => setOpen(isOpen ? -1 : i)}

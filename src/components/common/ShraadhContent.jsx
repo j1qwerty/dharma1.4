@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import { useLanguage } from "./LanguageToggle";
 import { SectionDecor } from "./decor";
+import { pujas } from "../../lib/data";
+import { buildInquiryHref, buildGayaJiHref } from "../../lib/booking";
 
 /* ------------------------------------------------------------------ *
  * ShraadhContent
@@ -14,6 +16,9 @@ import { SectionDecor } from "./decor";
 export default function ShraadhContent() {
   const { lang } = useLanguage();
   const hi = lang === "hi";
+  const shraadhPuja = pujas.find((x) => x.id === "shraadh") || pujas[0];
+  const vedacharyaHref = buildInquiryHref(shraadhPuja, lang);
+  const gayaJiHref = buildGayaJiHref(lang);
 
   // The copy is intentionally written for cultural warmth, not as
   // a service catalogue entry. Each block is a section of the essay.
@@ -938,7 +943,7 @@ export default function ShraadhContent() {
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <a
-              href="https://wa.me/919999999999"
+              href={vedacharyaHref}
               target="_blank"
               rel="noreferrer"
               className="btn-gold-dt"
@@ -949,7 +954,7 @@ export default function ShraadhContent() {
               {c.ctaBtn2} <ArrowUpRight size={14} />
             </Link>
             <a
-              href="https://wa.me/919999999999?text=I%20want%20to%20plan%20a%20Gaya%20Ji%20Shradh%20experience"
+              href={gayaJiHref}
               target="_blank"
               rel="noreferrer"
               className="btn-ghost-dt"
