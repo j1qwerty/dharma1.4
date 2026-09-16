@@ -6,6 +6,8 @@ import { LanguageProvider } from "./components/common/LanguageToggle";
 import Layout from "./components/common/Layout";
 import { BookingProvider } from "./lib/booking";
 import { FavoritesProvider } from "./lib/favorites";
+import { AuthProvider } from "./lib/auth";
+import RequireAdmin from "./components/common/RequireAdmin";
 import { ToastProvider } from "./components/common/Toast";
 import Home from "./pages/Home";
 import Catalog from "./pages/Catalog";
@@ -28,6 +30,8 @@ const MyBookings = lazy(() => import("./pages/MyBookings"));
 const Stories = lazy(() => import("./pages/Stories"));
 const StoryDetail = lazy(() => import("./pages/StoryDetail"));
 const Auth = lazy(() => import("./pages/Auth"));
+const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+const Admin = lazy(() => import("./pages/Admin"));
 const Legal = lazy(() => import("./pages/Legal"));
 const DecorPreview = lazy(() => import("./pages/DecorPreview"));
 const Review = lazy(() => import("./pages/Review"));
@@ -65,6 +69,7 @@ function App() {
           <ToastProvider>
             <FavoritesProvider>
               <BookingProvider>
+                <AuthProvider>
                 <Routes>
                   <Route element={<Layout />}>
                     <Route path="/" element={<Home />} />
@@ -216,9 +221,28 @@ function App() {
                         </Suspense>
                       }
                     />
+                    <Route
+                      path="/admin/login"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <AdminLogin />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/admin"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <RequireAdmin>
+                            <Admin />
+                          </RequireAdmin>
+                        </Suspense>
+                      }
+                    />
                     <Route path="*" element={<NotFound />} />
                   </Route>
                 </Routes>
+                </AuthProvider>
               </BookingProvider>
             </FavoritesProvider>
           </ToastProvider>

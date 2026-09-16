@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() { return request.auth != null; }
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    function isPublished() {
+      return resource.data.status == 'published';
+    }
+
+    // CMS content: public can read published docs, admins can write all.
+    // Covers: pujas, festivals, homepage_sections, stories, acharyas,
+    // testimonials, site_settings. Drafts stay invisible until published,
+    // and startDate/endDate visibility is enforced client-side via
+    // src/lib/schedule.js (rules guarantee draft-privacy, client handles windows).
+    match /pujas/{id} { allow read: if isPublished() || isAdmin(); allow write: if isAdmin(); }
+    match /festivals/{id} { allow read: if isPublished() || isAdmin(); allow write: if isAdmin(); }
+    match /homepage_sections/{id} { allow read: if true; allow write: if isAdmin(); }
+    match /stories/{id} { allow read: if isPublished() || isAdmin(); allow write: if isAdmin(); }
+    match /acharyas/{id} { allow read: if isPublished() || isAdmin(); allow write: if isAdmin(); }
+    match /testimonials/{id} { allow read: if isPublished() || isAdmin(); allow write: if isAdmin(); }
+    match /site_settings/{id} { allow read: if true; allow write: if isAdmin(); }
+
+    // Users own their doc; admins can read all.
+    match /users/{uid} {
+      allow read: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+      allow create: if isSignedIn() && request.auth.uid == uid;
+      allow update: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+      allow delete: if isAdmin();
+    }
+
+    // Bookings v1: read-only in CMS. Owner can create/read own; admins read all.
+    match /bookings/{id} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isSignedIn();
+      allow update, delete: if isAdmin();
+    }
+
+    match /admins/{uid} {
+      allow read: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+      allow write: if isAdmin();
+    }
+  }
+}

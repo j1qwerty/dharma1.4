@@ -5,11 +5,13 @@ import Brand from "../components/common/Brand";
 import Field from "../components/common/Field";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import { SectionDecor } from "../components/common/decor";
+import { useAuth } from "../lib/auth";
 
 const art =
   "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1400&q=86";
 export default function Auth({ mode = "login" }) {
   const nav = useNavigate();
+  const { configured, signInWithGoogle } = useAuth();
   const title =
     mode === "login"
       ? "Welcome back."
@@ -79,6 +81,17 @@ export default function Auth({ mode = "login" }) {
               <button onClick={() => nav("/auth/otp")} className="btn-gold-dt mt-6 w-full">
                 {mode === "login" ? "Send OTP" : "Create account"} <ArrowRight size={15} />
               </button>
+              {configured && (
+                <>
+                  <div className="mt-4 text-center text-xs muted-dt">or</div>
+                  <button
+                    onClick={() => signInWithGoogle().then(() => nav("/dashboard")).catch(() => {})}
+                    className="btn-ghost-dt mt-2 w-full"
+                  >
+                    Continue with Google
+                  </button>
+                </>
+              )}
               <div className="mt-8 text-center text-xs muted-dt">
                 {mode === "login" ? (
                   <>
