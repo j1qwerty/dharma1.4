@@ -6,6 +6,7 @@ Goal: Firebase Auth (Google) + Firestore + Storage for the CMS. Hosting stays on
 
 1. Go to https://console.firebase.google.com → **Add project** → name `dharmatribe-cms` → Continue (Analytics optional OFF is fine).
 2. **Authentication → Sign-in method → Add provider → Google → Enable** → set support email → Save.
+3. **Authentication → Sign-in method → Add provider → Email/Password → Enable** (required for `admin@dharmatribe.com` login) → Save.
 3. **Authentication → Settings → Authorized domains → Add domain:**
    - `localhost`
    - `dharmatribe.netlify.app` (prod)
@@ -25,13 +26,20 @@ Goal: Firebase Auth (Google) + Firestore + Storage for the CMS. Hosting stays on
    VITE_FIREBASE_MESSAGING_SENDER_ID=...
    VITE_FIREBASE_APP_ID=...
    ```
-8. **Admin access:** after first Google login, go to **Firestore → Start collection → `admins`** → add doc with ID = your Firebase Auth UID:
-   ```text
-   email: your@email.com
-   role: super-admin
-   createdAt: now
-   ```
-   (To find UID: Authentication → Users after you log in once. Extra editors: add more docs the same way.)
+8. **Admin access (all three):**
+   - `admin@dharmatribe.com` (email/password) — run after `.env.local` is filled (password via env, never committed):
+     ```powershell
+     $env:ADMIN_EMAIL="admin@dharmatribe.com"; $env:ADMIN_PASSWORD="12345678"
+     node scripts/createEmailAdmin.mjs
+     ```
+     Change this weak starter password later in Console → Authentication → Users.
+   - `du18ck@gmail.com` (Google) — log in once at `/admin/login` (shows “not an admin” first time), then copy its UID from **Authentication → Users** and create Firestore doc `admins/{UID}`:
+     ```text
+     email: du18ck@gmail.com
+     role: super-admin
+     createdAt: now
+     ```
+   - Your own Google account — same UID flow as above.
 
 ## B. CLI — install, path, login (Windows, `D:\cli`)
 

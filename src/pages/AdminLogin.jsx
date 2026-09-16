@@ -3,18 +3,27 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../lib/auth";
 
 export default function AdminLogin() {
-  const { user, isAdmin, loading, signInWithGoogle } = useAuth();
+  const { user, isAdmin, loading, signInWithGoogle, signInWithEmail } = useAuth();
   const [err, setErr] = useState(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const nav = useNavigate();
   const loc = useLocation();
   const from = loc.state?.from || "/admin";
 
   if (!loading && user && isAdmin) { nav(from, { replace: true }); return null; }
 
-  const go = async () => {
+  const goGoogle = async () => {
     setErr(null);
     try { await signInWithGoogle(); nav(from, { replace: true }); }
     catch (e) { setErr(e.message); }
+  };
+
+  const goEmail = async (e) => {
+    e.preventDefault();
+    setErr(null);
+    try { await signInWithEmail(email, password); nav(from, { replace: true }); }
+    catch (e2) { setErr(e2.message); }
   };
 
   return (
@@ -26,7 +35,17 @@ export default function AdminLogin() {
         <p style={{ color: "#b3261e", fontSize: 13 }}>Signed in as {user.email} — not an admin. Ask a super-admin to add your UID.</p>
       )}
       {err && <p style={{ color: "#b3261e", fontSize: 13 }}>{err}</p>}
-      <button className="btn-gold-dt mt-6 w-full" onClick={go}>Continue with Google</button>
+      <button className="btn-gold-dt mt-6 w-full" onClick={goGoogle}>Continue with Google</button>
+      <form onSubmit={goEmail} className="mt-6 grid gap-3">
+        <div className="eyebrow">or sign in with email</div>
+        <input type="email" required placeholder="admin@dharmatribe.com" value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="h-11 rounded-xl border border-dt bg-transparent px-3 text-sm outline-none" />
+        <input type="password" required placeholder="Password" value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="h-11 rounded-xl border border-dt bg-transparent px-3 text-sm outline-none" />
+        <button type="submit" className="btn-ghost-dt w-full">Sign in with email</button>
+      </form>
       <p className="mt-4 text-xs muted-dt"><Link to="/" className="underline">Back to site</Link></p>
     </section>
   );

@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
+import { GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { auth, db, firebaseConfigured } from "./firebase";
 
@@ -39,11 +39,16 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(() => (auth ? signOut(auth) : Promise.resolve()), []);
 
+  const signInWithEmail = useCallback(async (email, password) => {
+    if (!auth) throw new Error("Firebase not configured — add VITE_FIREBASE_* to .env.local");
+    return signInWithEmailAndPassword(auth, email.trim(), password);
+  }, []);
+
   const value = useMemo(() => ({
     user, isAdmin, loading,
     configured: firebaseConfigured,
-    signInWithGoogle, logout,
-  }), [user, isAdmin, loading, signInWithGoogle, logout]);
+    signInWithGoogle, signInWithEmail, logout,
+  }), [user, isAdmin, loading, signInWithGoogle, signInWithEmail, logout]);
 
   return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>;
 }
