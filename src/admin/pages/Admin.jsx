@@ -20,7 +20,7 @@ const LINKS = [
 ];
 
 export default function Admin() {
-  const { user } = useAuth();
+  const { user, adminRole } = useAuth();
   const [previewDate, setPreviewDate] = useState("");
   const { data: festivals } = useCollection("festivals");
   const { now } = getPreviewNow();
@@ -41,6 +41,23 @@ export default function Admin() {
       <div className="eyebrow">CMS · dashboard</div>
       <h1 className="display-dt" style={{ fontSize: 44, marginTop: 8 }}>Dashboard</h1>
       <p className="text-sm muted-dt">Signed in as {user?.email}</p>
+
+      <div className="panel-dt p-5 mt-6">
+        <h3 className="text-xl">Access check</h3>
+        <p className="text-[11px] muted-dt mt-1">
+          Writes need an <code>admins/{user?.uid || "{uid}"}</code> doc + deployed rules.
+          If saving fails with permissions, confirm both below.
+        </p>
+        <p className="text-xs mt-2">UID: <code>{user?.uid || "—"}</code></p>
+        <p className="text-xs mt-1">Admin role: <code>{adminRole || "none — not an admin"}</code></p>
+        {!adminRole && (
+          <p className="text-xs mt-2" style={{ color: "#b3261e" }}>
+            No admin doc found for this account. Grant it with{" "}
+            <code>node scripts/grantAdmin.mjs</code> (needs ADMIN_EMAIL, ADMIN_PASSWORD, TARGET_UID),
+            then sign out + back in.
+          </p>
+        )}
+      </div>
 
       <div className="panel-dt p-6 mt-6">
         <h2 className="text-2xl">Preview as of (scheduling test)</h2>

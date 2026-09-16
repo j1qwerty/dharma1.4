@@ -15,17 +15,20 @@ service cloud.firestore {
     // testimonials, site_settings. Drafts stay invisible until published,
     // and startDate/endDate visibility is enforced client-side via
     // src/lib/schedule.js (rules guarantee draft-privacy, client handles windows).
-    match /pujas/{id} { allow read: if isPublished() || isAdmin(); allow write: if isAdmin(); }
+    // NOTE: isAdmin() comes FIRST — rules short-circuit, so admin reads of
+    // not-yet-existing docs (e.g. the "does this id exist?" check on create)
+    // succeed instead of erroring on resource.data (null for missing docs).
+    match /pujas/{id} { allow read: if isAdmin() || isPublished(); allow write: if isAdmin(); }
     match /pujas/{id}/history/{hid} { allow read: if isAdmin(); allow write: if isAdmin(); }
-    match /festivals/{id} { allow read: if isPublished() || isAdmin(); allow write: if isAdmin(); }
+    match /festivals/{id} { allow read: if isAdmin() || isPublished(); allow write: if isAdmin(); }
     match /festivals/{id}/history/{hid} { allow read: if isAdmin(); allow write: if isAdmin(); }
     match /homepage_sections/{id} { allow read: if true; allow write: if isAdmin(); }
     match /homepage_sections/{id}/history/{hid} { allow read: if isAdmin(); allow write: if isAdmin(); }
-    match /stories/{id} { allow read: if isPublished() || isAdmin(); allow write: if isAdmin(); }
+    match /stories/{id} { allow read: if isAdmin() || isPublished(); allow write: if isAdmin(); }
     match /stories/{id}/history/{hid} { allow read: if isAdmin(); allow write: if isAdmin(); }
-    match /acharyas/{id} { allow read: if isPublished() || isAdmin(); allow write: if isAdmin(); }
+    match /acharyas/{id} { allow read: if isAdmin() || isPublished(); allow write: if isAdmin(); }
     match /acharyas/{id}/history/{hid} { allow read: if isAdmin(); allow write: if isAdmin(); }
-    match /testimonials/{id} { allow read: if isPublished() || isAdmin(); allow write: if isAdmin(); }
+    match /testimonials/{id} { allow read: if isAdmin() || isPublished(); allow write: if isAdmin(); }
     match /testimonials/{id}/history/{hid} { allow read: if isAdmin(); allow write: if isAdmin(); }
     match /inquiries/{id} { allow read: if isAdmin(); allow create: if true; allow update, delete: if isAdmin(); }
     match /site_settings/{id} { allow read: if true; allow write: if isAdmin(); }

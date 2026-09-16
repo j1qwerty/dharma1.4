@@ -43,14 +43,29 @@ export function isTrashExpired(docData, now = new Date()) {
   return Boolean(del && now >= del);
 }
 
+function rulesHint(e) {
+  if (e?.code === "permission-denied" || /insufficient permissions/i.test(e?.message || "")) {
+    return " (Missing or insufficient permissions — check: 1) your account has an admins/{uid} doc, 2) latest firestore.rules are deployed: firebase deploy --only firestore:rules)";
+  }
+  return "";
+}
+
 /** Create a new content doc (id auto from title/name/key when omitted). */
 export async function createContent(collectionName, data, user, { status = "draft" } = {}) {
   if (!canWrite()) throw new Error("Firebase not configured");
   const base = data?.title || data?.name || data?.key || data?.id || "item";
   const id = data?.id || slugId(base);
   const ref = doc(db, collectionName, id);
-  const existing = await getDoc(ref);
-  if (existing.exists()) throw new Error(`ID "${id}" already exists`);
+  // NOTE: getDoc on a MISSING doc can throw permission-denied even for admins
+  // when rules reference resource.data (null for missing docs). The write
+  // below is authoritative, so a failed existence check must not block creation.
+  try {
+    const existing = await getDoc(ref);
+    if (existing.exists()) throw new Error(`ID "${id}" already exists`);
+  } catch (e) {
+    if (e?.message?.includes("already exists")) throw e;
+    // fall through — setDoc enforces admin-only via rules
+  }
   const clean = snapshotOf(data);
   const by = user?.email || user?.uid || null;
   const payload = {
@@ -59,10 +74,14 @@ export async function createContent(collectionName, data, user, { status = "draf
     version: 1, versions: [],
     updatedAt: serverTimestamp(), updatedBy: by, createdAt: serverTimestamp(),
   };
-  await setDoc(ref, payload);
-  await addDoc(collection(db, collectionName, id, "history"), {
-    v: 1, at: serverTimestamp(), by, data: clean, action: "create",
-  });
+  try {
+    await setDoc(ref, payload);
+    await addDoc(collection(db, collectionName, id, "history"), {
+      v: 1, at: serverTimestamp(), by, data: clean, action: "create",
+    });
+  } catch (e) {
+    throw new Error(`Create failed: ${e.message}${rulesHint(e)}`);
+  }
   return id;
 }
 
@@ -88,15 +107,19 @@ export async function saveContent(collectionName, id, data, user, { status, acti
     ...(Array.isArray(current.versions) ? current.versions : []),
   ].slice(0, VERSION_LIMIT);
   const clean = snapshotOf(data);
-  await addDoc(collection(db, collectionName, id, "history"), {
-    v: prevVersion, at: serverTimestamp(), by, data: prevSnap, action,
-  });
-  await setDoc(ref, {
-    ...clean, id,
-    ...(status ? { status } : {}),
-    version: nextVersion, versions: nextVersions,
-    updatedAt: serverTimestamp(), updatedBy: by,
-  }, { merge: true });
+  try {
+    await addDoc(collection(db, collectionName, id, "history"), {
+      v: prevVersion, at: serverTimestamp(), by, data: prevSnap, action,
+    });
+    await setDoc(ref, {
+      ...clean, id,
+      ...(status ? { status } : {}),
+      version: nextVersion, versions: nextVersions,
+      updatedAt: serverTimestamp(), updatedBy: by,
+    }, { merge: true });
+  } catch (e) {
+    throw new Error(`Save failed: ${e.message}${rulesHint(e)}`);
+  }
   return nextVersion;
 }
 
@@ -108,15 +131,19 @@ export async function softDeleteContent(collectionName, id, user) {
   if (!snap.exists()) throw new Error("Not found");
   const current = snap.data() || {};
   const by = user?.email || user?.uid || null;
-  await addDoc(collection(db, collectionName, id, "history"), {
-    v: Number(current.version) || 1, at: serverTimestamp(), by,
-    data: snapshotOf(current), action: "soft-delete",
-  });
-  await setDoc(ref, {
-    status: "deleted",
-    deletedAt: serverTimestamp(), deleteAt: trashExpiry(),
-    updatedAt: serverTimestamp(), updatedBy: by,
-  }, { merge: true });
+  try {
+    await addDoc(collection(db, collectionName, id, "history"), {
+      v: Number(current.version) || 1, at: serverTimestamp(), by,
+      data: snapshotOf(current), action: "soft-delete",
+    });
+    await setDoc(ref, {
+      status: "deleted",
+      deletedAt: serverTimestamp(), deleteAt: trashExpiry(),
+      updatedAt: serverTimestamp(), updatedBy: by,
+    }, { merge: true });
+  } catch (e) {
+    throw new Error(`Delete failed: ${e.message}${rulesHint(e)}`);
+  }
 }
 
 /** Restore from trash → back to draft (admin re-publishes explicitly). */
