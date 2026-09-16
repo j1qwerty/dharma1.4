@@ -121,7 +121,6 @@ PATCH `https://identitytoolkit.googleapis.com/admin/v2/projects/dharmatribe-cms/
 One-off scripts were run from `D:\temp\opencode` and deleted afterwards.
 
 ## G. Admin bootstrapping
-
 ```powershell
 # email admin (needs providers enabled + .env.local filled)
 $env:ADMIN_EMAIL="admin@dharmatribe.com"; $env:ADMIN_PASSWORD="<strong-password>"
@@ -136,6 +135,31 @@ node scripts/grantAdmin.mjs
 ```
 First admin needed temporary open rules (strict rules block self-grant);
 procedure: backup `firestore.rules`, deploy open-all, run scripts, restore, redeploy.
+
+## G2. Roles (`src/lib/roles.js`)
+
+| Where | Values | Meaning |
+|---|---|---|
+| `admins/{uid}.role` | `super-admin` | full CMS access (current: admin@dharmatribe.com, du18ck@gmail.com) |
+| `admins/{uid}.role` | `editor` | future restricted staff (recognized by `canAccessAdmin`, per-action limits later) |
+| `users/{uid}.role` | `customer` (default) | normal devotee; auto-backfilled on login + `scripts/backfillRoles.mjs` |
+| `users/{uid}.role` | `staff` | legacy marker, treated as non-customer, never overwritten |
+
+`useAuth()` exposes `{ user, role, adminRole, isAdmin }`. `/admin` guard =
+any `admins/{uid}` doc. Audit anytime: `node scripts/listRoles.mjs`
+(with `ADMIN_EMAIL`/`ADMIN_PASSWORD` set) — prints every admins/users email+role.
+
+## G3. Customer cloud sync (background, offline-first)
+
+- **Wishlist** (`src/lib/favorites.jsx`): localStorage stays instant source of truth;
+  on sign-in, `users/{uid}.savedPujas` is union-merged in; every toggle pushes
+  the merged list via fire-and-forget `setDoc` (failures keep local). Exposes `cloud: off|pending|on|error`.
+- **Orders** (`src/lib/orders.js`): `BookingConfirmation` calls `saveBooking()`
+  when signed in — deterministic doc id `{uid}_{puja}_{date}_{time}`, idempotent
+  on re-render/refresh; WhatsApp flow unaffected. `MyBookings` shows the
+  Firestore history for signed-in users (sorted newest first, no composite index —
+  sorted client-side), demo list otherwise with a sync hint.
+- Rules cover both: users own their doc, bookings owner-create/read. No deploy needed.
 
 ## H. Build & deploy commands (MANUAL — only on explicit request ⛔)
 

@@ -4,17 +4,36 @@ import { ArrowRight, MagnifyingGlass } from "@phosphor-icons/react";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
 import { LeafBranch, LotusLine, Kalash, Trishul, SectionDecor } from "../components/common/decor";
-const bookings = [
-  ["Maha Rudrabhishek", "Sep 09, 2026", "Confirmed"],
+import { pujas } from "../lib/data";
+import { useAuth } from "../lib/auth";
+import { useBookings } from "../lib/orders";
+const demoBookings = [  ["Maha Rudrabhishek", "Sep 09, 2026", "Confirmed"],
   ["Ganesh Vighnaharta Puja", "Sep 10, 2026", "Confirmed"],
   ["Mahalakshmi Dhan Akarshan", "Oct 20, 2026", "Upcoming"],
   ["Satyanarayan Katha", "Aug 22, 2026", "Completed"],
   ["Sankat Mochan Hanuman Seva", "Aug 03, 2026", "Completed"],
 ];
+/* Normalize Firestore booking status to the tab labels used below. */
+function statusLabel(status) {
+  const s = String(status || "").toLowerCase();
+  if (s === "completed") return "Completed";
+  if (s === "cancelled") return "Cancelled";
+  return "Confirmed"; // confirmed / upcoming all fall under the Upcoming tab
+}
 export default function MyBookings() {
   const [q, setQ] = useState("");
   const [tab, setTab] = useState("All");
   const tabs = ["All", "Upcoming", "Completed"];
+  const { user } = useAuth();
+  const { bookings: cloudBookings, loading } = useBookings(user);
+  // Signed-in users see their Firestore order history (synced in the
+  // background from BookingConfirmation); everyone else sees demo content.
+  const bookings = cloudBookings?.length
+    ? cloudBookings.map((b) => {
+        const p = pujas.find((x) => x.id === b.pujaId);
+        return [p?.title || b.pujaId || "Puja", b.date || "", statusLabel(b.status)];
+      })
+    : demoBookings;
   const filtered = bookings.filter(
     (x) =>
       (tab === "All" || x[2] === tab || (tab === "Upcoming" && x[2] === "Confirmed")) &&
@@ -30,6 +49,15 @@ export default function MyBookings() {
             <h1 className="display-dt mt-3 text-6xl">Every ritual, one place.</h1>
             <p className="mt-4 max-w-xl text-sm leading-7 text-white/55">
               Search, track, rebook, and open the media attached to each ceremony.
+            </p>
+            <p className="mt-3 max-w-xl text-xs leading-6 text-white/40">
+              {loading
+                ? "Syncing your bookings…"
+                : user
+                  ? (cloudBookings?.length
+                      ? `Synced from your account (${user.email || "signed in"}).`
+                      : "Signed in — confirmed bookings will appear here automatically.")
+                  : "Sample bookings shown. Sign in to sync your own orders across devices."}
             </p>
           </Reveal>
           <Reveal>

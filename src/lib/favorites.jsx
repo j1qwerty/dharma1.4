@@ -1,9 +1,14 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { db, firebaseConfigured } from "./firebase";
+import { useAuth } from "./auth";
 
 /* ------------------------------------------------------------------ *
- * FavoritesProvider - a localStorage-backed wishlist of puja ids.
- * Exposes toggle, has, count, and the list itself. Used by the heart
- * toggle on PujaCard / PujaDetail, and surfaced on the Dashboard.
+ * FavoritesProvider - wishlist of puja ids.
+ * - Always works offline-first via localStorage (instant UI).
+ * - When signed in, syncs to users/{uid}.savedPujas in the background:
+ *   on login the cloud list is union-merged with local; every toggle
+ *   pushes the merged list (fire-and-forget, failures keep local truth).
  * ------------------------------------------------------------------ */
 
 const FavContext = createContext(null);
@@ -20,6 +25,9 @@ function read() {
 
 export function FavoritesProvider({ children }) {
   const [ids, setIds] = useState(read);
+  const [cloud, setCloud] = useState("off"); // off | pending | on | error
+  const { user } = useAuth();
+  const skipPush = useRef(true);
 
   useEffect(() => {
     try {
@@ -27,7 +35,41 @@ export function FavoritesProvider({ children }) {
     } catch {
       /* storage may be unavailable; ignore */
     }
-  }, [ids]);
+    // Background push to Firestore (skip the initial load/merge cycle).
+    if (skipPush.current || !firebaseConfigured || !db || !user) return;
+    setCloud("pending");
+    setDoc(doc(db, "users", user.uid), {
+      savedPujas: ids,
+      wishlistUpdatedAt: serverTimestamp(),
+    }, { merge: true }).then(
+      () => setCloud("on"),
+      () => setCloud("error")
+    );
+  }, [ids, user]);
+
+  // On sign-in: union-merge cloud wishlist into local (cloud never deletes local).
+  useEffect(() => {
+    if (!firebaseConfigured || !db || !user) { skipPush.current = true; return; }
+    let cancelled = false;
+    (async () => {
+      try {
+        const snap = await getDoc(doc(db, "users", user.uid));
+        const remote = snap.exists() && Array.isArray(snap.data().savedPujas)
+          ? snap.data().savedPujas
+          : [];
+        if (cancelled) return;
+        setIds((prev) => {
+          const merged = [...prev];
+          for (const id of remote) if (!merged.includes(id)) merged.push(id);
+          return merged;
+        });
+        setCloud("on");
+      } catch { if (!cancelled) setCloud("error"); }
+      if (!cancelled) skipPush.current = false;
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.uid]);
 
   // Keep multiple tabs in sync.
   useEffect(() => {
@@ -46,8 +88,8 @@ export function FavoritesProvider({ children }) {
   const clear = useCallback(() => setIds([]), []);
 
   const value = useMemo(
-    () => ({ ids, count: ids.length, has, toggle, clear }),
-    [ids, has, toggle, clear]
+    () => ({ ids, count: ids.length, has, toggle, clear, cloud }),
+    [ids, has, toggle, clear, cloud]
   );
   return <FavContext.Provider value={value}>{children}</FavContext.Provider>;
 }

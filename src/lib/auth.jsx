@@ -2,30 +2,39 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { auth, db, firebaseConfigured } from "./firebase";
+import { ROLES, canAccessAdmin } from "./roles";
 
-const AuthCtx = createContext({ user: null, isAdmin: false, loading: true, configured: firebaseConfigured });
+const AuthCtx = createContext({ user: null, role: ROLES.CUSTOMER, adminRole: null, isAdmin: false, loading: true, configured: firebaseConfigured });
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [role, setRole] = useState(ROLES.CUSTOMER);
+  const [adminRole, setAdminRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!firebaseConfigured || !auth) { setLoading(false); return; }
     return onAuthStateChanged(auth, async (u) => {
       setUser(u);
-      if (!u) { setIsAdmin(false); setLoading(false); return; }
+      if (!u) { setRole(ROLES.CUSTOMER); setAdminRole(null); setLoading(false); return; }
       try {
-        // Ensure a users/{uid} doc exists for CMS user listing.
-        await setDoc(doc(db, "users", u.uid), {
+        // Ensure a users/{uid} doc exists; backfill role=customer when missing
+        // (never overwrites staff roles).
+        const userRef = doc(db, "users", u.uid);
+        const userSnap = await getDoc(userRef);
+        const existingRole = userSnap.exists() ? userSnap.data().role : null;
+        await setDoc(userRef, {
           email: u.email || null,
           displayName: u.displayName || null,
           photoURL: u.photoURL || null,
+          ...(existingRole ? {} : { role: ROLES.CUSTOMER }),
           lastLoginAt: serverTimestamp(),
         }, { merge: true });
+        setRole(existingRole || ROLES.CUSTOMER);
         const adminSnap = await getDoc(doc(db, "admins", u.uid));
-        setIsAdmin(adminSnap.exists());
-      } catch { setIsAdmin(false); }
+        const aRole = adminSnap.exists() ? (adminSnap.data().role || ROLES.SUPER_ADMIN) : null;
+        setAdminRole(aRole);
+      } catch { setRole(ROLES.CUSTOMER); setAdminRole(null); }
       setLoading(false);
     });
   }, []);
@@ -44,11 +53,13 @@ export function AuthProvider({ children }) {
     return signInWithEmailAndPassword(auth, email.trim(), password);
   }, []);
 
+  const isAdmin = canAccessAdmin(adminRole);
+
   const value = useMemo(() => ({
-    user, isAdmin, loading,
+    user, role, adminRole, isAdmin, loading,
     configured: firebaseConfigured,
     signInWithGoogle, signInWithEmail, logout,
-  }), [user, isAdmin, loading, signInWithGoogle, signInWithEmail, logout]);
+  }), [user, role, adminRole, isAdmin, loading, signInWithGoogle, signInWithEmail, logout]);
 
   return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>;
 }

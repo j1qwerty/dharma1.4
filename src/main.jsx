@@ -68,9 +68,9 @@ function App() {
       <ThemeProvider>
         <LanguageProvider>
           <ToastProvider>
+            <AuthProvider>
             <FavoritesProvider>
               <BookingProvider>
-                <AuthProvider>
                 <Routes>
                   <Route element={<Layout />}>
                     <Route path="/" element={<Home />} />
@@ -253,9 +253,9 @@ function App() {
                     <Route path="*" element={<NotFound />} />
                   </Route>
                 </Routes>
-                </AuthProvider>
               </BookingProvider>
             </FavoritesProvider>
+            </AuthProvider>
           </ToastProvider>
         </LanguageProvider>
       </ThemeProvider>

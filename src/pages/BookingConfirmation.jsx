@@ -9,6 +9,8 @@ import {
   WhatsappLogo,
 } from "@phosphor-icons/react";
 import { useBooking, buildBookingWhatsAppHref } from "../lib/booking";
+import { useAuth } from "../lib/auth";
+import { saveBooking } from "../lib/orders";
 import { pujas } from "../lib/data";
 import { Reveal } from "../components/common/Motion";
 import SafeImage from "../components/common/SafeImage";
@@ -23,7 +25,13 @@ import { useLanguage } from "../components/common/LanguageToggle";
 
 export default function BookingConfirmation() {
   const { booking } = useBooking();
+  const { user } = useAuth();
   const { t, lang } = useLanguage();
+  // Persist to the customer's Firestore order history in the background.
+  // Idempotent (deterministic doc id) — safe on re-renders and refreshes.
+  React.useEffect(() => {
+    if (user?.uid) saveBooking(user.uid, booking);
+  }, [user?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
   const p = pujas.find((x) => x.id === booking.pujaId) || pujas[0];
   const waHref = buildBookingWhatsAppHref(booking, lang);
   const title = lang === "hi" && p.titleHi ? p.titleHi : p.title;
