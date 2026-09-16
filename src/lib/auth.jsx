@@ -46,7 +46,18 @@ export function AuthProvider({ children }) {
     return signInWithPopup(auth, provider);
   }, []);
 
-  const logout = useCallback(() => (auth ? signOut(auth) : Promise.resolve()), []);
+  const logout = useCallback(async () => {
+    if (auth) {
+      try { await signOut(auth); } catch { /* ignore */ }
+    }
+    // Reset the wishlist on sign-out so the next person on this browser
+    // starts clean. FavoritesProvider also listens for "dt:logout" to
+    // reset its in-memory state (same-tab storage events don't fire).
+    try {
+      localStorage.removeItem("dt-favorites");
+      window.dispatchEvent(new Event("dt:logout"));
+    } catch { /* storage may be unavailable; ignore */ }
+  }, []);
 
   const signInWithEmail = useCallback(async (email, password) => {
     if (!auth) throw new Error("Firebase not configured — add VITE_FIREBASE_* to .env.local");

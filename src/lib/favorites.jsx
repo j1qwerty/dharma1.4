@@ -76,8 +76,16 @@ export function FavoritesProvider({ children }) {
     function onStorage(e) {
       if (e.key === KEY) setIds(read());
     }
+    // Sign-out reset (dispatched by logout(); same-tab storage events don't fire).
+    function onLogout() {
+      setIds([]);
+    }
     window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    window.addEventListener("dt:logout", onLogout);
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("dt:logout", onLogout);
+    };
   }, []);
 
   const has = useCallback((id) => ids.includes(id), [ids]);

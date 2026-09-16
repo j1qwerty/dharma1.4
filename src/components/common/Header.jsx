@@ -17,12 +17,14 @@ import { deities, deityHi, pujas, stories, acharyas } from "../../lib/data";
 import { ThemeContext } from "./ThemeToggle";
 import { useLanguage } from "./LanguageToggle";
 import { useFavorites } from "../../lib/favorites";
+import { useAuth } from "../../lib/auth";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [pujasOpen, setPujasOpen] = useState(false);
   const [favOpen, setFavOpen] = useState(false);
+  const [acctOpen, setAcctOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const closeTimer = useRef(null);
@@ -32,6 +34,9 @@ export default function Header() {
   const { dark, toggle } = useContext(ThemeContext) ?? { dark: false, toggle: () => {} };
   const { lang, toggle: toggleLang, t } = useLanguage();
   const { ids, count: favCount } = useFavorites();
+  const { user, isAdmin, logout } = useAuth();
+  const acctName = user?.displayName || (user?.email ? user.email.split("@")[0] : "");
+  const acctInitial = (acctName || user?.email || "?").trim().charAt(0).toUpperCase();
   const savedPujas = useMemo(() => pujas.filter((p) => ids.includes(p.id)), [ids]);
   const links = [
     ["nav.home", "/", true],
@@ -73,22 +78,25 @@ export default function Header() {
     };
   }, [pujasOpen]);
 
-  // Close wishlist + search dropdowns on Escape or click-outside.
+  // Close wishlist + search + account dropdowns on Escape or click-outside.
   // Closing the search also clears the query so the bar fully contracts.
   useEffect(() => {
-    if (!favOpen && !searchOpen) return;
+    if (!favOpen && !searchOpen && !acctOpen) return;
     function onKey(e) {
       if (e.key === "Escape") {
         setFavOpen(false);
         setSearchOpen(false);
+        setAcctOpen(false);
         setQuery("");
       }
     }
     function onDocClick(e) {
       if (e.target.closest(".fav-wrap-dt")) return;
       if (e.target.closest(".search-wrap-dt")) return;
+      if (e.target.closest(".acct-wrap-dt")) return;
       setFavOpen(false);
       setSearchOpen(false);
+      setAcctOpen(false);
       setQuery("");
     }
     document.addEventListener("keydown", onKey);
@@ -97,7 +105,7 @@ export default function Header() {
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("click", onDocClick);
     };
-  }, [favOpen, searchOpen]);
+  }, [favOpen, searchOpen, acctOpen]);
 
   // Focus the visible search field whenever the panel opens so typing
   // starts immediately (desktop bar input, mobile panel input).
@@ -150,6 +158,13 @@ export default function Header() {
 
   function toggleTheme() {
     toggle();
+  }
+
+  async function signOut() {
+    setAcctOpen(false);
+    setOpen(false);
+    await logout();
+    navigate("/");
   }
 
   function openPujas() {
@@ -532,10 +547,69 @@ export default function Header() {
               <Globe size={14} weight="duotone" />
               <span className="lang-toggle-label">{lang === "en" ? "EN" : "हि"}</span>
             </button>
-            <Link className="hidden sm:inline-flex nav-dt font-semibold" to="/auth/login">
-              {t("nav.account")}
-            </Link>
-            <Link className="hidden sm:inline-flex btn-gold-dt" to="/pujas">
+            {user ? (
+              <div className="acct-wrap-dt hidden sm:block">
+                <button
+                  onClick={() => {
+                    setAcctOpen((v) => !v);
+                    setFavOpen(false);
+                    setSearchOpen(false);
+                  }}
+                  className="acct-btn-dt"
+                  aria-label={lang === "hi" ? "खाता मेनू" : "Account menu"}
+                  aria-expanded={acctOpen}
+                >
+                  <span className="acct-avatar-dt" aria-hidden="true">
+                    {user.photoURL ? (
+                      <img src={user.photoURL} alt="" />
+                    ) : (
+                      acctInitial
+                    )}
+                  </span>
+                  <span className="acct-name-dt">{acctName || t("nav.account")}</span>
+                  <CaretDown
+                    size={11}
+                    className={`transition-transform duration-300 ${acctOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {acctOpen && (
+                  <div className="acct-panel-dt" role="menu">
+                    <div className="acct-panel-head-dt">
+                      <span className="block truncate">{acctName}</span>
+                      {user.email && (
+                        <span className="block truncate text-[10px] font-normal normal-case tracking-normal muted-dt">
+                          {user.email}
+                        </span>
+                      )}
+                    </div>
+                    {isAdmin ? (
+                      <Link to="/admin" onClick={() => setAcctOpen(false)} className="acct-item-dt" role="menuitem">
+                        {lang === "hi" ? "एडमिन डैशबोर्ड" : "Admin dashboard"}
+                        <ArrowUpRight size={13} className="muted-dt" />
+                      </Link>
+                    ) : (
+                      <>
+                        <Link to="/dashboard" onClick={() => setAcctOpen(false)} className="acct-item-dt" role="menuitem">
+                          {lang === "hi" ? "मेरा खाता" : "My account"}
+                          <ArrowUpRight size={13} className="muted-dt" />
+                        </Link>
+                        <Link to="/bookings" onClick={() => setAcctOpen(false)} className="acct-item-dt" role="menuitem">
+                          {lang === "hi" ? "मेरी बुकिंग" : "My bookings"}
+                          <ArrowUpRight size={13} className="muted-dt" />
+                        </Link>
+                      </>
+                    )}
+                    <button onClick={signOut} className="acct-item-dt acct-signout-dt" role="menuitem">
+                      {lang === "hi" ? "साइन आउट" : "Sign out"}
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link className="hidden sm:inline-flex nav-dt font-semibold" to="/auth/login">
+                {t("nav.account")}
+              </Link>
+            )}            <Link className="hidden sm:inline-flex btn-gold-dt" to="/pujas">
               {t("nav.bookPuja")}
             </Link>
             <button
@@ -573,14 +647,31 @@ export default function Header() {
                   {t(key)}
                 </NavLink>
               ))}
-              <Link
-                onClick={() => setOpen(false)}
-                className="py-3 text-xl display-dt border-b border-dt mobile-nav-dt"
-                to="/auth/login"
-              >
-                {t("nav.account")}
-              </Link>
-              <NavLink
+              {user ? (
+                <>
+                  <Link
+                    onClick={() => setOpen(false)}
+                    className="py-3 text-xl display-dt border-b border-dt mobile-nav-dt"
+                    to={isAdmin ? "/admin" : "/dashboard"}
+                  >
+                    {acctName || t("nav.account")}
+                  </Link>
+                  <button
+                    onClick={signOut}
+                    className="py-3 text-xl display-dt border-b border-dt mobile-nav-dt text-left"
+                  >
+                    {lang === "hi" ? "साइन आउट" : "Sign out"}
+                  </button>
+                </>
+              ) : (
+                <Link
+                  onClick={() => setOpen(false)}
+                  className="py-3 text-xl display-dt border-b border-dt mobile-nav-dt"
+                  to="/auth/login"
+                >
+                  {t("nav.account")}
+                </Link>
+              )}              <NavLink
                 onClick={() => setOpen(false)}
                 className={({ isActive }) =>
                   `py-3 text-xl display-dt border-b border-dt mobile-nav-dt${isActive ? " active" : ""} inline-flex items-center gap-2`
