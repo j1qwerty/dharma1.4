@@ -2271,6 +2271,25 @@ html.dark .ink-dt .decor-tone-yellow {
   text-transform: uppercase;
   backdrop-filter: blur(8px);
 }
+/* Tradition / expertise tag shown below the name inside the card body */
+.acharya-card-tag-dt {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--gold) 38%, var(--line));
+  background: color-mix(in srgb, var(--gold) 12%, var(--surface));
+  color: var(--gold-600, #b88a2a);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+}
+:root.dark .acharya-card-tag-dt {
+  color: #f6c95d;
+}
 .acharya-card-name-dt {
   position: absolute;
   left: 16px;
@@ -2380,6 +2399,17 @@ html.dark .ink-dt .decor-tone-yellow {
 .acharya-slide-dt .acharya-card-dt {
   height: 100%;
 }
+.acharya-slide-link-dt {
+  display: block;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 20px;
+}
+.acharya-slide-link-dt:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
 @media (max-width: 639px) {
   .acharya-carousel-dt {
     --acharya-slide-w: 100%;
@@ -2393,6 +2423,11 @@ html.dark .ink-dt .decor-tone-yellow {
 @media (min-width: 900px) and (max-width: 1149px) {
   .acharya-carousel-dt {
     --acharya-slide-w: calc((100% - 36px) / 3);
+  }
+}
+@media (min-width: 1150px) {
+  .acharya-carousel-dt {
+    --acharya-slide-w: calc((100% - 54px) / 4);
   }
 }
 .acharya-controls-dt {
@@ -2991,8 +3026,11 @@ input[type="radio"]:focus-visible {
 .lang-toggle-dt {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   height: 36px;
+  width: 72px;
+  min-width: 72px;
   padding: 0 10px;
   border-radius: 999px;
   border: 1px solid var(--line, rgba(10, 9, 6, 0.12));
@@ -3017,6 +3055,9 @@ input[type="radio"]:focus-visible {
   color: var(--gold-600, #b88a2a);
 }
 .lang-toggle-label {
+  display: inline-block;
+  min-width: 24px;
+  text-align: center;
   font-size: 12px;
   line-height: 1;
 }

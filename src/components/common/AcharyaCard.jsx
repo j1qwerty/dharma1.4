@@ -7,7 +7,7 @@ import { useLanguage } from "./LanguageToggle";
  * page grid and the home preview slider. Compact media + name on the
  * photo, structured rows + bio in the body.
  * ------------------------------------------------------------------ */
-export default function AcharyaCard({ a }) {
+export default function AcharyaCard({ a, compact = false }) {
   const { lang, t } = useLanguage();
   const tradition = lang === "hi" && a.traditionHi ? a.traditionHi : a.tradition;
   const place = lang === "hi" && a.placeHi ? a.placeHi : a.place;
@@ -28,10 +28,10 @@ export default function AcharyaCard({ a }) {
               "https://images.unsplash.com/photo-1604608672516-f1b9c1d5a5e1?auto=format&fit=crop&w=900&q=80";
           }}
         />
-        <span className="acharya-card-badge-dt">{tradition}</span>
         <div className="acharya-card-name-dt">{a.name}</div>
       </div>
       <div className="acharya-card-body-dt">
+        {tradition && <span className="acharya-card-tag-dt">{tradition}</span>}
         <div className="acharya-card-row-dt">
           <span className="ar-label-dt">{t("ach.cardPlace")}</span>
           <span className="ar-value-dt">{place}</span>
@@ -48,7 +48,7 @@ export default function AcharyaCard({ a }) {
           <span className="ar-label-dt">{t("ach.cardExperience")}</span>
           <span className="ar-value-dt">{experience}</span>
         </div>
-        {a.phone && (
+        {a.phone && !compact && (
           <div className="acharya-card-row-dt">
             <span className="ar-label-dt">{t("ach.cardContact")}</span>
             <span className="ar-value-dt">
@@ -61,7 +61,7 @@ export default function AcharyaCard({ a }) {
             </span>
           </div>
         )}
-        <p className="acharya-card-bio-dt">{bio}</p>
+        {!compact && <p className="acharya-card-bio-dt">{bio}</p>}
       </div>
     </div>
   );

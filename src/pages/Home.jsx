@@ -100,6 +100,7 @@ function AcharyasHomeSlider() {
   const startX = useRef(0);
   const dragDx = useRef(0);
   const dragging = useRef(false);
+  const suppressClick = useRef(false);
   function onPointerDown(e) {
     dragging.current = true;
     startX.current = e.touches ? e.touches[0].clientX : e.clientX;
@@ -123,6 +124,7 @@ function AcharyasHomeSlider() {
     dragging.current = false;
     if (trackRef.current) trackRef.current.style.transition = "";
     const thresh = 56;
+    if (Math.abs(dragDx.current) > 10) suppressClick.current = true;
     if (dragDx.current < -thresh) go(1);
     else if (dragDx.current > thresh) go(-1);
     else if (trackRef.current) {
@@ -178,7 +180,20 @@ function AcharyasHomeSlider() {
               aria-roledescription="slide"
               aria-label={a.name}
             >
-              <AcharyaCard a={a} />
+              <Link
+                to="/acharyas"
+                className="acharya-slide-link-dt"
+                aria-label={`View all acharyas — ${a.name}`}
+                onClickCapture={(e) => {
+                  if (suppressClick.current) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    suppressClick.current = false;
+                  }
+                }}
+              >
+                <AcharyaCard a={a} compact />
+              </Link>
             </div>
           ))}
         </div>
