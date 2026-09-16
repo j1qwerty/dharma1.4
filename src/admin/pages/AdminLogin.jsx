@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../lib/auth";
-import PhoneLogin from "../components/common/PhoneLogin";
-import GoogleIcon from "../components/common/GoogleIcon";
+import { useAuth } from "../../lib/auth";
+import PhoneLogin from "../../components/common/PhoneLogin";
+import GoogleIcon from "../../components/common/GoogleIcon";
 
-import { useSiteSettings, isPhoneEnabled } from "../lib/settings";
+import { useSiteSettings, isPhoneEnabled } from "../../lib/settings";
 
 export default function AdminLogin() {
   const { user, isAdmin, loading, configured, signInWithGoogle, signInWithEmail } = useAuth();
@@ -47,7 +47,7 @@ export default function AdminLogin() {
       </button>
       <form onSubmit={goEmail} className="mt-6 grid gap-3">
         <div className="eyebrow">or sign in with email</div>
-        <input type="email" required placeholder="admin@dharmatribe.com" value={email}
+        <input type="email" required placeholder="email" value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="h-11 rounded-xl border border-dt bg-transparent px-3 text-sm outline-none" />
         <input type="password" required placeholder="Password" value={password}

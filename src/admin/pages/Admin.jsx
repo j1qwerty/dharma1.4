@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../lib/auth";
-import { useCollection } from "../lib/cms";
-import { getActiveFestivals, getPreviewNow } from "../lib/schedule";
+import { useAuth } from "../../lib/auth";
+import { useCollection } from "../../lib/cms";
+import { getActiveFestivals, getPreviewNow } from "../../lib/schedule";
 
 const LINKS = [
   ["Pujas", "/admin/pujas (next)", "pujas"],

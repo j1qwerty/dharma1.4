@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { db, firebaseConfigured } from "../lib/firebase";
-import { useAuth } from "../lib/auth";
-import { useSiteSettings } from "../lib/settings";
+import { db, firebaseConfigured } from "../../lib/firebase";
+import { useAuth } from "../../lib/auth";
+import { useSiteSettings } from "../../lib/settings";
 
 /* Admin → Settings: feature flags stored in site_settings/global.
  * phoneAuth: { customer: bool (for /auth/*), admin: bool (for /admin/login) }
