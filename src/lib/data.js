@@ -1,7 +1,11 @@
+// Puja catalogue. Each puja carries an English + Hindi title/desc so the UI
+// can render in either language without branching logic in the page.
 export const pujas = [
   {
     id: "mahadeva-rudra",
+    code: "PUJA-001",
     title: "Maha Rudrabhishek",
+    titleHi: "महा रुद्राभिषेक",
     deity: "Shiva",
     temple: "Kashi Vishwanath",
     date: "Sep 09, 2026",
@@ -13,10 +17,13 @@ export const pujas = [
     image:
       "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1500&q=86",
     desc: "A traditional Rudrabhishek with a personalized Sankalp and recorded ceremony access.",
+    descHi: "व्यक्तिगत संकल्प और रिकॉर्ड किए गए समारोह की पहुँच के साथ एक पारंपरिक रुद्राभिषेक।",
   },
   {
     id: "ganesha-vighna",
+    code: "PUJA-002",
     title: "Ganesh Vighnaharta Puja",
+    titleHi: "गणेश विघ्नहर्ता पूजा",
     deity: "Ganesh",
     temple: "Ujjain Mahakaleshwar",
     date: "Sep 10, 2026",
@@ -28,10 +35,13 @@ export const pujas = [
     image:
       "https://images.unsplash.com/photo-1567591414240-e6c5a9e0a0c4?auto=format&fit=crop&w=1500&q=86",
     desc: "A focused Ganesh puja for a new chapter, journey, venture or important decision.",
+    descHi: "नए अध्याय, यात्रा, उद्यम या महत्वपूर्ण निर्णय के लिए एक केंद्रित गणेश पूजा।",
   },
   {
     id: "lakshmi-diwali",
+    code: "PUJA-003",
     title: "Mahalakshmi Dhan Akarshan",
+    titleHi: "महालक्ष्मी धन आकर्षण",
     deity: "Lakshmi",
     temple: "Lotus Temple Seva",
     date: "Oct 20, 2026",
@@ -43,10 +53,13 @@ export const pujas = [
     image:
       "https://images.unsplash.com/photo-1603561596112-0a132b5a965a?auto=format&fit=crop&w=1500&q=86",
     desc: "An intimate Lakshmi offering for Diwali and the season of new beginnings.",
+    descHi: "दीवाली और नए आरंभ के मौसम के लिए एक अंतरंग लक्ष्मी अनुष्ठान।",
   },
   {
     id: "hanuman-sankat",
+    code: "PUJA-004",
     title: "Sankat Mochan Hanuman Seva",
+    titleHi: "संकट मोचन हनुमान सेवा",
     deity: "Hanuman",
     temple: "Ayodhya Ram Janmabhoomi",
     date: "Sep 12, 2026",
@@ -58,10 +71,13 @@ export const pujas = [
     image:
       "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=1500&q=86",
     desc: "A focused Hanuman seva for courage, steadiness and protection.",
+    descHi: "साहस, स्थिरता और सुरक्षा के लिए एक केंद्रित हनुमान सेवा।",
   },
   {
     id: "satyanarayan",
+    code: "PUJA-005",
     title: "Satyanarayan Katha",
+    titleHi: "सत्यनारायण कथा",
     deity: "Vishnu",
     temple: "Badrinath Seva Mandal",
     date: "Sep 13, 2026",
@@ -73,10 +89,13 @@ export const pujas = [
     image:
       "https://images.unsplash.com/photo-1604608672516-f1b9c7f84d1c?auto=format&fit=crop&w=1500&q=86",
     desc: "A family-oriented Satyanarayan ritual with personalized Sankalp.",
+    descHi: "व्यक्तिगत संकल्प के साथ परिवार-उन्मुख सत्यनारायण अनुष्ठान।",
   },
   {
     id: "navagraha",
+    code: "PUJA-006",
     title: "Navagraha Shanti Homam",
+    titleHi: "नवग्रह शांति होमम",
     deity: "Navagraha",
     temple: "Kanchipuram Seva",
     date: "Sep 15, 2026",
@@ -88,10 +107,13 @@ export const pujas = [
     image:
       "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=1500&q=86",
     desc: "A structured homam experience around traditional Navagraha practices.",
+    descHi: "पारंपरिक नवग्रह पद्धतियों के इर्द-गिर्द एक संरचित होमम अनुभव।",
   },
   {
     id: "durga-path",
+    code: "PUJA-007",
     title: "Durga Saptashati Path",
+    titleHi: "दुर्गा सप्तशती पाठ",
     deity: "Durga",
     temple: "Kolkata Shakti Peeth Seva",
     date: "Oct 06, 2026",
@@ -103,10 +125,13 @@ export const pujas = [
     image:
       "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1500&q=86",
     desc: "A Navratri path experience with family Sankalp.",
+    descHi: "पारिवारिक संकल्प के साथ एक नवरात्रि पाठ अनुभव।",
   },
   {
     id: "maha-mrityunjaya",
+    code: "PUJA-008",
     title: "Mahamrityunjaya Jaap",
+    titleHi: "महामृत्युंजय जाप",
     deity: "Shiva",
     temple: "Somnath Temple Seva",
     date: "Sep 18, 2026",
@@ -118,34 +143,62 @@ export const pujas = [
     image:
       "https://images.unsplash.com/photo-1532968961962-8a0e2b6fc5f6?auto=format&fit=crop&w=1500&q=86",
     desc: "A traditional mantra jaap experience with Sankalp and post-puja video delivery.",
+    descHi: "संकल्प और पूजा के बाद वीडियो डिलीवरी के साथ एक पारंपरिक मंत्र जाप अनुभव।",
+  },
+  {
+    id: "shraadh",
+    code: "PUJA-009",
+    title: "Shraadh",
+    titleHi: "श्राद्ध",
+    deity: "Pitru",
+    temple: "At Home · Temple · Gaya Ji",
+    date: "Pitru Paksha",
+    time: "Per Tithi",
+    price: 2101,
+    tag: "Ancestral",
+    purpose: "Ancestral peace",
+    type: "Shraadh",
+    image:
+      "https://images.unsplash.com/photo-1604608672516-f1b9c7f84d1c?auto=format&fit=crop&w=1500&q=86",
+    desc: "Ancestral observance performed with śraddhā — at home with a Vedacharya, on your behalf from a temple, or at Gaya Ji.",
+    descHi:
+      "श्रद्धा के साथ संपन्न होने वाला पितृ अनुष्ठान — घर पर वेदाचार्य के साथ, आपकी ओर से मंदिर से, या गया जी में।",
   },
 ];
 export const festivals = [
   {
     name: "Ganesh Chaturthi",
+    nameHi: "गणेश चतुर्थि",
     date: "Sep 12",
     note: "Ten days of devotion",
+    noteHi: "दस दिन की भक्ति",
     image:
       "https://images.unsplash.com/photo-1579439302394-975be7b3f46c?auto=format&fit=crop&w=1200&q=84",
   },
   {
     name: "Navratri",
+    nameHi: "नवरात्रि",
     date: "Oct 11",
     note: "Nine nights of devotion",
+    noteHi: "नौ रातों की भक्ति",
     image:
       "https://images.unsplash.com/photo-1565355528125-2b3c38b7f45f?auto=format&fit=crop&w=1200&q=84",
   },
   {
     name: "Diwali",
+    nameHi: "दीवाली",
     date: "Oct 20",
     note: "Light, Lakshmi, new beginnings",
+    noteHi: "प्रकाश, लक्ष्मी, नए आरंभ",
     image:
       "https://images.unsplash.com/photo-1603561596112-0a132b5a965a?auto=format&fit=crop&w=1200&q=84",
   },
   {
     name: "Mahashivratri",
+    nameHi: "महाशिवरात्रि",
     date: "Feb 15",
     note: "Night of Shiva",
+    noteHi: "शिव की रात",
     image:
       "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=84",
   },
@@ -155,81 +208,98 @@ export const stories = [
     id: "why-sankalp",
     category: "Rituals / Puja Vidhi",
     title: "What a Sankalp really means, and why your name matters",
+    titleHi: "संकल्प का वास्तविक अर्थ, और आपके नाम का महत्व",
     read: "6 min",
     date: "Sep 04, 2026",
     image:
       "https://images.unsplash.com/photo-1604608672516-f1b9c7f84d1c?auto=format&fit=crop&w=1400&q=84",
     excerpt: "A simple guide to the intention placed at the heart of a traditional puja.",
+    excerptHi: "पारंपरिक पूजा के केंद्र में रखे गए संकल्प का सरल परिचय।",
   },
   {
     id: "temple-bells",
     category: "Temple Histories",
     title: "The language of temple bells",
+    titleHi: "मंदिर घंटों की भाषा",
     read: "4 min",
     date: "Aug 29, 2026",
     image:
       "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?auto=format&fit=crop&w=1400&q=84",
     excerpt: "Why bells are rung, what the ritual means, and what devotees are actually doing.",
+    excerptHi:
+      "घंटे क्यों बजाए जाते हैं, अनुष्ठान का क्या अर्थ है, और भक्त वास्तव में क्या कर रहे हैं।",
   },
   {
     id: "shiva-ritual",
     category: "Deity Stories",
     title: "Why Rudrabhishek is one of the most requested Shiva rituals",
+    titleHi: "रुद्राभिषेक सबसे माँगे जाने वाले शिव अनुष्ठानों में से एक क्यों है",
     read: "8 min",
     date: "Aug 22, 2026",
     image:
       "https://images.unsplash.com/photo-1604848533913-24d40c8054b9?auto=format&fit=crop&w=1400&q=84",
     excerpt: "From the first offering to the final aarti, a ritual viewed through its sequence.",
+    excerptHi: "पहले अर्पण से अंतिम आरती तक, एक अनुष्ठान अपने क्रम के माध्यम से।",
   },
   {
     id: "home-puja",
     category: "Devotee Stories",
     title: "A puja performed 1,300 km away, but still close to home",
+    titleHi: "1,300 किमी दूर संपन्न पूजा, फिर भी घर के करीब",
     read: "5 min",
     date: "Aug 18, 2026",
     image:
       "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=1400&q=84",
     excerpt: "One family’s reason for choosing a remote puja service for a milestone.",
+    excerptHi: "किसी मील के पत्थर के लिए दूरस्थ पूजा सेवा चुनने वाले एक परिवार का कारण।",
   },
   {
     id: "diwali-lakshmi",
     category: "Festivals",
     title: "A calmer way to prepare for Diwali",
+    titleHi: "दीवाली की तैयारी का एक शांत तरीका",
     read: "7 min",
     date: "Aug 11, 2026",
     image:
       "https://images.unsplash.com/photo-1579439302394-975be7b3f46c?auto=format&fit=crop&w=1400&q=84",
     excerpt: "How to bring the important ritual details forward before the festival rush.",
+    excerptHi: "त्यौहार की भीड़ से पहले महत्वपूर्ण अनुष्ठान विवरण आगे कैसे लाएँ।",
   },
   {
     id: "annadanam",
     category: "Rituals / Puja Vidhi",
     title: "What happens when a puja includes Annadanam",
+    titleHi: "जब पूजा में अन्नदान शामिल हो तब क्या होता है",
     read: "5 min",
     date: "Aug 07, 2026",
     image:
       "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1400&q=84",
     excerpt: "A visual guide to the offering, preparation and community side of the ritual.",
+    excerptHi: "अर्पण, तैयारी और अनुष्ठान के सामुदायिक पक्ष का दृश्य मार्गदर्शन।",
   },
   {
     id: "temple-morning",
     category: "Temple Histories",
     title: "Before sunrise: a temple morning in three sounds",
+    titleHi: "सूर्योदय से पहले: तीन ध्वनियों में मंदिर की सुबह",
     read: "4 min",
     date: "Jul 28, 2026",
     image:
       "https://images.unsplash.com/photo-1602774891309-b8c7b6d9b8a8?auto=format&fit=crop&w=1400&q=84",
     excerpt: "Bell, conch and chant. A closer look at the rhythm of an early temple morning.",
+    excerptHi: "घंटा, शंख और मंत्र। एक मंदिर की प्रातः की लय पर एक नज़दीकी नज़र।",
   },
   {
     id: "family-sankalp",
     category: "Devotee Stories",
     title: "The family Sankalp that crossed three cities",
+    titleHi: "तीन शहरों को पार करने वाला पारिवारिक संकल्प",
     read: "6 min",
     date: "Jul 21, 2026",
     image:
       "https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&w=1400&q=84",
     excerpt: "A family used one booking to bring siblings together for a shared intention.",
+    excerptHi: "एक परिवार ने एक बुकिंग से भाई-बहनों को साझा संकल्प के लिए एक साथ लाया।",
   },
 ];
 export const intentions = [
@@ -254,6 +324,7 @@ export const deities = [
   "Hanuman",
   "Kali",
   "Navagraha",
+  "Pitru",
 ];
 export const social = [
   {
@@ -286,83 +357,74 @@ export const social = [
   },
 ];
 
+// Updated acharya list — replaces the placeholder scholars with the real
+// profiles from Acharya.md (Amit Diwedy, Mohit Sharma, Chandra Shekhar
+// Samavedula). Bilingual fields are exposed so the UI can switch EN/HI.
 export const acharyas = [
   {
-    id: "ramesh-shastri",
-    name: "Pt. Ramesh Shastri",
-    tradition: "Vedic / Sanatan",
-    place: "Kashi Vishwanath, Varanasi",
+    id: "amit-diwedy",
+    name: "Amit Diwedy",
+    tradition: "Numerology & Palmistry",
+    traditionHi: "अंक ज्योतिष और हस्तरेखा",
+    place: "Bharti Vidya Bhavan, Delhi",
+    placeHi: "भारतीय विद्या भवन, दिल्ली",
     approach: "Knowledge · Discipline · Authenticity",
-    expertise: "Rudrabhishek · Mahamrityunjaya Jaap",
-    lineage: "Krishna Yajurveda, Taittiriya shakha",
-    experience: "32 years",
-    image:
-      "https://images.unsplash.com/photo-1604608672516-f1b9b1d5a5e1?auto=format&fit=crop&w=900&q=80",
-    bio: "Trained in the traditional gurukula of Kashi, Pt. Shastri carries the Rudra recitation in its full padapatha. He leads Rudrabhishek and Mahamrityunjaya observances with the discipline of a daily practitioner.",
+    approachHi: "ज्ञान · अनुशासन · प्रामाणिकता",
+    expertise: "Numerology · Palmistry",
+    expertiseHi: "अंकज्योतिष · हस्तरेखा",
+    lineage: "Bharti Vidya Bhavan, Delhi",
+    lineageHi: "भारतीय विद्या भवन, दिल्ली",
+    experience: "Practising since age 40",
+    experienceHi: "40 वर्ष से अभ्यास",
+    image: "/amitdiwedi.jpg",
+    phone: "+91 99587 28666",
+    email: "macparmarth@gmail.com",
+    bio: "Amit is a Civil Engineering Graduate with Gold Medal from Bharti Vidyapeeth, Pune. After graduation, he did his MBA in Construction Management. He runs a business which is into Interior Designing. He enjoys playing Cricket and plays for his Cricket Club in Delhi. Additionally, he is a Trustee with Nursing Tree Trust which aims at the betterment of society & his alumni. Amit had an inclination towards Palmistry since he was in Class 10th but studies & life kept him busy. At the age of 40, he took this hobby as a profession and is now a known Numerologist and a Palmist after Graduating from Bharti Vidya Bhavan, Delhi. Amit wants to retire at the age of 45 and take this Journey to new heights where he can give to the society by doing a Positive Palmistry and Numerology aiming at the welfare of the society.",
+    bioHi:
+      "अमित भारती विद्यापीठ, पुणे से स्वर्ण पदक विजेता सिविल इंजीनियरिंग स्नातक हैं। स्नातक के बाद उन्होंने निर्माण प्रबंधन में एमबीए किया। वे इंटीरियर डिज़ाइनिंग का व्यवसाय चलाते हैं। वे क्रिकेट खेलना पसंद करते हैं और दिल्ली में अपने क्रिकेट क्लब के लिए खेलते हैं। साथ ही, वे नर्सिंग ट्री ट्रस्ट के ट्रस्टी हैं जो समाज और उनके एलुमनाई के उत्थान का लक्ष्य रखता है। अमित की कक्षा 10वीं से ही हस्तरेखा के प्रति रुचि थी, पर अध्ययन और जीवन व्यस्त रखते थे। 40 वर्ष की आयु में उन्होंने इस शौक को व्यवसाय बनाया और भारतीय विद्या भवन, दिल्ली से स्नातक के बाद अब वे एक जाने-माने अंक ज्योतिषी और हस्तरेखा विशेषज्ञ हैं। अमित 45 वर्ष की आयु में सेवानिवृत्त होकर इस यात्रा को नई ऊँचाइयों पर ले जाना चाहते हैं जहाँ वे सकारात्मक हस्तरेखा और अंकज्योतिष के माध्यम से समाज के कल्याण में योगदान दे सकें।",
   },
   {
-    id: "srinivasa-dikshitar",
-    name: "Acharya Srinivasa Dikshitar",
-    tradition: "Vedic / Sanatan",
-    place: "Sringeri Sharada Peetham, Karnataka",
+    id: "mohit-sharma",
+    name: "Mohit Sharma",
+    tradition: "Vedic Astrology & Palmistry",
+    traditionHi: "वैदिक ज्योतिष और हस्तरेखा",
+    place: "Jyotish Acharya · Delhi",
+    placeHi: "ज्योतिष आचार्य · दिल्ली",
     approach: "Knowledge · Discipline · Authenticity",
-    expertise: "Navagraha Shanti · Homam",
-    lineage: "Rigveda, Shakala shakha",
-    experience: "27 years",
-    image:
-      "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=900&q=80",
-    bio: "A scholar of the Sringeri lineage, Acharya Dikshitar specialises in Navagraha pacification and fire rituals. His recitation follows the Shakala rigvedic metre with strict phonetic fidelity.",
+    approachHi: "ज्ञान · अनुशासन · प्रामाणिकता",
+    expertise: "Jyotish · Palmistry · Numerology",
+    expertiseHi: "ज्योतिष · हस्तरेखा · अंकज्योतिष",
+    lineage: "Jyotish Alankar · Jyotish Acharya",
+    lineageHi: "ज्योतिष अलंकार · ज्योतिष आचार्य",
+    experience: "10+ years",
+    experienceHi: "10+ वर्ष",
+    image: "/mohitsharma.jpg",
+    phone: "+91 98682 38906",
+    email: "macparmarth@gmail.com",
+    bio: "Mohit Sharma, a Final Year Student in CA and CS, discovered his passion for Astrology while working in Finance for Corporates. What started as a hobby evolved into a deep interest, where he dived deeper into the Ancient Occult Science of Astrology. Alongside Astrology, he is also an avid cricketer. With over a decade of experience, he holds degrees in Jyotish Alankar, Jyotish Acharya, and has completed Diploma in Palmistry and Numerology. As a trusted astrologer, Mohit aims to use his knowledge for human welfare, blending traditional and modern techniques, which has garnered him a global following as a consultant and teacher.",
+    bioHi:
+      "मोहित शर्मा, सीए और सीएस के अंतिम वर्ष के छात्र, ने कॉर्पोरेट्स के लिए वित्त में कार्य करते हुए ज्योतिष के प्रति अपना जुनून खोजा। जो शौक से शुरू हुआ, वह एक गहरी रुचि में बदल गया, जहाँ उन्होंने ज्योतिष के प्राचीन गूढ़ विज्ञान में गहराई से उतरा। ज्योतिष के साथ-साथ, वे क्रिकेट के भी शौकीन हैं। एक दशक से अधिक के अनुभव के साथ, उन्होंने ज्योतिष अलंकार, ज्योतिष आचार्य में डिग्री हासिल की है, और हस्तरेखा एवं अंकज्योतिष में डिप्लोमा पूरा किया है। एक भरोसेमंद ज्योतिषी के रूप में, मोहित का लक्ष्य अपने ज्ञान का उपयोग मानव कल्याण के लिए करना है, पारंपरिक और आधुनिक तकनीकों को मिलाकर, जिसने उन्हें एक सलाहकार और शिक्षक के रूप में वैश्विक अनुसरण दिलाया है।",
   },
   {
-    id: "lakshmi-narayana-bhatt",
-    name: "Sri Lakshmi Narayana Bhatt",
-    tradition: "Pancharatra Agama",
-    place: "Tirumala Tirupati, Andhra Pradesh",
+    id: "chandra-shekhar-samavedula",
+    name: "Chandra Shekhar Samavedula",
+    tradition: "Graphology · Numerology · Astrology",
+    traditionHi: "ग्राफोलॉजी · अंकज्योतिष · ज्योतिष",
+    place: "Delhi-NCR",
+    placeHi: "दिल्ली-एनसीआर",
     approach: "Knowledge · Discipline · Authenticity",
-    expertise: "Archana · Kalyanam · Satyanarayan Katha",
-    lineage: "Vaikhanasa / Pancharatra agama",
-    experience: "24 years",
-    image:
-      "https://images.unsplash.com/photo-1567591414240-e6c5a0a0a0c4?auto=format&fit=crop&w=900&q=80",
-    bio: "Serving at one of the busiest Vaishnava temples, Sri Bhatt conducts daily archana and the Satyanarayan Katha in the Pancharatra tradition, with attention to each devotee's Sankalp.",
-  },
-  {
-    id: "devendra-giri",
-    name: "Pt. Devendra Giri",
-    tradition: "Vedic / Sanatan",
-    place: "Kashi & beyond, Varanasi",
-    approach: "Knowledge · Discipline · Authenticity",
-    expertise: "Mahamrityunjaya · Laghu Rudra",
-    lineage: "Shaiva, Jyotirlinga parampara",
-    experience: "29 years",
-    image:
-      "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=900&q=80",
-    bio: "A Mahadev upasaka from the ghats of Kashi, Pt. Giri's observances centre on the Mahamrityunjaya mantra and Laghu Rudra. He is known for the clarity of his Sankalp narration.",
-  },
-  {
-    id: "anandi-joshi",
-    name: "Acharya Anandi Prasad Joshi",
-    tradition: "Smarta",
-    place: "Mahakaleshwar, Ujjain",
-    approach: "Knowledge · Discipline · Authenticity",
-    expertise: "Ganesh pujas · Navagraha · Sankalp",
-    lineage: "Smarta, Shankara sampradaya",
-    experience: "21 years",
-    image:
-      "https://images.unsplash.com/photo-1532968961962-8a0b3a6b6fc6?auto=format&fit=crop&w=900&q=80",
-    bio: "Based at Mahakaleshwar, Acharya Joshi conducts Ganesh observances and family Sankalp rituals in the Smarta tradition. He is patient with first-time devotees explaining each step.",
-  },
-  {
-    id: "lakshmi-devi-sharma",
-    name: "Smt. Lakshmi Devi Sharma",
-    tradition: "Devi Upasana",
-    place: "Kamakshi Amman, Kanchipuram",
-    approach: "Knowledge · Discipline · Authenticity",
-    expertise: "Durga Saptashati · Lakshmi pujas",
-    lineage: "Devi upasana, Srividya",
-    experience: "26 years",
-    image:
-      "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=900&q=80",
-    bio: "One of the few women acharyas leading Devi recitations, Smt. Sharma leads Durga Saptashati Path and Mahalakshmi observances. Her Saptashati recitation follows the Markandeya metre.",
+    approachHi: "ज्ञान · अनुशासन · प्रामाणिकता",
+    expertise: "Graphology · Numerology · Astrology · Wristwatch Analysis",
+    expertiseHi: "ग्राफोलॉजी · अंकज्योतिष · ज्योतिष · कलाई घड़ी विश्लेषण",
+    lineage: "3+ years of practice",
+    lineageHi: "3+ वर्ष का अभ्यास",
+    experience: "3+ years",
+    experienceHi: "3+ वर्ष",
+    image: "/chandrashekhar.jpg",
+    phone: "+91 99582 53666",
+    email: "macparmarth@gmail.com",
+    bio: "An IT professional with 27 years of Industry experience, working with European MNC in Delhi-NCR. A Numismatist with a vast Collection of coins, Chandra enjoys hiking in Aravalis on weekends. Entered in the world of Occult Sciences with the aim to spread positivity in the society and bust the myths around various misconception. Chandra learnt different sciences for the betterment of the society. He has been working in this area for over 3 years & helped many adolescent school going children to overcome their fear just by analyzing the simplest drawing and providing the simple therapies and remedies. At the same time, Chandra has guided the people from different walks of life by providing the consultancy through Numerology, Hand-writing and Signature analysis and necessary changes, also advising the right kind of Wrist Watch to improve their married lives.",
+    bioHi:
+      "दिल्ली-एनसीआर में एक यूरोपीय बहुराष्ट्रीय कंपनी के साथ कार्यरत 27 वर्ष के उद्योग अनुभव वाले आईटी पेशेवर। विशाल सिक्का संग्रह वाले एक मुद्राशास्त्री, चंद्रा सप्ताहांत में अरावली में हाइकिंग का आनंद लेते हैं। समाज में सकारात्मकता फैलाने और विभिन्न भ्रांतियों के इर्द-गिर्द के मिथकों को दूर करने के उद्देश्य से गूढ़ विज्ञान की दुनिया में प्रवेश किया। चंद्रा ने समाज के उत्थान के लिए विभिन्न विज्ञान सीखे। वे इस क्षेत्र में 3 वर्ष से अधिक से कार्यरत हैं और केवल सरल चित्रकला का विश्लेषण करके और सरल चिकित्सा एवं उपाय प्रदान करके कई किशोर विद्यालय जाने वाले बच्चों के भय को दूर करने में सहायता की है। साथ ही, चंद्रा ने अंकज्योतिष, हस्तलेख और हस्ताक्षर विश्लेषण और आवश्यक परिवर्तनों के माध्यम से विभिन्न क्षेत्रों के लोगों को परामर्श दिया है, और उनके वैवाहिक जीवन में सुधार के लिए सही प्रकार की कलाई घड़ी की सलाह भी दी है।",
   },
 ];

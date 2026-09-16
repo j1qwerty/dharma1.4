@@ -6,7 +6,15 @@ export function MandalaRings({ className = "" }) {
   return (
     <svg className={className} viewBox="0 0 220 220" fill="none" aria-hidden="true">
       {rings.map((r, i) => (
-        <circle key={r} cx="110" cy="110" r={r} stroke={stroke} strokeWidth={i === 0 ? 1.1 : 0.8} opacity={1 - i * 0.12} />
+        <circle
+          key={r}
+          cx="110"
+          cy="110"
+          r={r}
+          stroke={stroke}
+          strokeWidth={i === 0 ? 1.1 : 0.8}
+          opacity={1 - i * 0.12}
+        />
       ))}
       {/* petal ring */}
       {Array.from({ length: 16 }).map((_, i) => {
@@ -15,7 +23,18 @@ export function MandalaRings({ className = "" }) {
         const y1 = 110 + Math.sin(a) * 52;
         const x2 = 110 + Math.cos(a) * 72;
         const y2 = 110 + Math.sin(a) * 72;
-        return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={stroke} strokeWidth="0.8" opacity="0.7" />;
+        return (
+          <line
+            key={i}
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
+            stroke={stroke}
+            strokeWidth="0.8"
+            opacity="0.7"
+          />
+        );
       })}
       {/* inner lotus petals */}
       {Array.from({ length: 8 }).map((_, i) => {

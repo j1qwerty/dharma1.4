@@ -173,14 +173,14 @@ export default function PageTransition() {
       <div className="pt-center" aria-hidden={!visible}>
         <div className="pt-hero-wrap">
           <div className="pt-glow" aria-hidden="true" />
-          <svg
-            key={tick}
-            className="pt-hero"
-            viewBox="0 0 120 120"
-            aria-hidden="true"
-            role="img"
-          >
-            <g fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <svg key={tick} className="pt-hero" viewBox="0 0 120 120" aria-hidden="true" role="img">
+            <g
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path className="arm a1" pathLength="1" d="M60 60 V20 H100" />
               <path className="arm a2" pathLength="1" d="M60 60 H100 V100" />
               <path className="arm a3" pathLength="1" d="M60 60 V100 H20" />
@@ -191,10 +191,22 @@ export default function PageTransition() {
               <path className="tip t2" d="M101.06 98.94 L98.94 101.06 L110 110 Z" />
               <path className="tip t3" d="M21.06 101.06 L18.94 98.94 L10 110 Z" />
               <path className="tip t4" d="M18.94 21.06 L21.06 18.94 L10 10 Z" />
-              <path className="star s1" d="M77 36 Q77 43 84 43 Q77 43 77 50 Q77 43 70 43 Q77 43 77 36 Z" />
-              <path className="star s2" d="M77 70 Q77 77 84 77 Q77 77 77 84 Q77 77 70 77 Q77 77 77 70 Z" />
-              <path className="star s3" d="M43 70 Q43 77 50 77 Q43 77 43 84 Q43 77 36 77 Q43 77 43 70 Z" />
-              <path className="star s4" d="M43 36 Q43 43 50 43 Q43 43 43 50 Q43 43 36 43 Q43 43 43 36 Z" />
+              <path
+                className="star s1"
+                d="M77 36 Q77 43 84 43 Q77 43 77 50 Q77 43 70 43 Q77 43 77 36 Z"
+              />
+              <path
+                className="star s2"
+                d="M77 70 Q77 77 84 77 Q77 77 77 84 Q77 77 70 77 Q77 77 77 70 Z"
+              />
+              <path
+                className="star s3"
+                d="M43 70 Q43 77 50 77 Q43 77 43 84 Q43 77 36 77 Q43 77 43 70 Z"
+              />
+              <path
+                className="star s4"
+                d="M43 36 Q43 43 50 43 Q43 43 43 50 Q43 43 36 43 Q43 43 43 36 Z"
+              />
               <circle className="dot" cx="60" cy="60" r="2.5" />
             </g>
           </svg>

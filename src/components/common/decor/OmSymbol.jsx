@@ -65,19 +65,10 @@ const OM_TILAKA = `
   C210.90372,63.086273 195.02308,53.837816 189.83603,40.997228
   Z`;
 
-export function OmSymbol({
-  className,
-  stroke = "currentColor",
-  strokeWidth = 4,
-}) {
+export function OmSymbol({ className, stroke = "currentColor", strokeWidth = 4 }) {
   return (
     <svg className={className} viewBox="0 0 356 367" fill="none" aria-hidden="true">
-      <g
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <g stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
         <path d={OM_BODY} />
         <path d={OM_CHANDRA} />
         <path d={OM_TILAKA} />

@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { pujas } from "./data";
+
 const C = createContext(null);
 const initial = {
   pujaId: "mahadeva-rudra",
   date: "Sep 09, 2026",
-  time: "07:30 AM",
+  time: "07:30 AM - 08:30 AM",
   package: "Family",
   packagePrice: 2100,
   addons: ["Video"],
@@ -26,3 +28,101 @@ export function BookingProvider({ children }) {
   return <C.Provider value={value}>{children}</C.Provider>;
 }
 export const useBooking = () => useContext(C);
+
+/**
+ * Build a fully detailed WhatsApp message for the current booking.
+ * Includes puja code, title (EN + HI when available), deity, temple, date,
+ * muhurat, package, addons, sankalp (name, gotra, purpose, family) and total.
+ *
+ * @param {object} booking - the active booking state.
+ * @param {("en"|"hi")} lang - language for the message header / labels.
+ */
+export function buildBookingWhatsAppMessage(booking, lang = "en") {
+  const p = pujas.find((x) => x.id === booking.pujaId) || pujas[0];
+  const addons = Array.isArray(booking.addons) ? booking.addons : [];
+  const total =
+    (booking.packagePrice || p.price || 0) +
+    addons.reduce((sum, _x, i) => sum + (i === 0 ? 0 : 0), 0); // addons have no price in prototype
+  const family = Number(booking?.sankalp?.family) || 0;
+
+  const hi = lang === "hi";
+
+  const L = hi
+    ? {
+        intro: "नमस्ते DharmaTribe, मैं एक पूजा बुक करना चाहता/चाहती हूँ।",
+        summaryHead: "बुकिंग विवरण",
+        code: "पूजा कोड",
+        title: "पूजा",
+        titleHi: "पूजा (हिन्दी)",
+        deity: "देवता",
+        temple: "मंदिर",
+        date: "तिथि",
+        time: "मुहूर्त",
+        package: "पैकेज",
+        addons: "ऐड-ऑन",
+        none: "कोई नहीं",
+        sankalpHead: "संकल्प विवरण",
+        name: "भक्त का नाम",
+        gotra: "गोत्र",
+        purpose: "उद्देश्य",
+        family: "परिवार के सदस्य",
+        total: "कुल राशि",
+        closing: "कृपया इस बुकिंग की पुष्टि करें। धन्यवाद।",
+      }
+    : {
+        intro: "Namaste DharmaTribe, I would like to book a puja.",
+        summaryHead: "Booking details",
+        code: "Puja code",
+        title: "Puja",
+        titleHi: "Puja (Hindi)",
+        deity: "Deity",
+        temple: "Temple",
+        date: "Date",
+        time: "Muhurat",
+        package: "Package",
+        addons: "Add-ons",
+        none: "None",
+        sankalpHead: "Sankalp details",
+        name: "Devotee name",
+        gotra: "Gotra",
+        purpose: "Purpose",
+        family: "Family members",
+        total: "Total amount",
+        closing: "Please confirm this booking. Thank you.",
+      };
+
+  const lines = [];
+  lines.push(L.intro);
+  lines.push("");
+  lines.push(`*${L.summaryHead}*`);
+  lines.push(`— ${L.code}: ${p.code || "—"}`);
+  lines.push(`— ${L.title}: ${p.title}`);
+  if (p.titleHi) lines.push(`— ${L.titleHi}: ${p.titleHi}`);
+  if (p.deity) lines.push(`— ${L.deity}: ${p.deity}`);
+  if (p.temple) lines.push(`— ${L.temple}: ${p.temple}`);
+  lines.push(`— ${L.date}: ${booking.date || "—"}`);
+  lines.push(`— ${L.time}: ${booking.time || "—"}`);
+  lines.push(
+    `— ${L.package}: ${booking.package || "—"} (₹${(booking.packagePrice || p.price || 0).toLocaleString("en-IN")})`
+  );
+  lines.push(`— ${L.addons}: ${addons.length ? addons.join(", ") : L.none}`);
+  lines.push("");
+  lines.push(`*${L.sankalpHead}*`);
+  lines.push(`— ${L.name}: ${booking?.sankalp?.name || "—"}`);
+  lines.push(`— ${L.gotra}: ${booking?.sankalp?.gotra || "—"}`);
+  lines.push(`— ${L.purpose}: ${booking?.sankalp?.purpose || "—"}`);
+  lines.push(`— ${L.family}: ${family > 0 ? family : "—"}`);
+  lines.push("");
+  lines.push(`*${L.total}: ₹${total.toLocaleString("en-IN")}*`);
+  lines.push("");
+  lines.push(L.closing);
+  return lines.join("\n");
+}
+
+/**
+ * Build a wa.me link for the current booking.
+ */
+export function buildBookingWhatsAppHref(booking, lang = "en", phone = "919999999999") {
+  const msg = buildBookingWhatsAppMessage(booking, lang);
+  return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+}

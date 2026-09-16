@@ -11,9 +11,18 @@ export function DiyaLamp({ className = "" }) {
         strokeWidth="0.9"
         strokeLinejoin="round"
       />
-      <path d="M60 50 C58 50 56 52 56 54 C56 56 58 58 60 58 C62 58 64 56 64 54 C64 52 62 50 60 50 Z" stroke={stroke} strokeWidth="0.7" />
+      <path
+        d="M60 50 C58 50 56 52 56 54 C56 56 58 58 60 58 C62 58 64 56 64 54 C64 52 62 50 60 50 Z"
+        stroke={stroke}
+        strokeWidth="0.7"
+      />
       {/* lamp bowl */}
-      <path d="M30 96 C30 112 44 122 60 122 C76 122 90 112 90 96 L90 90 L30 90 Z" stroke={stroke} strokeWidth="1" strokeLinejoin="round" />
+      <path
+        d="M30 96 C30 112 44 122 60 122 C76 122 90 112 90 96 L90 90 L30 90 Z"
+        stroke={stroke}
+        strokeWidth="1"
+        strokeLinejoin="round"
+      />
       <path d="M24 90 L96 90" stroke={stroke} strokeWidth="1" strokeLinecap="round" />
       <path d="M30 90 C30 80 90 80 90 90" stroke={stroke} strokeWidth="0.7" opacity="0.7" />
       {/* stand */}

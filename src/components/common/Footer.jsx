@@ -10,19 +10,20 @@ import {
 } from "@phosphor-icons/react";
 import Brand from "./Brand";
 import { BackToTopHalo } from "./decor";
+import { useLanguage } from "./LanguageToggle";
 
 export default function Footer() {
   const [showTop, setShowTop] = useState(false);
   const [joined, setJoined] = useState(false);
+  const { t } = useLanguage();
 
   // Back-to-top visibility via IntersectionObserver on the header sentinel.
   useEffect(() => {
     const sentinel = document.getElementById("header-sentinel-dt");
     if (!sentinel) return;
-    const io = new IntersectionObserver(
-      (entries) => setShowTop(!entries[0].isIntersecting),
-      { threshold: 0 }
-    );
+    const io = new IntersectionObserver((entries) => setShowTop(!entries[0].isIntersecting), {
+      threshold: 0,
+    });
     io.observe(sentinel);
     return () => io.disconnect();
   }, []);
@@ -46,10 +47,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-[1.35fr_.65fr_.65fr_1fr] lg:gap-12">
           <div className="col-span-2 lg:col-span-1">
             <Brand dark />
-            <p className="mt-5 max-w-sm text-sm leading-7 text-white/55">
-              Traditional rituals, clear booking, and a place to return to when the ceremony is
-              complete.
-            </p>
+            <p className="mt-5 max-w-sm text-sm leading-7 text-white/55">{t("footer.tagline")}</p>
             <div className="mt-6 flex gap-2">
               <a
                 className="grid h-9 w-9 place-items-center rounded-full border border-white/10 hover:border-gold-400/50 hover:text-gold-300 transition-colors"
@@ -72,28 +70,26 @@ export default function Footer() {
             </div>
           </div>
           <div>
-            <div className="text-xs text-gold-300">Explore</div>
+            <div className="text-xs text-gold-300">{t("footer.explore")}</div>
             <div className="mt-4 grid gap-3 text-sm text-white/55">
-              <Link to="/pujas">Pujas</Link>
-              <Link to="/acharyas">Acharyas</Link>
-              <Link to="/stories">Stories</Link>
-              <Link to="/about">About</Link>
-              <Link to="/dashboard">My account</Link>
+              <Link to="/pujas">{t("nav.pujas")}</Link>
+              <Link to="/acharyas">{t("nav.acharyas")}</Link>
+              <Link to="/stories">{t("nav.stories")}</Link>
+              <Link to="/about">{t("nav.about")}</Link>
+              <Link to="/dashboard">{t("nav.account")}</Link>
             </div>
           </div>
           <div>
-            <div className="text-xs text-gold-300">Legal</div>
+            <div className="text-xs text-gold-300">{t("footer.legal")}</div>
             <div className="mt-4 grid gap-3 text-sm text-white/55">
-              <Link to="/terms">Terms</Link>
-              <Link to="/privacy">Privacy</Link>
-              <a href="https://wa.me/919999999999">WhatsApp support</a>
+              <Link to="/terms">{t("footer.terms")}</Link>
+              <Link to="/privacy">{t("footer.privacy")}</Link>
+              <a href="https://wa.me/919999999999">{t("footer.whatsapp")}</a>
             </div>
           </div>
           <div className="col-span-2 lg:col-span-1">
-            <div className="text-xs text-gold-300">Stay connected</div>
-            <p className="mt-4 text-sm leading-6 text-white/55">
-              Festival reminders, new pujas, temple stories and booking windows.
-            </p>
+            <div className="text-xs text-gold-300">{t("footer.stayConnected")}</div>
+            <p className="mt-4 text-sm leading-6 text-white/55">{t("footer.stayCopy")}</p>
             <form
               className="mt-4 flex overflow-hidden rounded-full border border-white/10 bg-white/[.04] focus-within:border-gold-400/50 transition-colors"
               onSubmit={(e) => {
@@ -115,17 +111,15 @@ export default function Footer() {
               >
                 {joined ? (
                   <span className="inline-flex items-center gap-1.5">
-                    <Check size={14} weight="bold" /> Joined
+                    <Check size={14} weight="bold" /> {t("footer.joined")}
                   </span>
                 ) : (
-                  "Join"
+                  t("footer.join")
                 )}
               </button>
             </form>
             {joined && (
-              <p className="mt-2 text-[11px] text-gold-300/80">
-                Subscribed. Festival reminders will arrive soon.
-              </p>
+              <p className="mt-2 text-[11px] text-gold-300/80">{t("footer.joinedNote")}</p>
             )}
           </div>
         </div>
@@ -133,7 +127,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="container-dt flex flex-col gap-2 py-5 text-[10px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <span>© 2026 DharmaTribe</span>
-          <span>Devotional services are cultural and spiritual in nature.</span>
+          <span>{t("footer.rights")}</span>
         </div>
       </div>
       {showTop && (

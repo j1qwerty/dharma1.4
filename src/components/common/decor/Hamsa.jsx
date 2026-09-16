@@ -12,7 +12,11 @@ export function Hamsa({ className = "" }) {
         <path d="M54 52 C50 46 52 40 58 40 C64 40 66 46 62 52" />
         <path d="M62 48 L74 50 L62 54 Z" fill={stroke} stroke="none" />
         <circle cx="56" cy="48" r="1.6" fill={stroke} stroke="none" />
-        <path d="M20 120 C50 116 90 124 130 120 C150 118 168 122 176 120" strokeWidth="0.9" opacity="0.6" />
+        <path
+          d="M20 120 C50 116 90 124 130 120 C150 118 168 122 176 120"
+          strokeWidth="0.9"
+          opacity="0.6"
+        />
         <path d="M150 96 L162 92 L150 100" strokeWidth="1" />
       </g>
     </svg>

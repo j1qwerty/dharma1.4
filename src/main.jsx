@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "./components/common/ThemeToggle";
+import { LanguageProvider } from "./components/common/LanguageToggle";
 import Layout from "./components/common/Layout";
 import { BookingProvider } from "./lib/booking";
 import { FavoritesProvider } from "./lib/favorites";
@@ -59,158 +60,160 @@ function App() {
   return (
     <HashRouter>
       <ThemeProvider>
-        <ToastProvider>
-        <FavoritesProvider>
-          <BookingProvider>
-            <Routes>
-              <Route element={<Layout />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/pujas" element={<Catalog />} />
-                <Route path="/pujas/:id" element={<PujaDetail />} />
-                <Route
-                  path="/booking/:id/date"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <BookingDate />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/booking/:id/package"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <BookingPackage />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/booking/:id/sankalp"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <BookingSankalp />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/booking/:id/delivery"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <BookingDelivery />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/booking/:id/payment"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <BookingPayment />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/booking/confirmation"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <BookingConfirmation />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/booking/tracking"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <Tracking />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/dashboard"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <Dashboard />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/bookings"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <MyBookings />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/stories"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <Stories />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/stories/:id"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <StoryDetail />
-                    </Suspense>
-                  }
-                />
-                <Route path="/about" element={<About />} />
-                <Route path="/acharyas" element={<Acharyas />} />
-                <Route
-                  path="/auth/login"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <Auth mode="login" />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/auth/register"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <Auth mode="register" />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/auth/otp"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <Auth mode="otp" />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/terms"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <Legal type="terms" />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/privacy"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <Legal type="privacy" />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/decor"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <DecorPreview />
-                    </Suspense>
-                  }
-                />
-                <Route path="*" element={<NotFound />} />
-              </Route>
-            </Routes>
-          </BookingProvider>
-        </FavoritesProvider>
-        </ToastProvider>
+        <LanguageProvider>
+          <ToastProvider>
+            <FavoritesProvider>
+              <BookingProvider>
+                <Routes>
+                  <Route element={<Layout />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/pujas" element={<Catalog />} />
+                    <Route path="/pujas/:id" element={<PujaDetail />} />
+                    <Route
+                      path="/booking/:id/date"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <BookingDate />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/booking/:id/package"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <BookingPackage />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/booking/:id/sankalp"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <BookingSankalp />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/booking/:id/delivery"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <BookingDelivery />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/booking/:id/payment"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <BookingPayment />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/booking/confirmation"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <BookingConfirmation />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/booking/tracking"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <Tracking />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/dashboard"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <Dashboard />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/bookings"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <MyBookings />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/stories"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <Stories />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/stories/:id"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <StoryDetail />
+                        </Suspense>
+                      }
+                    />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/acharyas" element={<Acharyas />} />
+                    <Route
+                      path="/auth/login"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <Auth mode="login" />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/auth/register"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <Auth mode="register" />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/auth/otp"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <Auth mode="otp" />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/terms"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <Legal type="terms" />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/privacy"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <Legal type="privacy" />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/decor"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <DecorPreview />
+                        </Suspense>
+                      }
+                    />
+                    <Route path="*" element={<NotFound />} />
+                  </Route>
+                </Routes>
+              </BookingProvider>
+            </FavoritesProvider>
+          </ToastProvider>
+        </LanguageProvider>
       </ThemeProvider>
     </HashRouter>
   );

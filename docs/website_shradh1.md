@@ -1,6 +1,7 @@
-
 Dharmaa version should feel less like a religious-service webpage and more like a beautifully written cultural experience—something a modern Indian, especially someone living away from home, would actually want to read.
-________________________________________
+
+---
+
 SHRADH
 Some bonds don't end. They become part of who we are.
 We inherit many things from our families.
@@ -15,7 +16,9 @@ In the Sanatan tradition, Shradh is a way of remembering and honouring those who
 Not because we are afraid.
 Because we remember.
 And in today's world, where families can be spread across cities, countries and continents, Dharmaa Tribe brings this ancient practice into modern family life — without losing its meaning.
-________________________________________
+
+---
+
 So, what exactly is Shradh?
 Shradh is a traditional ancestral observance performed to honour departed family members.
 It may involve Sankalp, Tarpan, Pind Daan, Mantra, Prarthana, Daan, Bhojan, Homa and other prescribed practices, depending on the family tradition and the nature of the ritual.
@@ -28,7 +31,9 @@ Your Vedacharya may prescribe a specific Vidhi.
 At Dharmaa, we begin there.
 Not with a package.
 With understanding.
-________________________________________
+
+---
+
 Why do we perform Shradh?
 Perhaps the simplest answer is:
 Because we didn't get here alone.
@@ -42,7 +47,9 @@ Shradh gives us a traditional way to pause and acknowledge that connection.
 It is an act of remembrance, gratitude and responsibility towards our lineage.
 Shradh is not about fear.
 It is about श्रद्धा.
-________________________________________
+
+---
+
 When should Shradh be performed?
 This is where things can get confusing.
 Pitru Paksha? Annual Shradh? Which Tithi? Which ritual? Which place?
@@ -61,7 +68,9 @@ Not sure which ritual is appropriate?
 That's okay.
 You don't need to know everything before you begin.
 That's what a Vedacharya is for.
-________________________________________
+
+---
+
 What actually happens during Shradh?
 The exact Vidhi varies according to tradition.
 But depending on the ritual, you may encounter:
@@ -81,13 +90,17 @@ And finally—
 Remembering.
 Because sometimes the most important part of a ritual is not what we offer...
 but whom we remember while offering it.
-________________________________________
+
+---
+
 How can you perform Shradh with Dharmaa?
 Three ways. One intention.
 Your family.
 Your tradition.
 Your way of participating.
-________________________________________
+
+---
+
 01 — DO IT YOURSELF
 At Home. With a Vedacharya beside you.
 Want your family to actually participate?
@@ -98,7 +111,9 @@ You don't simply watch a ritual happening somewhere else.
 You understand it.
 You pass it on.**
 Especially for families who want their children to know what their traditions mean, this can become much more than a ceremony.
-________________________________________
+
+---
+
 02 — LET US DO IT FOR YOU
 When distance makes participation difficult.
 Maybe you're overseas.
@@ -109,7 +124,9 @@ Your relevant family details, ancestor information, Gotra and Sankalp are incorp
 **You entrust.
 The Vedacharya performs.**
 And you can remain connected through technology — wherever you are in the world.
-________________________________________
+
+---
+
 03 — GO TO GAYA JI
 For those who want to take the journey.
 For generations, Gaya Ji has held a special place in the tradition of Pind Daan and ancestral rites.
@@ -119,7 +136,9 @@ Because pilgrimage shouldn't mean figuring everything out yourself.
 We help you navigate the tradition.**
 And if you can't make the journey?
 We can help you explore appropriate arrangements for the ritual to be performed on your behalf.
-________________________________________
+
+---
+
 What if I don't know my family's rituals?
 This may actually be the most common question of all.
 Our grandparents knew.
@@ -132,26 +151,34 @@ You may not know whether your family traditionally performs Tarpan, Pind Daan, H
 That's not a failure.
 It is simply a sign that traditions need to be reconnected, not abandoned.
 Dharmaa helps you speak to a knowledgeable Vedacharya, understand your options and identify the appropriate traditional course of action.
-________________________________________
+
+---
+
 What is Pind Daan?
 Pind Daan is a traditional ancestral offering that forms an important part of several Shradh and Tirtha rituals.
 It is particularly associated with Gaya Ji, where ancestral rites have a deep and longstanding pilgrimage tradition.
 The exact practice and ingredients can vary according to the ritual and tradition being followed.
-________________________________________
+
+---
+
 What is Tarpan?
 Tarpan is a traditional offering of water, often accompanied by sesame and prescribed mantras.
 It forms an important part of many ancestral observances.
 And when performed at home with Dharmaa, your Vedacharya doesn't just tell you what to do.
 They can explain why you're doing it.
 Because understanding transforms an instruction into a practice.
-________________________________________
+
+---
+
 What is Varshik Shradh?
 Some memories deserve a place on the calendar.
 Varshik Shradh is the annual observance performed in remembrance of a departed family member, generally according to the relevant lunar Tithi.
 At Dharmaa, we can help families keep track of the relevant ritual information, with their permission, so that next year's observance doesn't begin with:
 “Does anyone remember when Dadaji's Shradh is?”
 Remember them. Every year.
-________________________________________
+
+---
+
 And what about Tripindi Shradh?
 You may have heard the term.
 You may also have heard many claims about it.
@@ -160,14 +187,16 @@ Understand first. Decide later.
 Tripindi Shradh is a specific ancestral ritual tradition associated with particular circumstances and practices.
 It should not automatically be presented as a solution to every problem in a family.
 If it has been recommended to you, speak to a knowledgeable Vedacharya to understand:
-•	What Tripindi Shradh actually is
-•	Whether it is relevant to your circumstances
-•	Where it is traditionally performed
-•	What the Vidhi involves
-•	What preparation is required
+• What Tripindi Shradh actually is
+• Whether it is relevant to your circumstances
+• Where it is traditionally performed
+• What the Vidhi involves
+• What preparation is required
 **No fear. No pressure.
 Just informed devotion.**
-________________________________________
+
+---
+
 What do I need for Shradh?
 The answer depends on which Shradh you're performing.
 Common items may include:
@@ -178,13 +207,17 @@ Then Dharmaa can give you a personalised preparation checklist telling you exact
 **No guesswork.
 No unnecessary shopping.
 Just what your ritual requires.**
-________________________________________
+
+---
+
 How long does Shradh take?
 There isn't one universal answer.
 The duration depends on the ritual, location, number of rites, participation and additional practices such as Homa or Bhojan.
 When you book with Dharmaa, we'll tell you what to expect beforehand.
 Because your time matters too.
-________________________________________
+
+---
+
 What does Dharmaa need from you?
 Not a mountain of paperwork.
 Just the information that helps us make the ritual personal and appropriate:
@@ -199,7 +232,9 @@ How you'd like to participate
 And if something is missing?
 Tell us.
 We'll help you figure it out.
-________________________________________
+
+---
+
 Your Shradh Journey
 01 — TELL US
 Your family story. Your ancestor. Whatever you know.
@@ -215,7 +250,9 @@ Join live — or let the Vedacharya perform on your behalf.
 Depending on your chosen offering, receive recordings, photographs, Prasad or digital documentation.
 07 — REMEMBER
 With your permission, keep your family's ritual details organised for future observances.
-________________________________________
+
+---
+
 For Families Who Live Far From Home
 You could be in:
 New York. London. Dubai. Singapore. Sydney.
@@ -227,7 +264,9 @@ At Dharmaa, technology is simply the bridge.
 The tradition stays traditional.
 The Vedacharya stays at the centre.
 And your family gets to remain connected — wherever in the world you happen to be.
-________________________________________
+
+---
+
 Why Dharmaa?
 Because we don't think Shradh should begin with:
 “Which package do I buy?”
@@ -245,7 +284,9 @@ Choice without confusion.
 At home.
 From a temple.
 At Gaya Ji.
-________________________________________
+
+---
+
 Shradh isn't about fear.
 It is about श्रद्धा.
 It is about remembering the people whose lives became part of ours.
@@ -253,7 +294,9 @@ It is about gratitude for what was given to us.
 It is about honouring our lineage.
 And perhaps, most importantly—
 making sure that a changing world doesn't make us forget where we came from.
-________________________________________
+
+---
+
 Dharmaa Tribe
 Ancient wisdom. Meaningful practice. A modern way to belong.
 At Home. From a Temple. At Gaya Ji.
@@ -262,8 +305,8 @@ Different ways to honour the same bond.
 [Explore Shradh]
 [Plan Your Gaya Ji Experience]
 
+A q n A section in details page for this
 
-A q n A section in details page for this 
 ### Question: How does Dharmaa Tribe conduct Shradh?
 
 **Answer:**
@@ -288,7 +331,8 @@ For families who wish to undertake **Pind Daan and Shradh at Gaya Ji**, Dharmaa 
 **At home. From a temple. Or at Gaya Ji.
 Different ways to honour the same bond.**
 
-hindi: 
+hindi:
+
 ### प्रश्न: Dharmaa Tribe श्राद्ध कैसे संपन्न कराता है?
 
 **उत्तर:**

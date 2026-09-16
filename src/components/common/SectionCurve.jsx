@@ -7,12 +7,7 @@ import { SacredMedallion } from "./Decor";
  * curve without copying it. `edge` controls top vs bottom; mini
  * medallions sit on the two side corners for the sacred feel.
  * ------------------------------------------------------------------ */
-export default function SectionCurve({
-  edge = "bottom",
-  coins = true,
-  drop = true,
-  flip = false,
-}) {
+export default function SectionCurve({ edge = "bottom", coins = true, drop = true, flip = false }) {
   const cls = edge === "bottom" ? "curve-wrap-bottom-dt" : "curve-wrap-top-dt";
   return (
     <div className={cls} aria-hidden="true">

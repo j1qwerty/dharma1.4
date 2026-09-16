@@ -10,28 +10,38 @@ import {
 } from "@phosphor-icons/react";
 import { Reveal } from "../components/common/Motion";
 import { LeafBranch, LotusLine, Conch, Trishul, SectionDecor } from "../components/common/decor";
+import { useLanguage } from "../components/common/LanguageToggle";
+
 export default function Tracking() {
-  const items = [
-    ["Booking confirmed", "Sep 05, 2026 · 11:04 AM", 1],
-    ["Sankalp submitted", "Sep 05, 2026 · 11:07 AM", 1],
-    ["Preparation", "Temple ritual preparation", 1],
-    ["Puja scheduled", "Sep 09, 2026 · 07:30 AM", 0],
-    ["Puja performed", "Awaiting the ceremony", 0],
-    ["Video delivered", "After processing", 0],
-  ];
+  const { t, lang } = useLanguage();
+  const items =
+    lang === "hi"
+      ? [
+          ["बुकिंग पुष्ट", "5 सितं 2026 · 11:04 AM", 1],
+          ["संकल्प जमा", "5 सितं 2026 · 11:07 AM", 1],
+          ["तैयारी", "मंदिर अनुष्ठान तैयारी", 1],
+          ["पूजा निर्धारित", "9 सितं 2026 · 07:30 AM", 0],
+          ["पूजा संपन्न", "समारोह की प्रतीक्षा", 0],
+          ["वीडियो डिलीवर", "प्रोसेसिंग के बाद", 0],
+        ]
+      : [
+          ["Booking confirmed", "Sep 05, 2026 · 11:04 AM", 1],
+          ["Sankalp submitted", "Sep 05, 2026 · 11:07 AM", 1],
+          ["Preparation", "Temple ritual preparation", 1],
+          ["Puja scheduled", "Sep 09, 2026 · 07:30 AM", 0],
+          ["Puja performed", "Awaiting the ceremony", 0],
+          ["Video delivered", "After processing", 0],
+        ];
   return (
     <section className="site-section has-decor-dt">
-        <SectionDecor />
+      <SectionDecor />
       <Conch className="decor-dt decor-tl hide-mobile soft-tone" />
       <Trishul className="decor-dt decor-br hide-mobile soft-tone" />
       <div className="container-dt max-w-[1200px]">
         <Reveal>
-          <div className="eyebrow">Booking tracking</div>
-          <h1 className="display-dt mt-3 text-6xl">A timeline you can follow.</h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 muted-dt">
-            Your booking becomes a visible lifecycle from confirmation through the ritual and
-            video delivery.
-          </p>
+          <div className="eyebrow">{t("track.eyebrow")}</div>
+          <h1 className="display-dt mt-3 text-6xl">{t("track.title")}</h1>
+          <p className="mt-4 max-w-2xl text-sm leading-7 muted-dt">{t("track.copy")}</p>
         </Reveal>
         <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_.55fr]">
           <Reveal>
@@ -39,18 +49,20 @@ export default function Tracking() {
               <div className="flex items-start justify-between gap-5">
                 <div>
                   <div className="text-xs muted-dt">DT-702450912</div>
-                  <h2 className="display-dt mt-2 text-4xl">Maha Rudrabhishek</h2>
+                  <h2 className="display-dt mt-2 text-4xl">
+                    {lang === "hi" ? "महा रुद्राभिषेक" : "Maha Rudrabhishek"}
+                  </h2>
                   <div className="mt-3 flex gap-4 text-xs muted-dt">
                     <span className="inline-flex items-center gap-1">
-                      <CalendarBlank size={13} /> Sep 09
+                      <CalendarBlank size={13} /> {lang === "hi" ? "9 सितं" : "Sep 09"}
                     </span>
                     <span className="inline-flex items-center gap-1">
-                      <MapPin size={13} /> Kashi Vishwanath
+                      <MapPin size={13} /> {lang === "hi" ? "काशी विश्वनाथ" : "Kashi Vishwanath"}
                     </span>
                   </div>
                 </div>
                 <span className="rounded-full bg-gold-400/12 px-3 py-2 text-xs font-bold text-gold-600 dark:text-gold-300">
-                  Confirmed
+                  {t("track.confirmed")}
                 </span>
               </div>
               <div className="mt-8">
@@ -77,14 +89,12 @@ export default function Tracking() {
             <Reveal>
               <div className="panel-dt p-6">
                 <VideoCamera size={20} className="text-gold-600" />
-                <div className="display-dt mt-4 text-3xl">Video and photos</div>
-                <p className="mt-2 text-sm leading-6 muted-dt">
-                  The media area unlocks when the ceremony is completed and files finish processing.
-                </p>
+                <div className="display-dt mt-4 text-3xl">{t("track.videoTitle")}</div>
+                <p className="mt-2 text-sm leading-6 muted-dt">{t("track.videoCopy")}</p>
               </div>
             </Reveal>
             <Link className="btn-gold-dt w-full" to="/dashboard">
-              Open my account <ArrowRight size={14} />
+              {t("track.openAccount")} <ArrowRight size={14} />
             </Link>
           </div>
         </div>

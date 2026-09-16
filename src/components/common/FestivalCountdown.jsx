@@ -102,7 +102,11 @@ export default function FestivalCountdown() {
               )}
             </div>
             <div className="fc-label-dt">{u.label}</div>
-            {i < units.length - 1 && <span className="fc-sep-dt" aria-hidden="true">:</span>}
+            {i < units.length - 1 && (
+              <span className="fc-sep-dt" aria-hidden="true">
+                :
+              </span>
+            )}
           </div>
         ))}
       </div>

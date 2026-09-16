@@ -55,7 +55,14 @@ function pick(arr) {
  * - position: "decor-tl" | "decor-tr" | "decor-bl" | "decor-br" | "decor-top" | "decor-bottom"
  * Colours automatically flip for dark mode & ink sections via CSS (index.css).
  */
-export function SectionDecor({ motif: MotifProp, tone: toneProp, position: posProp, className = "", flip, style }) {
+export function SectionDecor({
+  motif: MotifProp,
+  tone: toneProp,
+  position: posProp,
+  className = "",
+  flip,
+  style,
+}) {
   const Motif = useMemo(() => MotifProp ?? pick(MOTIFS), [MotifProp]);
   const tone = useMemo(() => toneProp ?? pick(TONES), [toneProp]);
   const pos = useMemo(() => posProp ?? pick(POSITIONS), [posProp]);
@@ -68,7 +75,13 @@ export function SectionDecor({ motif: MotifProp, tone: toneProp, position: posPr
 
   const extra = isLeaf ? { flip: flipVal } : {};
 
-  return <Motif className={`decor-dt ${pos} ${toneClass} hide-mobile ${className}`.trim()} style={style} {...extra} />;
+  return (
+    <Motif
+      className={`decor-dt ${pos} ${toneClass} hide-mobile ${className}`.trim()}
+      style={style}
+      {...extra}
+    />
+  );
 }
 
 export default SectionDecor;

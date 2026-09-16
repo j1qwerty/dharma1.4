@@ -25,12 +25,17 @@ export function SacredMedallion({ size = 120, className = "", glow = true, rays 
             position: "absolute",
             inset: "-26%",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(247,207,91,0.46) 0%, rgba(247,207,91,0.18) 42%, transparent 70%)",
+            background:
+              "radial-gradient(circle, rgba(247,207,91,0.46) 0%, rgba(247,207,91,0.18) 42%, transparent 70%)",
             filter: "blur(3px)",
           }}
         />
       )}
-      <svg viewBox="0 0 120 120" fill="none" style={{ position: "relative", width: "100%", height: "100%" }}>
+      <svg
+        viewBox="0 0 120 120"
+        fill="none"
+        style={{ position: "relative", width: "100%", height: "100%" }}
+      >
         <defs>
           <radialGradient id={gFace} cx="38%" cy="30%" r="80%">
             <stop offset="0%" stopColor="#fff6d6" />
@@ -96,7 +101,15 @@ export function SacredMedallion({ size = 120, className = "", glow = true, rays 
 
         {Array.from({ length: 48 }).map((_, i) => {
           const a = (i / 48) * Math.PI * 2;
-          return <circle key={`b${i}`} cx={60 + Math.cos(a) * 41} cy={60 + Math.sin(a) * 41} r="0.7" fill="rgba(110,72,10,0.55)" />;
+          return (
+            <circle
+              key={`b${i}`}
+              cx={60 + Math.cos(a) * 41}
+              cy={60 + Math.sin(a) * 41}
+              r="0.7"
+              fill="rgba(110,72,10,0.55)"
+            />
+          );
         })}
         <circle cx="60" cy="60" r="38" stroke="rgba(110,72,10,0.5)" strokeWidth="0.7" fill="none" />
         <circle cx="60" cy="60" r="37" fill={`url(#${gInner})`} />
@@ -128,8 +141,21 @@ export function SacredMedallion({ size = 120, className = "", glow = true, rays 
           );
         })}
 
-        <circle cx="60" cy="60" r="11" fill="rgba(120,80,12,0.16)" stroke="rgba(110,72,10,0.6)" strokeWidth="0.9" />
-        <g transform="translate(60 60)" stroke="rgba(80,52,6,0.7)" strokeWidth="1" fill="none" strokeLinecap="round">
+        <circle
+          cx="60"
+          cy="60"
+          r="11"
+          fill="rgba(120,80,12,0.16)"
+          stroke="rgba(110,72,10,0.6)"
+          strokeWidth="0.9"
+        />
+        <g
+          transform="translate(60 60)"
+          stroke="rgba(80,52,6,0.7)"
+          strokeWidth="1"
+          fill="none"
+          strokeLinecap="round"
+        >
           <path d="M-5 -3 C-8 -3 -8 1 -5 1 C-2 1 -2 -3 -5 -3" transform="scale(0.62)" />
           <circle cx="0" cy="0" r="1.4" fill="rgba(80,52,6,0.7)" stroke="none" />
         </g>

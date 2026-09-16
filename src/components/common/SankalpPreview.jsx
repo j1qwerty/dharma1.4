@@ -1,5 +1,6 @@
 import React from "react";
 import { FlowerLotus, UserCircle, Sparkle } from "@phosphor-icons/react";
+import { useLanguage } from "./LanguageToggle";
 
 /* ------------------------------------------------------------------ *
  * SankalpPreview - a live "patrika" (ritual slip) preview of the
@@ -7,10 +8,13 @@ import { FlowerLotus, UserCircle, Sparkle } from "@phosphor-icons/react";
  * in BookingSankalp. Styled as a sacred document card.
  * ------------------------------------------------------------------ */
 export default function SankalpPreview({ sankalp, pujaTitle, temple, date, time }) {
+  const { t } = useLanguage();
   const name = sankalp?.name?.trim() || "—";
   const gotra = sankalp?.gotra?.trim() || "—";
   const purpose = sankalp?.purpose?.trim() || "—";
   const family = Number(sankalp?.family) || 0;
+  const familyStr =
+    family > 0 ? `${family} ${family === 1 ? t("sp.person") : t("sp.people")}` : "—";
 
   return (
     <div className="sankalp-preview-dt">
@@ -23,13 +27,13 @@ export default function SankalpPreview({ sankalp, pujaTitle, temple, date, time 
         <div className="sp-head-dt">
           <FlowerLotus size={20} weight="duotone" className="text-gold-600" />
           <div>
-            <div className="sp-title-dt display-dt">Sankalp Patrika</div>
-            <div className="sp-sub-dt">What the priest will receive</div>
+            <div className="sp-title-dt display-dt">{t("sp.title")}</div>
+            <div className="sp-sub-dt">{t("sp.sub")}</div>
           </div>
         </div>
 
         <div className="sp-ritual-dt">
-          <div className="sp-ritual-label-dt">For the ritual</div>
+          <div className="sp-ritual-label-dt">{t("sp.forRitual")}</div>
           <div className="sp-ritual-name-dt">{pujaTitle || "Puja"}</div>
           <div className="sp-ritual-meta-dt">
             {temple}
@@ -41,33 +45,33 @@ export default function SankalpPreview({ sankalp, pujaTitle, temple, date, time 
         <dl className="sp-grid-dt">
           <div className="sp-row-dt">
             <dt>
-              <UserCircle size={13} /> Devotee
+              <UserCircle size={13} /> {t("sp.devotee")}
             </dt>
             <dd>{name}</dd>
           </div>
           <div className="sp-row-dt">
             <dt>
-              <Sparkle size={12} /> Gotra
+              <Sparkle size={12} /> {t("sp.gotra")}
             </dt>
             <dd>{gotra}</dd>
           </div>
           <div className="sp-row-dt sp-wide-dt">
             <dt>
-              <FlowerLotus size={12} /> Manokamna
+              <FlowerLotus size={12} /> {t("sp.manokamna")}
             </dt>
             <dd>{purpose}</dd>
           </div>
           <div className="sp-row-dt">
             <dt>
-              <UserCircle size={13} /> Family
+              <UserCircle size={13} /> {t("sp.family")}
             </dt>
-            <dd>{family > 0 ? `${family} ${family === 1 ? "person" : "people"}` : "—"}</dd>
+            <dd>{familyStr}</dd>
           </div>
         </dl>
 
         <div className="sp-foot-dt">
           <span className="sp-sig-dt">॥ ॐ ॥</span>
-          <span className="sp-note-dt">Live preview · updates as you type</span>
+          <span className="sp-note-dt">{t("sp.livePreview")}</span>
         </div>
       </div>
     </div>

@@ -1,5 +1,11 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { motion, useReducedMotion, useScroll, useTransform, useMotionValueEvent } from "motion/react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+} from "motion/react";
 
 /* BackToTopHalo — sacred button halo for the floating scroll-to-top.
  * Slightly larger than the 44px button (default 68px) with a soft
@@ -51,7 +57,13 @@ export function BackToTopHalo({ size = 68, className = "", speed = 0.7, idleMs =
   return (
     <span
       aria-hidden="true"
-      style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", pointerEvents: "none" }}
+      style={{
+        position: "absolute",
+        inset: 0,
+        display: "grid",
+        placeItems: "center",
+        pointerEvents: "none",
+      }}
     >
       <motion.span
         className={className}
@@ -86,13 +98,20 @@ export function BackToTopHalo({ size = 68, className = "", speed = 0.7, idleMs =
             position: "absolute",
             inset: "-18%",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(247,207,91,0.42) 0%, rgba(247,207,91,0.16) 42%, transparent 72%)",
+            background:
+              "radial-gradient(circle, rgba(247,207,91,0.42) 0%, rgba(247,207,91,0.16) 42%, transparent 72%)",
             filter: "blur(4px)",
             zIndex: -1,
           }}
         />
         <motion.span
-          style={{ display: "grid", placeItems: "center", width: "100%", height: "100%", rotate: reduce ? 0 : rotate }}
+          style={{
+            display: "grid",
+            placeItems: "center",
+            width: "100%",
+            height: "100%",
+            rotate: reduce ? 0 : rotate,
+          }}
         >
           <svg viewBox="0 0 100 100" fill="none" style={{ width: "100%", height: "100%" }}>
             <circle cx="50" cy="50" r="46" stroke="rgba(231,182,49,0.5)" strokeWidth="0.9" />
@@ -108,7 +127,11 @@ export function BackToTopHalo({ size = 68, className = "", speed = 0.7, idleMs =
             </g>
             <g stroke="rgba(231,182,49,0.45)" strokeWidth="0.7" fill="rgba(255,240,180,0.06)">
               {geometry.petals.map((petal, i) => (
-                <path key={i} d="M50 29 C52.5 22 52.5 16 50 11 C47.5 16 47.5 22 50 29 Z" transform={petal.transform} />
+                <path
+                  key={i}
+                  d="M50 29 C52.5 22 52.5 16 50 11 C47.5 16 47.5 22 50 29 Z"
+                  transform={petal.transform}
+                />
               ))}
             </g>
             <circle cx="50" cy="50" r="22" stroke="rgba(231,182,49,0.22)" strokeWidth="0.6" />

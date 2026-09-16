@@ -17,7 +17,9 @@ export function ThemeProvider({ children }) {
       localStorage.setItem("dt-theme", dark ? "dark" : "light");
     } catch {}
   }, [dark]);
-  return <ThemeContext.Provider value={{ dark, setDark, toggle }}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={{ dark, setDark, toggle }}>{children}</ThemeContext.Provider>
+  );
 }
 export default function ThemeToggle() {
   return null;

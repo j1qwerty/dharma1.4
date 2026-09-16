@@ -40,12 +40,13 @@ import {
 import FestivalCountdown from "../components/common/FestivalCountdown";
 import AcharyaCard from "../components/common/AcharyaCard";
 import { pujas, festivals, intentions, stories, social, acharyas } from "../lib/data";
+import { useLanguage } from "../components/common/LanguageToggle";
 
-const TRUST_ITEMS = [
-  { icon: Sparkle, label: "Authentic Rituals" },
-  { icon: ShieldCheck, label: "Trusted Priests" },
-  { icon: VideoCamera, label: "Live Video" },
-  { icon: UsersThree, label: "Family Sankalp" },
+const TRUST_ITEMS = ({ t }) => [
+  { icon: Sparkle, label: t("home.trustAuthentic") },
+  { icon: ShieldCheck, label: t("home.trustPriests") },
+  { icon: VideoCamera, label: t("home.trustVideo") },
+  { icon: UsersThree, label: t("home.trustFamily") },
 ];
 
 function splitTitle(title) {
@@ -55,21 +56,6 @@ function splitTitle(title) {
   }
   return [title, ""];
 }
-
-const heroSlides = [
-  {
-    title: "Sacred rituals. Modern access.",
-    copy: "Book a traditional puja, add your Sankalp, and receive the ceremony after it is performed.",
-    image: "https://picsum.photos/seed/dharma-varanasi-sunset/2000/1250",
-    date: "Ganesh Chaturthi · September 12",
-  },
-  {
-    title: "Let devotion travel with you.",
-    copy: "Festival-specific and evergreen pujas with a clear date, package, temple, and delivery journey.",
-    image: "https://picsum.photos/seed/dharma-temple-diya/2000/1250",
-    date: "Diwali · October 20",
-  },
-];
 
 function AcharyasHomeSlider() {
   const trackRef = useRef(null);
@@ -101,8 +87,14 @@ function AcharyasHomeSlider() {
     if (index > maxIndex) setIndex(maxIndex);
   }, [maxIndex, index]);
 
-  const go = useCallback((dir) => setIndex((v) => (v + dir + (maxIndex + 1)) % (maxIndex + 1 || 1)), [maxIndex]);
-  const goTo = useCallback((i) => setIndex(((i % (maxIndex + 1)) + (maxIndex + 1)) % (maxIndex + 1 || 1)), [maxIndex]);
+  const go = useCallback(
+    (dir) => setIndex((v) => (v + dir + (maxIndex + 1)) % (maxIndex + 1 || 1)),
+    [maxIndex]
+  );
+  const goTo = useCallback(
+    (i) => setIndex(((i % (maxIndex + 1)) + (maxIndex + 1)) % (maxIndex + 1 || 1)),
+    [maxIndex]
+  );
 
   // touch / drag
   const startX = useRef(0);
@@ -120,7 +112,9 @@ function AcharyasHomeSlider() {
     dragDx.current = x - startX.current;
     if (trackRef.current) {
       const gap = 18;
-      const slideW = trackRef.current.firstChild ? trackRef.current.firstChild.getBoundingClientRect().width + gap : 278;
+      const slideW = trackRef.current.firstChild
+        ? trackRef.current.firstChild.getBoundingClientRect().width + gap
+        : 278;
       trackRef.current.style.transform = `translateX(calc(${-index * slideW}px + ${dragDx.current}px))`;
     }
   }
@@ -133,7 +127,9 @@ function AcharyasHomeSlider() {
     else if (dragDx.current > thresh) go(-1);
     else if (trackRef.current) {
       const gap = 18;
-      const slideW = trackRef.current.firstChild ? trackRef.current.firstChild.getBoundingClientRect().width + gap : 278;
+      const slideW = trackRef.current.firstChild
+        ? trackRef.current.firstChild.getBoundingClientRect().width + gap
+        : 278;
       trackRef.current.style.transform = `translateX(${-index * slideW}px)`;
     }
   }
@@ -175,7 +171,13 @@ function AcharyasHomeSlider() {
           onMouseLeave={onPointerUp}
         >
           {acharyas.map((a) => (
-            <div key={a.id} className="acharya-slide-dt" role="group" aria-roledescription="slide" aria-label={a.name}>
+            <div
+              key={a.id}
+              className="acharya-slide-dt"
+              role="group"
+              aria-roledescription="slide"
+              aria-label={a.name}
+            >
               <AcharyaCard a={a} />
             </div>
           ))}
@@ -218,6 +220,21 @@ function AcharyasHomeSlider() {
 }
 
 export default function Home() {
+  const { t, lang } = useLanguage();
+  const heroSlides = [
+    {
+      title: t("home.heroSlide1Title"),
+      copy: t("home.heroSlide1Copy"),
+      image: "https://picsum.photos/seed/dharma-varanasi-sunset/2000/1250",
+      date: t("home.heroDate1"),
+    },
+    {
+      title: t("home.heroSlide2Title"),
+      copy: t("home.heroSlide2Copy"),
+      image: "https://picsum.photos/seed/dharma-temple-diya/2000/1250",
+      date: t("home.heroDate2"),
+    },
+  ];
   const [hero, setHero] = useState(0);
   const [paused, setPaused] = useState(false);
   const reduce = useReducedMotion();
@@ -230,11 +247,12 @@ export default function Home() {
 
   function onKey(e) {
     if (e.key === "ArrowRight") setHero((v) => (v + 1) % heroSlides.length);
-    else if (e.key === "ArrowLeft")
-      setHero((v) => (v - 1 + heroSlides.length) % heroSlides.length);
+    else if (e.key === "ArrowLeft") setHero((v) => (v - 1 + heroSlides.length) % heroSlides.length);
   }
 
   const [goldLine, whiteLine] = splitTitle(current.title);
+  const trustItems = TRUST_ITEMS({ t });
+
   return (
     <>
       <section
@@ -272,22 +290,20 @@ export default function Home() {
             <div className="eyebrow-dt hero-eyebrow-dt">{current.date}</div>
             <h1 className="display-dt hero-title-dt">
               <span className="hero-line-gold-dt">{goldLine}</span>
-              {whiteLine ? (
-                <span className="hero-line-white-dt">{whiteLine}</span>
-              ) : null}
+              {whiteLine ? <span className="hero-line-white-dt">{whiteLine}</span> : null}
             </h1>
             <p className="hero-sub-dt">{current.copy}</p>
             <div className="hero-cta-dt">
               <Magnetic>
                 <Link className="btn-gold-dt hero-btn-gold-dt" to="/pujas">
-                  Explore Pujas <ArrowRight size={17} />
+                  {t("home.heroExplore")} <ArrowRight size={17} />
                 </Link>
               </Magnetic>
               <Link className="hero-btn-ghost-dt" to="/about">
                 <span className="hero-play-dt">
                   <Play size={14} weight="fill" />
                 </span>
-                Watch Video
+                {t("home.heroWatch")}
               </Link>
             </div>
             <div className="hero-dots-dt" aria-label="Slides">
@@ -328,7 +344,7 @@ export default function Home() {
 
         <div className="hero-trust-dt">
           <div className="container-dt hero-trust-row-dt">
-            {TRUST_ITEMS.map(({ icon: Icon, label }) => (
+            {trustItems.map(({ icon: Icon, label }) => (
               <span key={label} className="hero-trust-item-dt">
                 <Icon size={22} weight="duotone" />
                 {label}
@@ -343,10 +359,10 @@ export default function Home() {
         <LeafBranch className="decor-dt decor-tl hide-mobile soft-tone" />
         <div className="container-dt assurance-grid-dt">
           {[
-            [CalendarBlank, "Dates and muhurat", "Choose before checkout"],
-            [VideoCamera, "Photos and video", "Access after the ritual"],
-            [ShieldCheck, "Clear booking", "Sankalp and package details"],
-            [UsersThree, "Family participation", "Add people to your Sankalp"],
+            [CalendarBlank, t("home.assurance1Title"), t("home.assurance1Sub")],
+            [VideoCamera, t("home.assurance2Title"), t("home.assurance2Sub")],
+            [ShieldCheck, t("home.assurance3Title"), t("home.assurance3Sub")],
+            [UsersThree, t("home.assurance4Title"), t("home.assurance4Sub")],
           ].map(([Icon, title, sub], i) => (
             <div className="assurance-item-dt" key={title}>
               <span className="assurance-index-dt">0{i + 1}</span>
@@ -369,20 +385,15 @@ export default function Home() {
         <div className="container-dt">
           <div className="grid gap-10 lg:grid-cols-[1fr_1fr] items-center">
             <Reveal>
-              <div className="eyebrow eyebrow-line-dt">On the horizon</div>
-              <h2 className="display-dt mt-3 text-5xl sm:text-6xl">
-                The next festival is closer than you think.
-              </h2>
-              <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
-                Plan ahead so the muhurat, the Sankalp and the package are all settled before the
-                day arrives. The countdown keeps the calendar present without noise.
-              </p>
+              <div className="eyebrow eyebrow-line-dt">{t("home.onHorizon")}</div>
+              <h2 className="display-dt mt-3 text-5xl sm:text-6xl">{t("home.nextFestival")}</h2>
+              <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">{t("home.planAhead")}</p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link className="btn-gold-dt" to="/pujas">
-                  Book before the window <ArrowRight size={15} />
+                  {t("home.bookBefore")} <ArrowRight size={15} />
                 </Link>
                 <Link className="btn-ghost-dt" to="/stories">
-                  Read festival guides <ArrowUpRight size={14} />
+                  {t("home.readFestivalGuides")} <ArrowUpRight size={14} />
                 </Link>
               </div>
             </Reveal>
@@ -398,9 +409,9 @@ export default function Home() {
         <LotusLine className="decor-dt decor-tr hide-mobile soft-tone" />
         <div className="container-dt">
           <SectionHeading
-            title="The dates people are booking"
-            copy="A fast look at the next rituals, with festival-specific dates alongside year-round services."
-            action={{ label: "View all pujas", to: "/pujas" }}
+            title={t("home.datesBooking")}
+            copy={t("home.datesCopy")}
+            action={{ label: t("home.viewAllPujas"), to: "/pujas" }}
             soft
           />
           <div className="grid grid-cols-2 gap-5 lg:grid-cols-3 puja-grid-dt">
@@ -419,14 +430,17 @@ export default function Home() {
           <div className="marquee-dt display-dt text-3xl text-white/40">
             {Array.from({ length: 2 }).map((_, k) => (
               <span key={k} className="flex items-center gap-16">
-                {festivals.map((f) => (
-                  <span key={f.name + k} className="flex items-center gap-16">
-                    <span className="text-gold-300/70">{f.name}</span>
-                    <span className="text-white/25">·</span>
-                    <span className="text-white/30">{f.date}</span>
-                    <Sparkle size={14} className="text-gold-400/40" />
-                  </span>
-                ))}
+                {festivals.map((f) => {
+                  const fName = lang === "hi" && f.nameHi ? f.nameHi : f.name;
+                  return (
+                    <span key={f.name + k} className="flex items-center gap-16">
+                      <span className="text-gold-300/70">{fName}</span>
+                      <span className="text-white/25">·</span>
+                      <span className="text-white/30">{f.date}</span>
+                      <Sparkle size={14} className="text-gold-400/40" />
+                    </span>
+                  );
+                })}
               </span>
             ))}
           </div>
@@ -438,35 +452,39 @@ export default function Home() {
         <Trishul className="decor-dt decor-br hide-mobile ink-tone" />
         <div className="container-dt">
           <SectionHeading
-            title="The calendar keeps moving"
-            copy="The shell stays consistent while festival, seasonal, evergreen and date-specific content changes."
-            action={{ label: "Explore the catalogue", to: "/pujas" }}
+            title={t("home.calendarKeepsMoving")}
+            copy={t("home.calendarCopy")}
+            action={{ label: t("home.exploreCatalogue"), to: "/pujas" }}
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {festivals.map((f, i) => (
-              <Reveal key={f.name} delay={i * 0.05}>
-                <TiltCard max={7}>
-                <Link
-                  className="relative block h-[320px] overflow-hidden rounded-[20px] bg-black"
-                  to="/pujas"
-                >
-                  <ParallaxImage
-                    src={f.image}
-                    className="absolute inset-0 h-full w-full"
-                    strength={16}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/5 to-transparent" />
-                  <div className="absolute bottom-5 left-5 right-5">
-                    <div className="text-[10px] font-bold uppercase tracking-[.16em] text-gold-300">
-                      {f.date}
-                    </div>
-                    <h3 className="title-soft mt-1 text-3xl text-white">{f.name}</h3>
-                    <p className="mt-1 text-xs text-white/55">{f.note}</p>
-                  </div>
-                </Link>
-                </TiltCard>
-              </Reveal>
-            ))}
+            {festivals.map((f, i) => {
+              const fName = lang === "hi" && f.nameHi ? f.nameHi : f.name;
+              const fNote = lang === "hi" && f.noteHi ? f.noteHi : f.note;
+              return (
+                <Reveal key={f.name} delay={i * 0.05}>
+                  <TiltCard max={7}>
+                    <Link
+                      className="relative block h-[320px] overflow-hidden rounded-[20px] bg-black"
+                      to="/pujas"
+                    >
+                      <ParallaxImage
+                        src={f.image}
+                        className="absolute inset-0 h-full w-full"
+                        strength={16}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/5 to-transparent" />
+                      <div className="absolute bottom-5 left-5 right-5">
+                        <div className="text-[10px] font-bold uppercase tracking-[.16em] text-gold-300">
+                          {f.date}
+                        </div>
+                        <h3 className="title-soft mt-1 text-3xl text-white">{fName}</h3>
+                        <p className="mt-1 text-xs text-white/55">{fNote}</p>
+                      </div>
+                    </Link>
+                  </TiltCard>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -477,14 +495,13 @@ export default function Home() {
         <div className="container-dt">
           <div className="intent-grid-dt">
             <Reveal>
-              <div className="eyebrow eyebrow-line-dt">Start with the intention</div>
-              <h2 className="display-dt mt-3 text-5xl sm:text-6xl">What are you here to mark?</h2>
+              <div className="eyebrow eyebrow-line-dt">{t("home.startWithIntention")}</div>
+              <h2 className="display-dt mt-3 text-5xl sm:text-6xl">{t("home.whatMark")}</h2>
               <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
-                Browse by purpose when you know what you want to focus on, even before you know the
-                exact ritual.
+                {t("home.browsePurpose")}
               </p>
               <Link className="btn-ghost-dt mt-7" to="/pujas">
-                Find a puja <ArrowUpRight size={14} />
+                {t("home.findPuja")} <ArrowUpRight size={14} />
               </Link>
             </Reveal>
             <div className="intent-list-dt">
@@ -507,10 +524,7 @@ export default function Home() {
           <MandalaRings style={{ width: 280, height: 280 }} className="soft-tone" />
         </SpinDecor>
         <div className="container-dt">
-          <SectionHeading
-            title="A ritual journey with no hidden steps"
-            copy="Each stage has a place in the interface, from the first date selection to the final video update."
-          />
+          <SectionHeading title={t("home.ritualJourney")} copy={t("home.ritualJourneyCopy")} />
           <div className="steps-dt">
             <Reveal>
               <div className="steps-visual-dt">
@@ -518,18 +532,18 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 <div className="absolute bottom-5 left-5 right-5 text-white">
                   <div className="text-[10px] uppercase tracking-[.18em] text-gold-300">
-                    Your booking
+                    {t("home.yourBooking")}
                   </div>
-                  <div className="mt-2 text-4xl display-dt">Choose. Submit. Receive.</div>
+                  <div className="mt-2 text-4xl display-dt">{t("home.chooseSubmitReceive")}</div>
                 </div>
               </div>
             </Reveal>
             <div className="step-list-dt">
               {[
-                ["01", "Choose a date", "See the day, muhurat and available slots."],
-                ["02", "Select a package", "Compare family, couple and individual options."],
-                ["03", "Add your Sankalp", "Enter the devotee details the priest needs."],
-                ["04", "Track the ritual", "Follow preparation, performance and delivery."],
+                ["01", t("home.step1Title"), t("home.step1Copy")],
+                ["02", t("home.step2Title"), t("home.step2Copy")],
+                ["03", t("home.step3Title"), t("home.step3Copy")],
+                ["04", t("home.step4Title"), t("home.step4Copy")],
               ].map((x) => (
                 <Reveal key={x[0]}>
                   <div className="step-item-dt">
@@ -551,26 +565,23 @@ export default function Home() {
         <div className="container-dt trust-band-inner-dt">
           <Reveal>
             <div>
-              <div className="eyebrow !text-gold-300">A clearer kind of trust</div>
-              <h2 className="display-dt mt-3 text-5xl sm:text-6xl">
-                See what matters before and after the puja.
-              </h2>
+              <div className="eyebrow !text-gold-300">{t("home.clearerTrust")}</div>
+              <h2 className="display-dt mt-3 text-5xl sm:text-6xl">{t("home.seeMatters")}</h2>
               <p className="mt-5 max-w-xl text-sm leading-7 text-white/55">
-                Temple, priest, date, package, Sankalp and video are treated as part of one
-                journey, not separate pieces.
+                {t("home.seeMattersCopy")}
               </p>
               <div className="stat-row-dt">
                 <div className="stat-dt">
                   <div className="text-3xl display-dt text-gold-300">50+</div>
-                  <div className="mt-1 text-[10px] text-white/45">sample temple partners</div>
+                  <div className="mt-1 text-[10px] text-white/45">{t("home.sampleTemples")}</div>
                 </div>
                 <div className="stat-dt">
                   <div className="text-3xl display-dt text-gold-300">200+</div>
-                  <div className="mt-1 text-[10px] text-white/45">puja experiences</div>
+                  <div className="mt-1 text-[10px] text-white/45">{t("home.pujaExperiences")}</div>
                 </div>
                 <div className="stat-dt">
                   <div className="text-3xl display-dt text-gold-300">4.9</div>
-                  <div className="mt-1 text-[10px] text-white/45">sample rating</div>
+                  <div className="mt-1 text-[10px] text-white/45">{t("home.sampleRating")}</div>
                 </div>
               </div>
             </div>
@@ -579,12 +590,14 @@ export default function Home() {
             <div className="rounded-[22px] border border-white/10 bg-white/[.04] p-7">
               <div className="flex items-center gap-2 text-gold-300">
                 <Sparkle size={17} />
-                <span className="text-xs font-semibold">A devotee note</span>
+                <span className="text-xs font-semibold">{t("home.devoteeNote")}</span>
               </div>
               <blockquote className="mt-6 display-dt text-3xl leading-tight">
-                “The important part was knowing what would happen next.”
+                {t("home.devoteeQuote")}
               </blockquote>
-              <div className="mt-5 text-xs text-white/45">Priya Sharma · Bengaluru</div>
+              <div className="mt-5 text-xs text-white/45">
+                {lang === "hi" ? "प्रिया शर्मा · बेंगलुरु" : "Priya Sharma · Bengaluru"}
+              </div>
               <div className="mt-5 flex gap-1 text-gold-300">
                 {Array.from({ length: 5 }, (_, i) => (
                   <Heart key={i} weight="fill" size={14} />
@@ -600,32 +613,36 @@ export default function Home() {
         <Conch className="decor-dt decor-br hide-mobile soft-tone" />
         <div className="container-dt">
           <SectionHeading
-            title="Stories, in the shape of a real journal"
-            copy="Festival guides, ritual explainers, temple histories and devotee experiences. Uneven by design, easier to scan."
-            action={{ label: "Read all stories", to: "/stories" }}
+            title={t("home.storiesTitle")}
+            copy={t("home.storiesCopy")}
+            action={{ label: t("home.readAllStories"), to: "/stories" }}
           />
           <StoryMasonry
             items={stories.slice(0, 6)}
-            render={(s) => (
-              <Link className="story-card-dt" to={`/stories/${s.id}`}>
-                <div className="story-media-dt">
-                  <ParallaxImage
-                    src={s.image}
-                    alt={s.title}
-                    className="h-full min-h-[210px]"
-                    strength={12}
-                  />
-                </div>
-                <div className="story-copy-dt">
-                  <div className="cat">{s.category}</div>
-                  <h3>{s.title}</h3>
-                  <p>{s.excerpt}</p>
-                  <div className="mt-3 inline-flex items-center gap-2 text-[10px] font-bold text-gold-600">
-                    Read story <ArrowUpRight size={13} />
+            render={(s) => {
+              const sTitle = lang === "hi" && s.titleHi ? s.titleHi : s.title;
+              const sExcerpt = lang === "hi" && s.excerptHi ? s.excerptHi : s.excerpt;
+              return (
+                <Link className="story-card-dt" to={`/stories/${s.id}`}>
+                  <div className="story-media-dt">
+                    <ParallaxImage
+                      src={s.image}
+                      alt={sTitle}
+                      className="h-full min-h-[210px]"
+                      strength={12}
+                    />
                   </div>
-                </div>
-              </Link>
-            )}
+                  <div className="story-copy-dt">
+                    <div className="cat">{s.category}</div>
+                    <h3>{sTitle}</h3>
+                    <p>{sExcerpt}</p>
+                    <div className="mt-3 inline-flex items-center gap-2 text-[10px] font-bold text-gold-600">
+                      {t("home.readStory")} <ArrowUpRight size={13} />
+                    </div>
+                  </div>
+                </Link>
+              );
+            }}
           />
         </div>
       </section>
@@ -634,11 +651,7 @@ export default function Home() {
         <SectionDecor />
         <LotusLine className="decor-dt decor-tr hide-mobile soft-tone" />
         <div className="container-dt">
-          <SectionHeading
-            title="The wider DharmaTribe feed"
-            copy="Use the social layer for rituals in motion, temple moments and festival content."
-            soft
-          />
+          <SectionHeading title={t("home.widerFeed")} copy={t("home.widerFeedCopy")} soft />
           <div className="grid gap-4 md:grid-cols-12">
             {social.map((x, i) => (
               <Reveal
@@ -662,7 +675,7 @@ export default function Home() {
                     </div>
                     <div className="mt-2 text-3xl display-dt">{x.copy}</div>
                     <div className="mt-3 inline-flex items-center gap-2 text-[11px] font-bold text-gold-300">
-                      Open channel <ArrowUpRight size={13} />
+                      {t("home.openChannel")} <ArrowUpRight size={13} />
                     </div>
                   </div>
                 </a>
@@ -678,28 +691,31 @@ export default function Home() {
         <div className="container-dt">
           <div className="grid gap-10 lg:grid-cols-[.9fr_1.1fr] items-end">
             <Reveal>
-              <div className="eyebrow eyebrow-line-dt">Year-long and recurring</div>
-              <h2 className="display-dt mt-3 text-5xl sm:text-6xl">Keep one intention going.</h2>
+              <div className="eyebrow eyebrow-line-dt">{t("home.yearLong")}</div>
+              <h2 className="display-dt mt-3 text-5xl sm:text-6xl">
+                {t("home.keepIntentionGoing")}
+              </h2>
               <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
-                The Phase 3 subscription surfaces are not part of this launch, but the homepage
-                already makes room for monthly Sankalp, tithi seva and annual paths.
+                {t("home.keepIntentionCopy")}
               </p>
               <Link className="btn-ghost-dt mt-7" to="/about">
-                See the roadmap intent <ArrowUpRight size={14} />
+                {t("home.seeRoadmap")} <ArrowUpRight size={14} />
               </Link>
             </Reveal>
             <div className="grid gap-3 sm:grid-cols-2">
               {[
-                "Monthly Sankalp",
-                "Tithi Seva",
-                "Daily Aarti sponsorship",
-                "Annual Path / Jaap",
+                lang === "hi" ? "मासिक संकल्प" : "Monthly Sankalp",
+                lang === "hi" ? "तिथि सेवा" : "Tithi Seva",
+                lang === "hi" ? "दैनिक आरती प्रायोजन" : "Daily Aarti sponsorship",
+                lang === "hi" ? "वार्षिक पाठ / जाप" : "Annual Path / Jaap",
               ].map((x, i) => (
                 <Reveal key={x} delay={i * 0.06}>
                   <div className="panel-dt p-6">
                     <div className="text-3xl display-dt">{x}</div>
                     <p className="mt-2 text-xs leading-6 text-muted-dt">
-                      Designed as a future recurring-service surface.
+                      {lang === "hi"
+                        ? "भविष्य की आवर्ती सेवा सतह के रूप में डिज़ाइन किया गया।"
+                        : "Designed as a future recurring-service surface."}
                     </p>
                   </div>
                 </Reveal>
@@ -713,42 +729,44 @@ export default function Home() {
         <SectionDecor />
         <LotusLine className="decor-dt decor-tl hide-mobile soft-tone" />
         <div className="container-dt">
-          <SectionHeading
-            title="A temple network, presented with context"
-            copy="The homepage should eventually point to temple stories, locations, rituals and related pujas without changing the core visual structure."
-            soft
-          />
+          <SectionHeading title={t("home.templeNetwork")} copy={t("home.templeNetworkCopy")} soft />
           <div className="grid gap-5 md:grid-cols-3">
             {[
               [
-                "Varanasi",
+                lang === "hi" ? "वाराणसी" : "Varanasi",
                 "Kashi Vishwanath",
                 "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1000&q=86",
-                "Temple context, available pujas and upcoming moments.",
+                lang === "hi"
+                  ? "मंदिर संदर्भ, उपलब्ध पूजा और आगामी क्षण।"
+                  : "Temple context, available pujas and upcoming moments.",
               ],
               [
-                "Ayodhya",
+                lang === "hi" ? "अयोध्या" : "Ayodhya",
                 "Ram Janmabhoomi Seva",
                 "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=1000&q=86",
-                "A place-led route into rituals and devotional content.",
+                lang === "hi"
+                  ? "अनुष्ठानों और भक्ति सामग्री के लिए स्थान-आधारित मार्ग।"
+                  : "A place-led route into rituals and devotional content.",
               ],
               [
                 "Somnath",
                 "Somnath Temple",
                 "https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&w=1000&q=86",
-                "A future temple detail route with seva and story content.",
+                lang === "hi"
+                  ? "भविष्य का मंदिर विवरण मार्ग, सेवा और कथा सामग्री के साथ।"
+                  : "A future temple detail route with seva and story content.",
               ],
             ].map(([place, name, img, note], i) => (
               <Reveal key={name} delay={i * 0.05}>
                 <TiltCard max={6}>
-                <div className="temple-card-dt">
-                  <ParallaxImage src={img} className="h-72" strength={14} />
-                  <div className="p-5 text-white">
-                    <div className="text-[10px] text-gold-300">{place}</div>
-                    <h3 className="mt-2 text-3xl display-dt">{name}</h3>
-                    <p className="mt-2 text-xs text-white/50">{note}</p>
+                  <div className="temple-card-dt">
+                    <ParallaxImage src={img} className="h-72" strength={14} />
+                    <div className="p-5 text-white">
+                      <div className="text-[10px] text-gold-300">{place}</div>
+                      <h3 className="mt-2 text-3xl display-dt">{name}</h3>
+                      <p className="mt-2 text-xs text-white/50">{note}</p>
+                    </div>
                   </div>
-                </div>
                 </TiltCard>
               </Reveal>
             ))}
@@ -764,15 +782,12 @@ export default function Home() {
           <div className="flex items-end justify-between gap-5 flex-wrap section-head-dt">
             <Reveal className="section-head-copy-dt">
               <h2 className="display-dt text-5xl sm:text-6xl title-soft">
-                The people who carry the tradition.
+                {t("home.peopleTradition")}
               </h2>
-              <p>
-                Scholars and practitioners behind every ritual, with their learning, traditions and
-                areas of expertise clearly presented.
-              </p>
+              <p>{t("home.peopleTraditionCopy")}</p>
             </Reveal>
             <Link className="btn-ghost-dt shrink-0" to="/acharyas">
-              Meet all acharyas <ArrowUpRight size={14} />
+              {t("home.meetAllAcharyas")} <ArrowUpRight size={14} />
             </Link>
           </div>
           <Reveal>
@@ -787,13 +802,11 @@ export default function Home() {
         <div className="container-dt">
           <div className="grid gap-8 lg:grid-cols-[1fr_1fr] items-end border-t border-dt pt-14">
             <Reveal>
-              <div className="eyebrow eyebrow-line-dt">Stay connected</div>
+              <div className="eyebrow eyebrow-line-dt">{t("home.stayConnected")}</div>
               <h2 className="display-dt title-soft mt-3 text-5xl sm:text-6xl">
-                Know what is coming next.
+                {t("home.knowComingNext")}
               </h2>
-              <p className="mt-4 max-w-lg text-sm leading-7 text-muted-dt">
-                Festival reminders, new puja windows and useful stories, without filling the inbox.
-              </p>
+              <p className="mt-4 max-w-lg text-sm leading-7 text-muted-dt">{t("home.stayCopy")}</p>
             </Reveal>
             <Reveal>
               <div className="flex overflow-hidden rounded-full border border-dt surface-dt">
@@ -802,7 +815,7 @@ export default function Home() {
                   className="min-w-0 flex-1 bg-transparent px-5 py-3.5 text-sm outline-none"
                   placeholder="your@email.com"
                 />
-                <button className="btn-gold-dt m-1">Join</button>
+                <button className="btn-gold-dt m-1">{t("home.join")}</button>
               </div>
             </Reveal>
           </div>

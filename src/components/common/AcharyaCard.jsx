@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useLanguage } from "./LanguageToggle";
 
 /* ------------------------------------------------------------------ *
  * AcharyaCard - a single acharya profile card. Reused by the Acharyas
@@ -7,31 +8,60 @@ import { Link } from "react-router-dom";
  * photo, structured rows + bio in the body.
  * ------------------------------------------------------------------ */
 export default function AcharyaCard({ a }) {
+  const { lang, t } = useLanguage();
+  const tradition = lang === "hi" && a.traditionHi ? a.traditionHi : a.tradition;
+  const place = lang === "hi" && a.placeHi ? a.placeHi : a.place;
+  const expertise = lang === "hi" && a.expertiseHi ? a.expertiseHi : a.expertise;
+  const lineage = lang === "hi" && a.lineageHi ? a.lineageHi : a.lineage;
+  const experience = lang === "hi" && a.experienceHi ? a.experienceHi : a.experience;
+  const bio = lang === "hi" && a.bioHi ? a.bioHi : a.bio;
   return (
     <div className="acharya-card-dt">
       <div className="acharya-card-media-dt">
-        <img src={a.image} alt={a.name} loading="lazy" />
-        <span className="acharya-card-badge-dt">{a.tradition}</span>
+        <img
+          src={a.image}
+          alt={a.name}
+          loading="lazy"
+          onError={(e) => {
+            // Graceful fallback if the local profile image isn't present.
+            e.currentTarget.src =
+              "https://images.unsplash.com/photo-1604608672516-f1b9c1d5a5e1?auto=format&fit=crop&w=900&q=80";
+          }}
+        />
+        <span className="acharya-card-badge-dt">{tradition}</span>
         <div className="acharya-card-name-dt">{a.name}</div>
       </div>
       <div className="acharya-card-body-dt">
         <div className="acharya-card-row-dt">
-          <span className="ar-label-dt">Place</span>
-          <span className="ar-value-dt">{a.place}</span>
+          <span className="ar-label-dt">{t("ach.cardPlace")}</span>
+          <span className="ar-value-dt">{place}</span>
         </div>
         <div className="acharya-card-row-dt">
-          <span className="ar-label-dt">Expertise</span>
-          <span className="ar-value-dt">{a.expertise}</span>
+          <span className="ar-label-dt">{t("ach.cardExpertise")}</span>
+          <span className="ar-value-dt">{expertise}</span>
         </div>
         <div className="acharya-card-row-dt">
-          <span className="ar-label-dt">Lineage</span>
-          <span className="ar-value-dt">{a.lineage}</span>
+          <span className="ar-label-dt">{t("ach.cardLineage")}</span>
+          <span className="ar-value-dt">{lineage}</span>
         </div>
         <div className="acharya-card-row-dt">
-          <span className="ar-label-dt">Experience</span>
-          <span className="ar-value-dt">{a.experience}</span>
+          <span className="ar-label-dt">{t("ach.cardExperience")}</span>
+          <span className="ar-value-dt">{experience}</span>
         </div>
-        <p className="acharya-card-bio-dt">{a.bio}</p>
+        {a.phone && (
+          <div className="acharya-card-row-dt">
+            <span className="ar-label-dt">{t("ach.cardContact")}</span>
+            <span className="ar-value-dt">
+              <a
+                href={`tel:${a.phone.replace(/\s+/g, "")}`}
+                className="text-gold-600 hover:underline"
+              >
+                {a.phone}
+              </a>
+            </span>
+          </div>
+        )}
+        <p className="acharya-card-bio-dt">{bio}</p>
       </div>
     </div>
   );

@@ -17,7 +17,11 @@ export function Peacock({ className = "" }) {
               <path d="M0 0 L-60 -90" strokeWidth="1" />
               <circle cx="-60" cy="-90" r="7" strokeWidth="1" />
               <circle cx="-60" cy="-90" r="3" fill={stroke} stroke="none" opacity="0.7" />
-              <path d="M-66 -84 C-60 -80 -54 -82 -54 -90 C-54 -96 -60 -98 -66 -96" strokeWidth="0.7" opacity="0.7" />
+              <path
+                d="M-66 -84 C-60 -80 -54 -82 -54 -90 C-54 -96 -60 -98 -66 -96"
+                strokeWidth="0.7"
+                opacity="0.7"
+              />
             </g>
           );
         })}

@@ -4,7 +4,12 @@ const stroke = "currentColor";
 export function LotusLine({ className = "" }) {
   return (
     <svg className={className} viewBox="0 0 240 200" fill="none" aria-hidden="true">
-      <path d="M120 192 C120 150 120 120 120 96" stroke={stroke} strokeWidth="1" strokeLinecap="round" />
+      <path
+        d="M120 192 C120 150 120 120 120 96"
+        stroke={stroke}
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
       <path
         d="M120 96 C86 92 52 70 30 40 C29 38 31 36 33 37 C66 48 98 70 120 96 Z"
         stroke={stroke}

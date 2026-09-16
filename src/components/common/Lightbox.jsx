@@ -12,10 +12,8 @@ export default function Lightbox({ images, index, onClose, onIndex }) {
   const handleKey = useCallback(
     (e) => {
       if (e.key === "Escape") onClose();
-      else if (e.key === "ArrowRight")
-        onIndex((index + 1) % images.length);
-      else if (e.key === "ArrowLeft")
-        onIndex((index - 1 + images.length) % images.length);
+      else if (e.key === "ArrowRight") onIndex((index + 1) % images.length);
+      else if (e.key === "ArrowLeft") onIndex((index - 1 + images.length) % images.length);
     },
     [index, images.length, onClose, onIndex]
   );
@@ -55,11 +53,7 @@ export default function Lightbox({ images, index, onClose, onIndex }) {
           transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
           onClick={(e) => e.stopPropagation()}
         >
-          <button
-            className="lightbox-close-dt"
-            onClick={onClose}
-            aria-label="Close viewer"
-          >
+          <button className="lightbox-close-dt" onClick={onClose} aria-label="Close viewer">
             <X size={18} />
           </button>
           {images.length > 1 && (
@@ -112,12 +106,7 @@ export function GalleryTile({ images, startIdx, children, className = "" }) {
         </span>
       </button>
       {open && (
-        <Lightbox
-          images={images}
-          index={idx}
-          onIndex={setIdx}
-          onClose={() => setOpen(false)}
-        />
+        <Lightbox images={images} index={idx} onIndex={setIdx} onClose={() => setOpen(false)} />
       )}
     </>
   );

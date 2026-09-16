@@ -1,9 +1,19 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { MagnifyingGlass, List, X, Sun, Moon, CaretDown, PaintBrush } from "@phosphor-icons/react";
+import {
+  MagnifyingGlass,
+  List,
+  X,
+  Sun,
+  Moon,
+  CaretDown,
+  PaintBrush,
+  Globe,
+} from "@phosphor-icons/react";
 import Brand from "./Brand";
 import { deities } from "../../lib/data";
 import { ThemeContext } from "./ThemeToggle";
+import { useLanguage } from "./LanguageToggle";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -11,12 +21,13 @@ export default function Header() {
   const [pujasOpen, setPujasOpen] = useState(false);
   const closeTimer = useRef(null);
   const { dark, toggle } = useContext(ThemeContext) ?? { dark: false, toggle: () => {} };
+  const { lang, toggle: toggleLang, t } = useLanguage();
   const links = [
-    ["Home", "/", true],
-    ["Pujas", "/pujas", false],
-    ["Acharyas", "/acharyas", false],
-    ["Stories", "/stories", false],
-    ["About", "/about", false],
+    ["nav.home", "/", true],
+    ["nav.pujas", "/pujas", false],
+    ["nav.acharyas", "/acharyas", false],
+    ["nav.stories", "/stories", false],
+    ["nav.about", "/about", false],
   ];
 
   // Scroll-aware shrink via IntersectionObserver on a top sentinel.
@@ -24,10 +35,10 @@ export default function Header() {
   useEffect(() => {
     const sentinel = document.getElementById("header-sentinel-dt");
     if (!sentinel) return;
-    const io = new IntersectionObserver(
-      (entries) => setScrolled(!entries[0].isIntersecting),
-      { rootMargin: "0px 0px 0px 0px", threshold: 0 }
-    );
+    const io = new IntersectionObserver((entries) => setScrolled(!entries[0].isIntersecting), {
+      rootMargin: "0px 0px 0px 0px",
+      threshold: 0,
+    });
     io.observe(sentinel);
     return () => io.disconnect();
   }, []);
@@ -65,20 +76,14 @@ export default function Header() {
   return (
     <>
       <div id="header-sentinel-dt" aria-hidden="true" style={{ height: 1 }} />
-      {/* <div className="h-8 bg-ink-950 text-gold-300 flex items-center justify-center text-[10px] tracking-[.09em]">
-        Ganesh Chaturthi bookings are open{" "}
-        <Link className="ml-4 font-bold underline underline-offset-4" to="/pujas">
-          Explore pujas
-        </Link>
-      </div> */}
       <header className={`header-dt ${scrolled ? "header-scrolled-dt" : ""}`}>
         <div className="container-dt flex h-[70px] items-center justify-between gap-5">
           <Link to="/" aria-label="DharmaTribe home">
             <Brand />
           </Link>
           <nav className="hidden lg:flex items-center gap-8" aria-label="Primary">
-            {links.map(([label, to, exact]) =>
-              label === "Pujas" ? (
+            {links.map(([key, to, exact]) =>
+              key === "nav.pujas" ? (
                 <div
                   key={to}
                   className="nav-wrap-dt"
@@ -91,7 +96,7 @@ export default function Header() {
                     end={exact}
                   >
                     <span className="inline-flex items-center gap-1.5">
-                      {label}
+                      {t(key)}
                       <CaretDown
                         size={11}
                         className={`transition-transform duration-300 ${pujasOpen ? "rotate-180" : ""}`}
@@ -103,10 +108,13 @@ export default function Header() {
                       <div className="megamenu-inner-dt">
                         <div className="megamenu-head-dt">
                           <div className="text-[9px] font-bold uppercase tracking-[.16em] text-gold-600">
-                            Browse by deity
+                            {t("nav.browseByDeity")}
                           </div>
-                          <Link to="/pujas" className="text-[10px] font-bold text-gold-600 hover:underline">
-                            View all pujas
+                          <Link
+                            to="/pujas"
+                            className="text-[10px] font-bold text-gold-600 hover:underline"
+                          >
+                            {t("nav.viewAllPujas")}
                           </Link>
                         </div>
                         <div className="megamenu-grid-dt">
@@ -124,10 +132,10 @@ export default function Header() {
                         </div>
                         <div className="megamenu-foot-dt">
                           <Link to="/stories" className="text-[11px] muted-dt hover:text-gold-600">
-                            Read ritual guides
+                            {t("nav.readRitualGuides")}
                           </Link>
                           <Link to="/about" className="text-[11px] muted-dt hover:text-gold-600">
-                            How booking works
+                            {t("nav.howBookingWorks")}
                           </Link>
                         </div>
                       </div>
@@ -141,7 +149,7 @@ export default function Header() {
                   end={exact}
                   key={to}
                 >
-                  {label}
+                  {t(key)}
                 </NavLink>
               )
             )}
@@ -157,22 +165,33 @@ export default function Header() {
             </Link> */}
             <button
               className="hidden sm:grid place-items-center h-9 w-9 rounded-full border border-dt"
-              aria-label="Search"
+              aria-label={t("nav.search")}
             >
               <MagnifyingGlass size={16} />
             </button>
             <button
               onClick={toggleTheme}
               className="grid place-items-center h-9 w-9 rounded-full border border-dt"
-              aria-label="Toggle theme"
+              aria-label={t("nav.toggleTheme")}
+              title={t("nav.toggleTheme")}
             >
               {dark ? <Sun size={16} /> : <Moon size={16} />}
             </button>
+            <button
+              onClick={toggleLang}
+              className="lang-toggle-dt"
+              aria-label={t("nav.toggleLang")}
+              title={t("nav.toggleLang")}
+              data-lang={lang}
+            >
+              <Globe size={14} weight="duotone" />
+              <span className="lang-toggle-label">{lang === "en" ? "EN" : "हि"}</span>
+            </button>
             <Link className="hidden sm:inline-flex nav-dt font-semibold" to="/auth/login">
-              My account
+              {t("nav.account")}
             </Link>
             <Link className="hidden sm:inline-flex btn-gold-dt" to="/pujas">
-              Book a puja
+              {t("nav.bookPuja")}
             </Link>
             <button
               className="lg:hidden grid place-items-center h-9 w-9 rounded-full border border-dt"
@@ -186,7 +205,7 @@ export default function Header() {
         {open && (
           <div className="lg:hidden border-t border-dt surface-dt">
             <div className="container-dt py-5 grid gap-1">
-              {links.map(([label, to, exact]) => (
+              {links.map(([key, to, exact]) => (
                 <NavLink
                   className={({ isActive }) =>
                     `py-3 text-xl display-dt border-b border-dt mobile-nav-dt${isActive ? " active" : ""}`
@@ -196,7 +215,7 @@ export default function Header() {
                   end={exact}
                   to={to}
                 >
-                  {label}
+                  {t(key)}
                 </NavLink>
               ))}
               <Link
@@ -204,7 +223,7 @@ export default function Header() {
                 className="py-3 text-xl display-dt border-b border-dt mobile-nav-dt"
                 to="/auth/login"
               >
-                My account
+                {t("nav.account")}
               </Link>
               <NavLink
                 onClick={() => setOpen(false)}
@@ -213,10 +232,19 @@ export default function Header() {
                 }
                 to="/decor"
               >
-                <PaintBrush size={18} weight="duotone" /> Decor preview
+                <PaintBrush size={18} weight="duotone" /> {t("nav.decorPreview")}
               </NavLink>
+              <button
+                onClick={() => {
+                  toggleLang();
+                }}
+                className="py-3 text-xl display-dt border-b border-dt mobile-nav-dt inline-flex items-center gap-2"
+              >
+                <Globe size={18} weight="duotone" />
+                {lang === "en" ? "हिन्दी" : "English"}
+              </button>
               <Link onClick={() => setOpen(false)} className="btn-gold-dt mt-3" to="/pujas">
-                Book a puja
+                {t("nav.bookPuja")}
               </Link>
             </div>
           </div>

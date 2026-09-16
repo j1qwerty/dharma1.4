@@ -14,21 +14,10 @@ import SectionHeading from "../components/common/SectionHeading";
 import { Reveal } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
 import { LeafBranch, LotusLine, Rangoli, Toran, SectionDecor } from "../components/common/decor";
-
-const SORTS = [
-  { key: "popular", label: "Sort by Popular" },
-  { key: "upcoming", label: "Sort by Upcoming" },
-  { key: "price-asc", label: "Price low to high" },
-  { key: "price-desc", label: "Price high to low" },
-];
-
-// parse "Sep 09, 2026" into a Date for upcoming sort
-function parseDate(s) {
-  const d = new Date(s);
-  return Number.isNaN(d.getTime()) ? Infinity : d.getTime();
-}
+import { useLanguage } from "../components/common/LanguageToggle";
 
 export default function Catalog() {
+  const { t, lang } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialDeity = searchParams.get("deity");
   const [q, setQ] = useState("");
@@ -39,7 +28,7 @@ export default function Catalog() {
   const [purpose, setPurpose] = useState("All");
   const [sort, setSort] = useState("popular");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const tags = ["All", "Festival", "Evergreen", "Popular", "Remedy", "Limited slots"];
+  const tags = ["All", "Festival", "Evergreen", "Popular", "Remedy", "Limited slots", "Ancestral"];
 
   // Keep the URL in sync with the deity filter so links can pre-filter.
   useEffect(() => {
@@ -64,13 +53,14 @@ export default function Catalog() {
         (tag === "All" || p.tag === tag) &&
         (deity === "All" || p.deity === deity) &&
         (purpose === "All" || p.purpose === purpose) &&
-        `${p.title} ${p.deity} ${p.temple} ${p.purpose}`.toLowerCase().includes(q.toLowerCase())
+        `${p.title} ${p.titleHi || ""} ${p.deity} ${p.temple} ${p.purpose}`
+          .toLowerCase()
+          .includes(q.toLowerCase())
     );
     const sorted = [...filtered];
     if (sort === "price-asc") sorted.sort((a, b) => a.price - b.price);
     else if (sort === "price-desc") sorted.sort((a, b) => b.price - a.price);
     else if (sort === "upcoming") sorted.sort((a, b) => parseDate(a.date) - parseDate(b.date));
-    // popular = original order
     return sorted;
   }, [q, tag, deity, purpose, sort]);
 
@@ -93,20 +83,22 @@ export default function Catalog() {
     return { min: Math.min(...prices), max: Math.max(...prices) };
   }, [result]);
 
+  const SORTS = [
+    { key: "popular", label: t("catalog.sortPopular") },
+    { key: "upcoming", label: t("catalog.sortUpcoming") },
+    { key: "price-asc", label: t("catalog.sortPriceAsc") },
+    { key: "price-desc", label: t("catalog.sortPriceDesc") },
+  ];
+
   return (
     <>
       <section className="ink-dt overflow-hidden has-decor-dt relative">
         <SectionDecor />
         <div className="container-dt pt-24 pb-32">
           <Reveal>
-            <div className="eyebrow !text-gold-300">Pujas</div>
-            <h1 className="display-dt mt-3 max-w-4xl text-6xl sm:text-7xl">
-              Find the puja that fits the moment.
-            </h1>
-            <p className="mt-5 max-w-2xl text-sm leading-7 text-white/55">
-              Browse by festival, deity, purpose, temple or ritual type. The same catalogue can carry
-              year-round and seasonal inventory.
-            </p>
+            <div className="eyebrow !text-gold-300">{t("catalog.eyebrow")}</div>
+            <h1 className="display-dt mt-3 max-w-4xl text-6xl sm:text-7xl">{t("catalog.title")}</h1>
+            <p className="mt-5 max-w-2xl text-sm leading-7 text-white/55">{t("catalog.copy")}</p>
           </Reveal>
         </div>
         <SectionCurve edge="bottom" />
@@ -122,7 +114,7 @@ export default function Catalog() {
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 className="w-full bg-transparent text-sm outline-none"
-                placeholder="Search by puja, deity or temple"
+                placeholder={t("catalog.searchPlaceholder")}
               />
               {q && (
                 <button
@@ -138,17 +130,17 @@ export default function Catalog() {
               className="btn-ghost-dt lg:hidden"
               onClick={() => setMobileFiltersOpen((v) => !v)}
             >
-              <SlidersHorizontal size={15} /> Filters
+              <SlidersHorizontal size={15} /> {t("catalog.filters")}
             </button>
           </div>
           <div className="mt-5 flex gap-2 overflow-x-auto pb-1">
-            {tags.map((t) => (
+            {tags.map((tg) => (
               <button
-                onClick={() => setTag(t)}
-                key={t}
-                className={`whitespace-nowrap rounded-full border px-4 py-2 text-[11px] font-semibold transition-colors ${tag === t ? "border-gold-400 bg-gold-400/10 text-gold-600 dark:text-gold-300" : "border-dt muted-dt hover:border-gold-400/50"}`}
+                onClick={() => setTag(tg)}
+                key={tg}
+                className={`whitespace-nowrap rounded-full border px-4 py-2 text-[11px] font-semibold transition-colors ${tag === tg ? "border-gold-400 bg-gold-400/10 text-gold-600 dark:text-gold-300" : "border-dt muted-dt hover:border-gold-400/50"}`}
               >
-                {t}
+                {tg}
               </button>
             ))}
           </div>
@@ -156,19 +148,19 @@ export default function Catalog() {
           <div className="mt-14 grid gap-12 lg:grid-cols-[220px_1fr]">
             <aside className={`${mobileFiltersOpen ? "block" : "hidden"} lg:block`}>
               <div className="flex items-center justify-between">
-                <div className="eyebrow">Refine</div>
+                <div className="eyebrow">{t("catalog.refine")}</div>
                 {activeFilters.length > 0 && (
                   <button
                     onClick={clearAll}
                     className="text-[10px] font-bold text-gold-600 hover:underline"
                   >
-                    Clear all
+                    {t("catalog.clearAll")}
                   </button>
                 )}
               </div>
               <div className="mt-5 grid gap-7">
                 <div>
-                  <div className="text-xs font-semibold">Deity</div>
+                  <div className="text-xs font-semibold">{t("catalog.deity")}</div>
                   <div className="mt-2 grid gap-1">
                     {["All", ...deities].map((d) => (
                       <button
@@ -183,7 +175,7 @@ export default function Catalog() {
                   </div>
                 </div>
                 <div>
-                  <div className="text-xs font-semibold">Purpose</div>
+                  <div className="text-xs font-semibold">{t("catalog.purpose")}</div>
                   <div className="mt-2 grid gap-1">
                     {["All", ...intentions].map((x) => (
                       <button
@@ -202,13 +194,15 @@ export default function Catalog() {
             <div>
               <div className="flex items-end justify-between gap-4 flex-wrap">
                 <div>
-                  <div className="eyebrow">Results</div>
+                  <div className="eyebrow">{t("catalog.results")}</div>
                   <div className="mt-2 text-sm muted-dt">
-                    {result.length} {result.length === 1 ? "puja" : "pujas"} in this view
+                    {result.length}{" "}
+                    {result.length === 1 ? t("catalog.pujaInView") : t("catalog.pujasInView")}
                     {priceRange && (
                       <span className="text-muted-dt/70">
                         {" "}
-                        · ₹{priceRange.min.toLocaleString("en-IN")} - ₹{priceRange.max.toLocaleString("en-IN")}
+                        · ₹{priceRange.min.toLocaleString("en-IN")} - ₹
+                        {priceRange.max.toLocaleString("en-IN")}
                       </span>
                     )}
                   </div>
@@ -255,10 +249,10 @@ export default function Catalog() {
               ) : (
                 <div className="panel-dt mt-8 p-10 text-center">
                   <House size={32} className="mx-auto text-gold-600" />
-                  <div className="display-dt mt-4 text-4xl">No pujas match this view.</div>
-                  <p className="mt-3 text-sm muted-dt">Try another deity, tag or search term.</p>
+                  <div className="display-dt mt-4 text-4xl">{t("catalog.noPujas")}</div>
+                  <p className="mt-3 text-sm muted-dt">{t("catalog.tryAnother")}</p>
                   <button onClick={clearAll} className="btn-gold-dt mt-6">
-                    Clear all filters
+                    {t("catalog.clearAllFilters")}
                   </button>
                 </div>
               )}
@@ -266,33 +260,40 @@ export default function Catalog() {
           </div>
 
           <section className="mt-20 has-decor-dt">
-        <SectionDecor />
+            <SectionDecor />
             <Rangoli className="decor-dt decor-bl hide-mobile soft-tone" />
-            <SectionHeading
-              title="Seasonal shelves"
-              copy="These shelves can be promoted or hidden by CMS later without changing the catalogue layout."
-            />
+            <SectionHeading title={t("catalog.seasonalShelves")} copy={t("catalog.seasonalCopy")} />
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {festivals.map((f, i) => (
-                <Reveal key={f.name} delay={i * 0.04}>
-                  <div className="panel-dt overflow-hidden">
-                    <div className="media-dt aspect-[4/3]">
-                      <img src={f.image} alt="" />
-                    </div>
-                    <div className="p-5">
-                      <div className="text-[10px] uppercase tracking-[.16em] text-gold-600">
-                        {f.date}
+              {festivals.map((f, i) => {
+                const name = lang === "hi" && f.nameHi ? f.nameHi : f.name;
+                const note = lang === "hi" && f.noteHi ? f.noteHi : f.note;
+                return (
+                  <Reveal key={f.name} delay={i * 0.04}>
+                    <div className="panel-dt overflow-hidden">
+                      <div className="media-dt aspect-[4/3]">
+                        <img src={f.image} alt={name} />
                       </div>
-                      <h3 className="mt-2 text-3xl">{f.name}</h3>
-                      <p className="mt-1 text-xs leading-6 muted-dt">{f.note}</p>
+                      <div className="p-5">
+                        <div className="text-[10px] uppercase tracking-[.16em] text-gold-600">
+                          {f.date}
+                        </div>
+                        <h3 className="mt-2 text-3xl">{name}</h3>
+                        <p className="mt-1 text-xs leading-6 muted-dt">{note}</p>
+                      </div>
                     </div>
-                  </div>
-                </Reveal>
-              ))}
+                  </Reveal>
+                );
+              })}
             </div>
           </section>
         </div>
       </section>
     </>
   );
+}
+
+function parseDate(s) {
+  // Works for "Sep 09, 2026". For non-English strings returns Infinity.
+  const d = new Date(s);
+  return Number.isNaN(d.getTime()) ? Infinity : d.getTime();
 }

@@ -14,18 +14,30 @@ import { pujas, stories } from "../lib/data";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionHeading from "../components/common/SectionHeading";
 import SectionCurve from "../components/common/SectionCurve";
-import { LeafBranch, LotusLine, DiyaCluster, Kalash, SectionDecor } from "../components/common/decor";
+import {
+  LeafBranch,
+  LotusLine,
+  DiyaCluster,
+  Kalash,
+  SectionDecor,
+} from "../components/common/decor";
 import FavToggle from "../components/common/FavToggle";
 import { useToast } from "../components/common/Toast";
 import FaqAccordion from "../components/common/FaqAccordion";
 import { GalleryTile } from "../components/common/Lightbox";
+import { useLanguage } from "../components/common/LanguageToggle";
+import ShraadhContent from "../components/common/ShraadhContent";
 
 export default function PujaDetail() {
   const { id } = useParams();
+  const { t, lang } = useLanguage();
   const p = pujas.find((x) => x.id === id) || pujas[0];
   const toast = useToast();
+  const title = lang === "hi" && p.titleHi ? p.titleHi : p.title;
+  const desc = lang === "hi" && p.descHi ? p.descHi : p.desc;
+  const isShraadh = p.id === "shraadh";
   const galleryImages = [
-    { src: p.image, alt: `${p.title} ritual moment` },
+    { src: p.image, alt: `${title} ritual moment` },
     { src: stories[1].image, alt: "Ritual moment" },
     { src: stories[2].image, alt: "Ritual moment" },
     { src: stories[3].image, alt: "Ritual moment" },
@@ -35,15 +47,18 @@ export default function PujaDetail() {
       <section className="detail-hero-dt has-decor-dt">
         <SectionDecor />
         <div className="detail-hero-media-dt">
-          <ParallaxImage src={p.image} alt={p.title} className="h-full w-full" strength={28} />
+          <ParallaxImage src={p.image} alt={title} className="h-full w-full" strength={28} />
         </div>
         <div className="container-dt detail-hero-content-dt pb-16">
           <Reveal>
             <div className="eyebrow !text-gold-300">{p.tag}</div>
             <h1 className="display-dt mt-3 max-w-4xl text-6xl sm:text-7xl lg:text-[76px]">
-              {p.title}
+              {title}
             </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/60">{p.desc}</p>
+            {p.titleHi && lang === "en" && (
+              <p className="mt-2 text-sm text-white/40">{p.titleHi}</p>
+            )}
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/60">{desc}</p>
             <div className="mt-6 flex flex-wrap gap-4 text-xs text-white/55">
               <span className="inline-flex items-center gap-2">
                 <CalendarBlank size={14} /> {p.date}
@@ -54,14 +69,19 @@ export default function PujaDetail() {
               <span className="inline-flex items-center gap-2">
                 <MapPin size={14} /> {p.temple}
               </span>
+              {p.code && (
+                <span className="inline-flex items-center gap-2 font-mono">
+                  <CheckCircle size={14} /> {p.code}
+                </span>
+              )}
             </div>
             <div className="mt-7 flex flex-wrap gap-3 items-center">
               <Link className="btn-gold-dt" to={`/booking/${p.id}/date`}>
-                Proceed to booking <ArrowRight size={15} />
+                {t("detail.proceedBooking")} <ArrowRight size={15} />
               </Link>
               <FavToggle
                 id={p.id}
-                title={p.title}
+                title={title}
                 variant="photo"
                 size={17}
                 className="!w-11 !h-11"
@@ -71,18 +91,21 @@ export default function PujaDetail() {
                 onClick={() =>
                   toast.push({
                     type: "info",
-                    title: "Link copied",
-                    desc: "Share this puja with your family.",
+                    title: t("detail.linkCopied"),
+                    desc: t("detail.linkCopiedDesc"),
                   })
                 }
               >
-                Share <ArrowUpRight size={14} />
+                {t("detail.share")} <ArrowUpRight size={14} />
               </button>
             </div>
           </Reveal>
         </div>
         <SectionCurve edge="bottom" />
       </section>
+
+      {isShraadh && <ShraadhContent />}
+
       <section className="site-section has-decor-dt">
         <SectionDecor />
         <DiyaCluster className="decor-dt decor-tr hide-mobile soft-tone" />
@@ -90,21 +113,17 @@ export default function PujaDetail() {
           <div className="grid gap-8 lg:grid-cols-[1.2fr_.8fr] items-start">
             <Reveal>
               <div>
-                <div className="eyebrow">About the puja</div>
-                <h2 className="display-dt mt-3 text-5xl">
-                  A ritual with a clear place in the journey.
-                </h2>
+                <div className="eyebrow">{t("detail.aboutPuja")}</div>
+                <h2 className="display-dt mt-3 text-5xl">{t("detail.ritualJourneyTitle")}</h2>
                 <p className="mt-5 max-w-2xl text-sm leading-8 muted-dt">
-                  This detail page keeps significance, process, temple context and booking
-                  information close together. Devotees can understand the ritual before choosing a
-                  package.
+                  {t("detail.ritualJourneyCopy")}
                 </p>
                 <div className="mt-8 grid gap-3 sm:grid-cols-2">
                   {[
-                    ["Ritual duration", "1 to 2 hours"],
-                    ["Temple", "" + p.temple],
-                    ["Priest", "Verified acharya network"],
-                    ["Delivery", "Video in 24 to 48 hours"],
+                    [t("detail.duration"), t("detail.durationValue")],
+                    [t("detail.temple"), p.temple],
+                    [t("detail.priest"), t("detail.priestValue")],
+                    [t("detail.delivery"), t("detail.deliveryValue")],
                   ].map(([a, b]) => (
                     <div className="panel-dt p-5" key={a}>
                       <div className="text-[10px] uppercase tracking-[.15em] text-gold-600">
@@ -120,31 +139,29 @@ export default function PujaDetail() {
               <div className="panel-dt p-6 puja-booking-widget-dt">
                 <div className="flex items-center gap-2 text-gold-600">
                   <ShieldCheck size={16} />
-                  <span className="text-xs font-semibold">Book with confidence</span>
+                  <span className="text-xs font-semibold">{t("detail.bookConfidence")}</span>
                 </div>
-                <div className="mt-5 text-sm muted-dt">Starting from</div>
+                <div className="mt-5 text-sm muted-dt">{t("detail.startingFrom")}</div>
                 <div className="mt-1 display-dt text-5xl puja-price-dt">
                   ₹{p.price.toLocaleString("en-IN")}
                 </div>
-                <div className="mt-1 text-[11px] muted-dt">
-                  inclusive of priest, materials and delivery
-                </div>
+                <div className="mt-1 text-[11px] muted-dt">{t("detail.inclusiveOf")}</div>
 
                 <div className="mt-5 rounded-xl border border-dt overflow-hidden puja-breakdown-dt">
                   <div className="flex items-center justify-between px-4 py-2.5 text-[11px]">
-                    <span className="muted-dt">Puja seva</span>
+                    <span className="muted-dt">{t("detail.pujaSeva")}</span>
                     <span className="font-semibold">
                       ₹{Math.round(p.price * 0.7).toLocaleString("en-IN")}
                     </span>
                   </div>
                   <div className="flex items-center justify-between px-4 py-2.5 text-[11px] border-t border-dt">
-                    <span className="muted-dt">Materials & dakshina</span>
+                    <span className="muted-dt">{t("detail.materials")}</span>
                     <span className="font-semibold">
                       ₹{Math.round(p.price * 0.22).toLocaleString("en-IN")}
                     </span>
                   </div>
                   <div className="flex items-center justify-between px-4 py-2.5 text-[11px] border-t border-dt">
-                    <span className="muted-dt">Video & delivery</span>
+                    <span className="muted-dt">{t("detail.videoDelivery")}</span>
                     <span className="font-semibold">
                       ₹{Math.round(p.price * 0.08).toLocaleString("en-IN")}
                     </span>
@@ -153,9 +170,9 @@ export default function PujaDetail() {
 
                 <div className="mt-6 grid gap-2">
                   {[
-                    "Personalized Sankalp",
-                    "Temple and priest context",
-                    "Photo / video delivery",
+                    t("detail.personalizedSankalp"),
+                    t("detail.templePriestContext"),
+                    t("detail.photoVideo"),
                   ].map((x) => (
                     <div key={x} className="flex items-center gap-2 text-xs">
                       <CheckCircle size={14} className="text-gold-600" weight="fill" />
@@ -164,11 +181,9 @@ export default function PujaDetail() {
                   ))}
                 </div>
                 <Link className="btn-gold-dt mt-7 w-full" to={`/booking/${p.id}/date`}>
-                  Choose your date <ArrowRight size={14} />
+                  {t("detail.chooseDate")} <ArrowRight size={14} />
                 </Link>
-                <p className="mt-3 text-center text-[10px] muted-dt">
-                  No charge until you confirm. Free reschedule once.
-                </p>
+                <p className="mt-3 text-center text-[10px] muted-dt">{t("detail.noCharge")}</p>
               </div>
             </Reveal>
           </div>
@@ -177,15 +192,12 @@ export default function PujaDetail() {
       <section className="site-section has-decor-dt surface-2-dt">
         <SectionDecor />
         <div className="container-dt">
-          <SectionHeading
-            title="What you receive"
-            copy="Deliverables are explicit so the customer knows what remains after the puja is performed."
-          />
+          <SectionHeading title={t("detail.whatReceive")} copy={t("detail.whatReceiveCopy")} />
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {[
-              [VideoCamera, "Video", "Recorded ceremony available in the account."],
-              [ShieldCheck, "Sankalp", "Personalized details included in the ritual."],
-              [CalendarBlank, "Updates", "Booking and ritual status from start to finish."],
+              [VideoCamera, t("detail.video"), t("detail.videoCopy")],
+              [ShieldCheck, t("detail.sankalp"), t("detail.sankalpCopy")],
+              [CalendarBlank, t("detail.updates"), t("detail.updatesCopy")],
             ].map(([Icon, a, b], i) => (
               <Reveal key={a} delay={i * 0.05}>
                 <div className="panel-dt p-6">
@@ -204,19 +216,12 @@ export default function PujaDetail() {
         <div className="container-dt">
           <div className="grid gap-8 lg:grid-cols-[.8fr_1.2fr] items-start">
             <Reveal>
-              <h2 className="display-dt text-5xl">Puja vidhi and Sankalp</h2>
+              <h2 className="display-dt text-5xl">{t("detail.vidhiSankalp")}</h2>
             </Reveal>
             <Reveal>
               <div className="grid gap-5 text-sm leading-8 muted-dt">
-                <p>
-                  The booking can collect the name, gotra, family members, rashi, nakshatra and
-                  purpose when the ritual needs them. Helpers should explain what each field means
-                  without forcing the user to know everything in advance.
-                </p>
-                <p>
-                  For the prototype, every package shares the same core information architecture. A
-                  future CMS can vary the exact fields and ritual steps per puja.
-                </p>
+                <p>{t("detail.vidhiCopy1")}</p>
+                <p>{t("detail.vidhiCopy2")}</p>
               </div>
             </Reveal>
           </div>
@@ -225,10 +230,7 @@ export default function PujaDetail() {
       <section className="site-section has-decor-dt surface-2-dt">
         <SectionDecor />
         <div className="container-dt">
-          <SectionHeading
-            title="Past ritual moments"
-            copy="Tap any image to open the gallery. A mixed image set gives the detail page a visual sense of the ceremony without turning it into a photo grid."
-          />
+          <SectionHeading title={t("detail.pastMoments")} copy={t("detail.pastMomentsCopy")} />
           <div className="grid gap-4 md:grid-cols-12">
             <Reveal className="md:col-span-7">
               <GalleryTile
@@ -278,25 +280,13 @@ export default function PujaDetail() {
       <section className="site-section has-decor-dt">
         <SectionDecor />
         <div className="container-dt">
-          <SectionHeading title="Questions devotees ask" />
+          <SectionHeading title={t("detail.questionsTitle")} />
           <FaqAccordion
             items={[
-              {
-                q: "Do I need to know my gotra?",
-                a: "Not always. You can choose 'I do not know' on the Sankalp step and the priest will use a general gotra during the ritual. The booking still proceeds normally.",
-              },
-              {
-                q: "When do photos and video arrive?",
-                a: "Recorded ceremony photos and video are delivered to your account within 24 to 48 hours after the puja is performed. You will receive a notification when they are ready.",
-              },
-              {
-                q: "Can my family join the Sankalp?",
-                a: "Yes. The Sankalp step lets you add up to four family members on the Family package. Their names are included in the ritual intention alongside yours.",
-              },
-              {
-                q: "What happens if I miss the live ritual?",
-                a: "Nothing is lost. The recorded ceremony stays in your account under My Blessings, and you can revisit the Sankalp and video at any time afterwards.",
-              },
+              { q: t("detail.faq1Q"), a: t("detail.faq1A") },
+              { q: t("detail.faq2Q"), a: t("detail.faq2A") },
+              { q: t("detail.faq3Q"), a: t("detail.faq3A") },
+              { q: t("detail.faq4Q"), a: t("detail.faq4A") },
             ]}
           />
         </div>

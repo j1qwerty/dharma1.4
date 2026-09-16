@@ -9,7 +9,11 @@ export function SpinDecor({ children, className = "", speed = 1, reverse = false
   const rotate = useTransform(scrollYProgress, [0, 1], [0, 360 * speed * (reverse ? -1 : 1)]);
   return (
     <span ref={ref} className={className} style={{ display: "inline-block" }}>
-      {reduce ? <>{children}</> : <motion.span style={{ rotate, display: "inline-block" }}>{children}</motion.span>}
+      {reduce ? (
+        <>{children}</>
+      ) : (
+        <motion.span style={{ rotate, display: "inline-block" }}>{children}</motion.span>
+      )}
     </span>
   );
 }

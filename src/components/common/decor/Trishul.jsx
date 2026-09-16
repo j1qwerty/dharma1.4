@@ -11,21 +11,12 @@ const PARTS = {
   crossbar: "M40 82 H80",
   shaft: "M60 66 V212", // long shaft — head is ~64 tall, shaft ~146
   pommel: "M60 212 L65.5 218 L60 224 L54.5 218 Z",
-} ;
+};
 
-export function Trishul({
-  className,
-  stroke = "currentColor",
-  strokeWidth = 3,
-}) {
+export function Trishul({ className, stroke = "currentColor", strokeWidth = 3 }) {
   return (
     <svg className={className} viewBox="0 0 120 240" fill="none" aria-hidden="true">
-      <g
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <g stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
         <path d={PARTS.spear} />
         <path d={PARTS.prongL} />
         <path d={PARTS.prongR} />

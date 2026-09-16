@@ -35,7 +35,12 @@ const STARS = [
   [43, 43],
 ];
 
-export function Swastika({ className = "", stroke: strokeProp = "currentColor", variant = "extended", stars = true }) {
+export function Swastika({
+  className = "",
+  stroke: strokeProp = "currentColor",
+  variant = "extended",
+  stars = true,
+}) {
   return (
     <svg className={className} viewBox="0 0 120 120" fill="none" aria-hidden="true">
       <g stroke={strokeProp} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">

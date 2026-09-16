@@ -12,7 +12,18 @@ import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionHeading from "../components/common/SectionHeading";
 import { ImageMasonry } from "../components/common/Masonry";
 import SectionCurve from "../components/common/SectionCurve";
-import { LeafBranch, LotusLine, MandalaRings, SpinDecor, Trishul, Bell, Hamsa, Peacock, SectionDecor } from "../components/common/decor";
+import {
+  LeafBranch,
+  LotusLine,
+  MandalaRings,
+  SpinDecor,
+  Trishul,
+  Bell,
+  Hamsa,
+  Peacock,
+  SectionDecor,
+} from "../components/common/decor";
+import { useLanguage } from "../components/common/LanguageToggle";
 
 const gallery = [
   "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=800&q=84",
@@ -23,6 +34,7 @@ const gallery = [
 ];
 
 export default function About() {
+  const { t } = useLanguage();
   return (
     <>
       <section className="ink-dt overflow-hidden has-decor-dt relative">
@@ -30,16 +42,11 @@ export default function About() {
         <div className="container-dt grid min-h-[520px] items-end gap-10 py-20 lg:grid-cols-[1fr_.8fr]">
           <Reveal>
             <div>
-              <div className="eyebrow !text-gold-300">About DharmaTribe</div>
-              <h1 className="display-dt mt-4 max-w-4xl text-6xl sm:text-7xl">
-                Ancient rituals, clearer access.
-              </h1>
-              <p className="mt-5 max-w-xl text-sm leading-7 text-white/55">
-                A digital layer between a devotee at home and a ritual being performed at a sacred
-                place.
-              </p>
+              <div className="eyebrow !text-gold-300">{t("about.eyebrow")}</div>
+              <h1 className="display-dt mt-4 max-w-4xl text-6xl sm:text-7xl">{t("about.title")}</h1>
+              <p className="mt-5 max-w-xl text-sm leading-7 text-white/55">{t("about.copy")}</p>
               <Link className="btn-gold-dt mt-7" to="/pujas">
-                Explore pujas <ArrowUpRight size={14} />
+                {t("about.explorePujas")} <ArrowUpRight size={14} />
               </Link>
             </div>
           </Reveal>
@@ -58,20 +65,12 @@ export default function About() {
         <div className="container-dt">
           <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
             <Reveal>
-              <h2 className="display-dt text-5xl sm:text-6xl">The product starts with trust.</h2>
+              <h2 className="display-dt text-5xl sm:text-6xl">{t("about.trustTitle")}</h2>
             </Reveal>
             <Reveal>
               <div className="space-y-5 text-sm leading-8 muted-dt">
-                <p>
-                  The experience should feel closer to a trusted introduction than a generic
-                  checkout. That is why dates, muhurat, temple, package, Sankalp and delivery are
-                  kept visible.
-                </p>
-                <p>
-                  The same page system also has to survive an entire year of content changes.
-                  Festival campaigns can replace evergreen shelves, then settle back without
-                  redesigning the product.
-                </p>
+                <p>{t("about.trustCopy1")}</p>
+                <p>{t("about.trustCopy2")}</p>
               </div>
             </Reveal>
           </div>
@@ -83,16 +82,13 @@ export default function About() {
           <MandalaRings style={{ width: 420, height: 420 }} className="soft-tone" />
         </SpinDecor>
         <div className="container-dt">
-          <SectionHeading
-            title="What we keep visible"
-            copy="The platform is designed around the parts of a booking that create confidence."
-          />
+          <SectionHeading title={t("about.whatVisible")} copy={t("about.whatVisibleCopy")} />
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {[
-              [FlowerLotus, "Tradition", "Keep ritual context in the interface."],
-              [ShieldCheck, "Trust", "Show who, when and where."],
-              [VideoCamera, "Proof", "Make post-puja delivery obvious."],
-              [UsersThree, "Family", "Support shared Sankalp details."],
+              [FlowerLotus, t("about.tradition"), t("about.traditionCopy")],
+              [ShieldCheck, t("about.trust"), t("about.trustCopy")],
+              [VideoCamera, t("about.proof"), t("about.proofCopy")],
+              [UsersThree, t("about.family"), t("about.familyCopy")],
             ].map(([Icon, title, copy], i) => (
               <Reveal delay={i * 0.05} key={title}>
                 <div className="panel-dt p-6">
@@ -109,10 +105,7 @@ export default function About() {
         <SectionDecor />
         <Peacock className="decor-dt decor-bl hide-mobile soft-tone" />
         <div className="container-dt">
-          <SectionHeading
-            title="The visual language"
-            copy="Cream and charcoal keep the page calm. Gold marks action, ritual, and emphasis. Photography does the rest."
-          />
+          <SectionHeading title={t("about.visualLanguage")} copy={t("about.visualCopy")} />
           <ImageMasonry items={gallery} />
         </div>
       </section>
@@ -121,29 +114,28 @@ export default function About() {
         <Bell className="decor-dt decor-tr hide-mobile ink-tone" />
         <div className="container-dt grid gap-10 lg:grid-cols-[1.1fr_.9fr] items-end">
           <Reveal>
-            <div className="eyebrow !text-gold-300">Technology + tradition</div>
-            <h2 className="display-dt mt-3 text-5xl">
-              The interface should disappear when the ritual starts.
-            </h2>
-            <p className="mt-5 max-w-xl text-sm leading-7 text-white/55">
-              Everything before the ceremony should reduce uncertainty. Everything after it should
-              help the devotee return to the memory.
-            </p>
+            <div>
+              <div className="eyebrow !text-gold-300">{t("about.techTradition")}</div>
+              <h2 className="display-dt mt-3 text-5xl">{t("about.interfaceTitle")}</h2>
+              <p className="mt-5 max-w-xl text-sm leading-7 text-white/55">
+                {t("about.interfaceCopy")}
+              </p>
+            </div>
           </Reveal>
           <Reveal>
             <div className="border-t border-white/10 pt-5">
               <div className="grid grid-cols-3 gap-4">
                 <div className="stat-dt">
                   <div className="display-dt text-4xl text-gold-300">50+</div>
-                  <div className="mt-1 text-[10px] text-white/40">sample temples</div>
+                  <div className="mt-1 text-[10px] text-white/40">{t("about.sampleTemples")}</div>
                 </div>
                 <div className="stat-dt">
                   <div className="display-dt text-4xl text-gold-300">200+</div>
-                  <div className="mt-1 text-[10px] text-white/40">sample pujas</div>
+                  <div className="mt-1 text-[10px] text-white/40">{t("about.samplePujas")}</div>
                 </div>
                 <div className="stat-dt">
                   <div className="display-dt text-4xl text-gold-300">4.9</div>
-                  <div className="mt-1 text-[10px] text-white/40">sample rating</div>
+                  <div className="mt-1 text-[10px] text-white/40">{t("about.sampleRating")}</div>
                 </div>
               </div>
             </div>
@@ -155,12 +147,12 @@ export default function About() {
         <Hamsa className="decor-dt decor-tl hide-mobile soft-tone" />
         <div className="container-dt text-center">
           <Reveal>
-            <h2 className="display-dt text-5xl sm:text-6xl">Start with the next sacred date.</h2>
+            <h2 className="display-dt text-5xl sm:text-6xl">{t("about.startNextDate")}</h2>
             <p className="mx-auto mt-4 max-w-xl text-sm leading-7 muted-dt">
-              Explore current pujas or return to the booking flow from your account.
+              {t("about.startCopy")}
             </p>
             <Link className="btn-gold-dt mt-7" to="/pujas">
-              Explore pujas <ArrowUpRight size={14} />
+              {t("about.explorePujas")} <ArrowUpRight size={14} />
             </Link>
           </Reveal>
         </div>
