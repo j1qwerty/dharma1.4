@@ -26,11 +26,12 @@ import {
 import { useLanguage } from "../components/common/LanguageToggle";
 
 const gallery = [
-  "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=800&q=84",
-  "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=800&q=84",
-  "https://picsum.photos/seed/dharma-lakshmi/800/600",
-  "https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&w=800&q=84",
-  "https://picsum.photos/seed/dharma-ganesh/800/600",
+  "/more/rudraabishek.png",
+  "/more/mahalaxmi.png",
+  "/more/diya.png",
+  "/more/temple.png",
+  "/more/templeinside.png",
+  "/more/ganesh.png",
 ];
 
 export default function About() {

@@ -16,7 +16,7 @@ export const pujas = [
     purpose: "Ancestral peace",
     type: "Shraadh",
     image:
-      "https://picsum.photos/seed/dharma-shraadh/1500/1000",
+      "/puja/Shraadh.jpg",
     desc: "Ancestral observance performed with śraddhā — at home with a Vedacharya, on your behalf from a temple, or at Gaya Ji.",
     descHi:
       "श्रद्धा के साथ संपन्न होने वाला पितृ अनुष्ठान — घर पर वेदाचार्य के साथ, आपकी ओर से मंदिर से, या गया जी में।",
@@ -35,7 +35,7 @@ export const pujas = [
     purpose: "Peace & protection",
     type: "Abhishek",
     image:
-      "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1500&q=86",
+      "/puja/Maha Rudrabhishek.jpg",
     desc: "A traditional Rudrabhishek with a personalized Sankalp and recorded ceremony access.",
     descHi: "व्यक्तिगत संकल्प और रिकॉर्ड किए गए समारोह की पहुँच के साथ एक पारंपरिक रुद्राभिषेक।",
   },
@@ -53,7 +53,7 @@ export const pujas = [
     purpose: "New beginnings",
     type: "Archana",
     image:
-      "https://picsum.photos/seed/dharma-ganesh/1500/1000",
+      "/puja/Ganesh Vighnaharta Puja.jpg",
     desc: "A focused Ganesh puja for a new chapter, journey, venture or important decision.",
     descHi: "नए अध्याय, यात्रा, उद्यम या महत्वपूर्ण निर्णय के लिए एक केंद्रित गणेश पूजा।",
   },
@@ -71,7 +71,7 @@ export const pujas = [
     purpose: "Wealth & prosperity",
     type: "Puja",
     image:
-      "https://picsum.photos/seed/dharma-lakshmi/1500/1000",
+      "/puja/Mahalakshmi Dhan Akarshan.jpg",
     desc: "An intimate Lakshmi offering for Diwali and the season of new beginnings.",
     descHi: "दीवाली और नए आरंभ के मौसम के लिए एक अंतरंग लक्ष्मी अनुष्ठान।",
   },
@@ -89,7 +89,7 @@ export const pujas = [
     purpose: "Peace & protection",
     type: "Seva",
     image:
-      "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=1500&q=86",
+      "/puja/Sankat Mochan Hanuman.jpg",
     desc: "A focused Hanuman seva for courage, steadiness and protection.",
     descHi: "साहस, स्थिरता और सुरक्षा के लिए एक केंद्रित हनुमान सेवा।",
   },
@@ -107,7 +107,7 @@ export const pujas = [
     purpose: "Family & harmony",
     type: "Katha",
     image:
-      "https://picsum.photos/seed/dharma-shraadh/1500/1000",
+      "/puja/Satyanarayan Katha.jpg",
     desc: "A family-oriented Satyanarayan ritual with personalized Sankalp.",
     descHi: "व्यक्तिगत संकल्प के साथ परिवार-उन्मुख सत्यनारायण अनुष्ठान।",
   },
@@ -125,7 +125,7 @@ export const pujas = [
     purpose: "Dosha & remedy",
     type: "Homam",
     image:
-      "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=1500&q=86",
+      "/puja/Navagraha Shanti Homam.jpg",
     desc: "A structured homam experience around traditional Navagraha practices.",
     descHi: "पारंपरिक नवग्रह पद्धतियों के इर्द-गिर्द एक संरचित होमम अनुभव।",
   },
@@ -143,7 +143,7 @@ export const pujas = [
     purpose: "Protection",
     type: "Path",
     image:
-      "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1500&q=86",
+      "/puja/Durga Saptashati Path.jpg",
     desc: "A Navratri path experience with family Sankalp.",
     descHi: "पारिवारिक संकल्प के साथ एक नवरात्रि पाठ अनुभव।",
   },
@@ -161,7 +161,7 @@ export const pujas = [
     purpose: "Health & well-being",
     type: "Jaap",
     image:
-      "https://picsum.photos/seed/dharma-mrityunjaya/1500/1000",
+      "/puja/Mahamrityunjaya Jaap.jpg",
     desc: "A traditional mantra jaap experience with Sankalp and post-puja video delivery.",
     descHi: "संकल्प और पूजा के बाद वीडियो डिलीवरी के साथ एक पारंपरिक मंत्र जाप अनुभव।",
   },
@@ -174,7 +174,7 @@ export const festivals = [
     note: "Ten days of devotion",
     noteHi: "दस दिन की भक्ति",
     image:
-      "https://picsum.photos/seed/dharma-ganesh-fest/1200/800",
+      "/festivals/Ganesh Chaturthi.jpg",
   },
   {
     name: "Navratri",
@@ -183,7 +183,7 @@ export const festivals = [
     note: "Nine nights of devotion",
     noteHi: "नौ रातों की भक्ति",
     image:
-      "https://picsum.photos/seed/dharma-navratri/1200/800",
+      "/festivals/Navratri.jpg",
   },
   {
     name: "Diwali",
@@ -192,7 +192,7 @@ export const festivals = [
     note: "Light, Lakshmi, new beginnings",
     noteHi: "प्रकाश, लक्ष्मी, नए आरंभ",
     image:
-      "https://picsum.photos/seed/dharma-diwali/1200/800",
+      "/festivals/Diwali.jpg",
   },
   {
     name: "Mahashivratri",
@@ -201,7 +201,7 @@ export const festivals = [
     note: "Night of Shiva",
     noteHi: "शिव की रात",
     image:
-      "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=84",
+      "/festivals/Mahashivratri.jpg",
   },
 ];
 export const stories = [
@@ -213,7 +213,7 @@ export const stories = [
     read: "6 min",
     date: "Sep 04, 2026",
     image:
-      "https://picsum.photos/seed/dharma-sankalp/1400/900",
+      "/stories/What a Sankalp really means, and why your name matters.png",
     excerpt: "A simple guide to the intention placed at the heart of a traditional puja.",
     excerptHi: "पारंपरिक पूजा के केंद्र में रखे गए संकल्प का सरल परिचय।",
   },
@@ -225,7 +225,7 @@ export const stories = [
     read: "4 min",
     date: "Aug 29, 2026",
     image:
-      "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?auto=format&fit=crop&w=1400&q=84",
+      "/stories/The language of temple bells.png",
     excerpt: "Why bells are rung, what the ritual means, and what devotees are actually doing.",
     excerptHi:
       "घंटे क्यों बजाए जाते हैं, अनुष्ठान का क्या अर्थ है, और भक्त वास्तव में क्या कर रहे हैं।",
@@ -238,7 +238,7 @@ export const stories = [
     read: "8 min",
     date: "Aug 22, 2026",
     image:
-      "https://picsum.photos/seed/dharma-shiva-ritual/1400/900",
+      "/stories/Why Rudrabhishek is one of the most requested Shiva rituals.png",
     excerpt: "From the first offering to the final aarti, a ritual viewed through its sequence.",
     excerptHi: "पहले अर्पण से अंतिम आरती तक, एक अनुष्ठान अपने क्रम के माध्यम से।",
   },
@@ -250,7 +250,7 @@ export const stories = [
     read: "5 min",
     date: "Aug 18, 2026",
     image:
-      "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=1400&q=84",
+      "/stories/A puja performed 1,300 km away, but still close to home.png",
     excerpt: "One family’s reason for choosing a remote puja service for a milestone.",
     excerptHi: "किसी मील के पत्थर के लिए दूरस्थ पूजा सेवा चुनने वाले एक परिवार का कारण।",
   },
@@ -262,7 +262,7 @@ export const stories = [
     read: "7 min",
     date: "Aug 11, 2026",
     image:
-      "https://picsum.photos/seed/dharma-diwali-story/1400/900",
+      "/stories/A calmer way to prepare for Diwali.png",
     excerpt: "How to bring the important ritual details forward before the festival rush.",
     excerptHi: "त्यौहार की भीड़ से पहले महत्वपूर्ण अनुष्ठान विवरण आगे कैसे लाएँ।",
   },
@@ -274,7 +274,7 @@ export const stories = [
     read: "5 min",
     date: "Aug 07, 2026",
     image:
-      "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1400&q=84",
+      "/stories/What happens when a puja includes Annadanam.png",
     excerpt: "A visual guide to the offering, preparation and community side of the ritual.",
     excerptHi: "अर्पण, तैयारी और अनुष्ठान के सामुदायिक पक्ष का दृश्य मार्गदर्शन।",
   },
@@ -286,7 +286,7 @@ export const stories = [
     read: "4 min",
     date: "Jul 28, 2026",
     image:
-      "https://picsum.photos/seed/dharma-temple-morning/1400/900",
+      "/stories/Before sunrise a temple morning in three sounds.png",
     excerpt: "Bell, conch and chant. A closer look at the rhythm of an early temple morning.",
     excerptHi: "घंटा, शंख और मंत्र। एक मंदिर की प्रातः की लय पर एक नज़दीकी नज़र।",
   },
@@ -298,7 +298,7 @@ export const stories = [
     read: "6 min",
     date: "Jul 21, 2026",
     image:
-      "https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&w=1400&q=84",
+      "/stories/The family Sankalp that crossed three cities.png",
     excerpt: "A family used one booking to bring siblings together for a shared intention.",
     excerptHi: "एक परिवार ने एक बुकिंग से भाई-बहनों को साझा संकल्प के लिए एक साथ लाया।",
   },
@@ -346,28 +346,28 @@ export const social = [
     label: "Instagram",
     type: "Reel",
     image:
-      "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1000&q=84",
+      "/more/diya.png",
     copy: "Aarti in the last light of evening.",
   },
   {
     label: "YouTube",
     type: "Short",
     image:
-      "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1000&q=84",
+      "/more/templeinside.png",
     copy: "Inside a temple morning ritual.",
   },
   {
     label: "Facebook",
     type: "Story",
     image:
-      "https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&w=1000&q=84",
+      "/more/temple.png",
     copy: "A devotee’s first remote puja.",
   },
   {
     label: "WhatsApp",
     type: "Channel",
     image:
-      "https://picsum.photos/seed/dharma-whatsapp/1000/700",
+      "/more/ganesh.png",
     copy: "Festival reminders and live updates.",
   },
 ];

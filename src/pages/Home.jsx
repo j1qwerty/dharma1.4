@@ -623,7 +623,7 @@ export default function Home() {
               [
                 lang === "hi" ? "वाराणसी" : "Varanasi",
                 "Kashi Vishwanath",
-                "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1000&q=86",
+                "/temples/kashivishwanath.webp",
                 lang === "hi"
                   ? "मंदिर संदर्भ, उपलब्ध पूजा और आगामी क्षण।"
                   : "Temple context, available pujas and upcoming moments.",
@@ -631,7 +631,7 @@ export default function Home() {
               [
                 lang === "hi" ? "अयोध्या" : "Ayodhya",
                 "Ram Janmabhoomi Seva",
-                "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=1000&q=86",
+                "/temples/ram janambhoomi.jpg",
                 lang === "hi"
                   ? "अनुष्ठानों और भक्ति सामग्री के लिए स्थान-आधारित मार्ग।"
                   : "A place-led route into rituals and devotional content.",
@@ -639,7 +639,7 @@ export default function Home() {
               [
                 "Somnath",
                 "Somnath Temple",
-                "https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&w=1000&q=86",
+                "/temples/somnath.jpg",
                 lang === "hi"
                   ? "भविष्य का मंदिर विवरण मार्ग, सेवा और कथा सामग्री के साथ।"
                   : "A future temple detail route with seva and story content.",

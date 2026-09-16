@@ -77,7 +77,13 @@ export default function Lightbox({ images, index, onClose, onIndex }) {
               </div>
             </>
           )}
-          <img src={current.src} alt={current.alt || ""} />
+          <img
+            src={current.src}
+            alt={current.alt || ""}
+            onError={(e) => {
+              e.currentTarget.src = "/images/placeholder.svg";
+            }}
+          />
         </motion.div>
       </motion.div>
     </AnimatePresence>,

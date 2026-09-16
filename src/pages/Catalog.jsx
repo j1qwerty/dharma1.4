@@ -11,6 +11,7 @@ import {
 import { pujas, festivals, intentions, deities, deityHi } from "../lib/data";
 import { upcomingFestivals } from "../lib/dates";
 import PujaCard from "../components/common/PujaCard";
+import SafeImage from "../components/common/SafeImage";
 import SectionHeading from "../components/common/SectionHeading";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
@@ -292,7 +293,7 @@ export default function Catalog() {
                   <Reveal key={f.name} delay={i * 0.04}>
                     <div className="panel-dt overflow-hidden">
                       <div className="media-dt aspect-[4/3]">
-                        <img src={f.image} alt={name} />
+                        <SafeImage src={f.image} alt={name} className="h-full w-full object-cover" />
                       </div>
                       <div className="p-5">
                         <div className="text-[10px] uppercase tracking-[.16em] text-gold-600">
