@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { WhatsappLogo } from "@phosphor-icons/react";
 import BookingFrame from "../components/common/BookingFrame";
+import SafeImage from "../components/common/SafeImage";
 import { CheckCircle, LockKey } from "../components/common/Icons";
 import { useBooking, buildBookingWhatsAppHref } from "../lib/booking";
 import { pujas } from "../lib/data";
@@ -41,7 +42,19 @@ export default function BookingPayment() {
       <div className="eyebrow">{t("bpay.eyebrow")}</div>
       <h2 className="font-display mt-3 text-4xl">{t("bpay.title")}</h2>
 
-      <div className="mt-8 grid gap-2">
+      <div className="mt-6 overflow-hidden rounded-2xl">
+        <SafeImage
+          src={p.image}
+          alt={lang === "hi" && p.titleHi ? p.titleHi : p.title}
+          className="h-48 w-full object-cover"
+        />
+      </div>
+      <div className="mt-3 flex items-center justify-between text-xs text-muted">
+        <span>{`${p.title}${p.titleHi ? " · " + p.titleHi : ""}`}</span>
+        <span>{p.temple}</span>
+      </div>
+
+      <div className="mt-6 grid gap-2">
         {rows.map(([label, value]) => (
           <div key={label} className="flex justify-between border-b border-line py-3 text-sm gap-4">
             <span className="text-muted">{label}</span>

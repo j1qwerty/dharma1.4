@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, FlowerLotus, Sparkle } from "@phosphor-icons/react";
-import { Reveal } from "../components/common/Motion";
+import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
 import {
   LeafBranch,
@@ -36,7 +36,7 @@ export default function Acharyas() {
     <>
       <section className="ink-dt overflow-hidden has-decor-dt relative">
         <SectionDecor />
-        <div className="container-dt pt-24 pb-28">
+        <div className="container-dt grid min-h-[520px] items-end gap-10 py-20 pt-24 pb-28 lg:grid-cols-[1fr_.8fr]">
           <Reveal>
             <div className="eyebrow !text-gold-300">{t("ach.eyebrow")}</div>
             <h1 className="display-dt mt-3 max-w-4xl text-6xl sm:text-7xl">{t("ach.title")}</h1>
@@ -78,6 +78,16 @@ export default function Acharyas() {
               >
                 {t("ach.meetNetwork")}
               </a>
+            </div>
+          </Reveal>
+          <Reveal>
+            <div className="overflow-hidden rounded-[24px]">
+              <ParallaxImage
+                src="https://picsum.photos/seed/dharma-acharyas/1000/800"
+                alt="Acharyas"
+                className="h-[340px] w-full lg:h-[440px]"
+                strength={25}
+              />
             </div>
           </Reveal>
         </div>

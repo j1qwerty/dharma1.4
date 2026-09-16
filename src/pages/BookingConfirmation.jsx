@@ -11,6 +11,7 @@ import {
 import { useBooking, buildBookingWhatsAppHref } from "../lib/booking";
 import { pujas } from "../lib/data";
 import { Reveal } from "../components/common/Motion";
+import SafeImage from "../components/common/SafeImage";
 import {
   LeafBranch,
   LotusLine,
@@ -40,6 +41,13 @@ export default function BookingConfirmation() {
                 <div className="eyebrow mt-6 !text-gold-300">{t("bc.confirmed")}</div>
                 <h1 className="display-dt mt-3 text-6xl">{t("bc.title")}</h1>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-white/55">{t("bc.copy")}</p>
+                <div className="mt-7 overflow-hidden rounded-2xl">
+                  <SafeImage
+                    src={p.image}
+                    alt={title}
+                    className="h-56 w-full object-cover"
+                  />
+                </div>
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Link className="btn-gold-dt" to="/booking/tracking">
                     {t("bc.trackBooking")} <ArrowRight size={14} />
@@ -64,7 +72,10 @@ export default function BookingConfirmation() {
             </div>
             <div className="grid gap-5 p-7 sm:p-9 md:grid-cols-2">
               <div className="panel-dt p-5">
-                <div className="text-xs muted-dt">{t("bc.bookingId")}</div>
+                <div className="overflow-hidden rounded-xl">
+                  <SafeImage src={p.image} alt={title} className="h-32 w-full object-cover" />
+                </div>
+                <div className="mt-4 text-xs muted-dt">{t("bc.bookingId")}</div>
                 <div className="mt-2 font-mono text-sm">DT-702450912</div>
                 <div className="mt-6 grid gap-3 text-sm">
                   <div className="flex justify-between">

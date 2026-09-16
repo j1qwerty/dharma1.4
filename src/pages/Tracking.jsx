@@ -9,6 +9,7 @@ import {
   CalendarBlank,
 } from "@phosphor-icons/react";
 import { Reveal } from "../components/common/Motion";
+import SafeImage from "../components/common/SafeImage";
 import { LeafBranch, LotusLine, Conch, Trishul, SectionDecor } from "../components/common/decor";
 import { useLanguage } from "../components/common/LanguageToggle";
 
@@ -43,6 +44,13 @@ export default function Tracking() {
           <h1 className="display-dt mt-3 text-6xl">{t("track.title")}</h1>
           <p className="mt-4 max-w-2xl text-sm leading-7 muted-dt">{t("track.copy")}</p>
         </Reveal>
+        <div className="mt-8 overflow-hidden rounded-2xl">
+          <SafeImage
+            src="https://picsum.photos/seed/dharma-tracking/1600/700"
+            alt=""
+            className="h-52 w-full object-cover"
+          />
+        </div>
         <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_.55fr]">
           <Reveal>
             <div className="panel-dt p-7">
@@ -88,7 +96,14 @@ export default function Tracking() {
           <div className="grid gap-4">
             <Reveal>
               <div className="panel-dt p-6">
-                <VideoCamera size={20} className="text-gold-600" />
+                <div className="overflow-hidden rounded-xl">
+                  <SafeImage
+                    src="https://picsum.photos/seed/dharma-ritual-video/800/450"
+                    alt=""
+                    className="h-36 w-full object-cover"
+                  />
+                </div>
+                <VideoCamera size={20} className="mt-4 text-gold-600" />
                 <div className="display-dt mt-4 text-3xl">{t("track.videoTitle")}</div>
                 <p className="mt-2 text-sm leading-6 muted-dt">{t("track.videoCopy")}</p>
               </div>

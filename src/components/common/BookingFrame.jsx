@@ -11,6 +11,7 @@ import {
 import { pujas } from "../../lib/data";
 import { useBooking, buildBookingWhatsAppHref } from "../../lib/booking";
 import { SectionDecor } from "./decor";
+import SafeImage from "./SafeImage";
 import { useLanguage } from "./LanguageToggle";
 
 const steps = [
@@ -100,8 +101,19 @@ export default function BookingFrame({ active, children, summary = true }) {
           {summary && (
             <aside className="panel p-6 booking-summary">
               <div className="eyebrow">{t("booking.yourSelection")}</div>
-              <div className="mt-5 flex gap-3">
-                <img src={p.image} alt="" className="h-20 w-24 rounded-xl object-cover" />
+              <div className="mt-5 overflow-hidden rounded-xl">
+                <SafeImage
+                  src={p.image}
+                  alt={lang === "hi" && p.titleHi ? p.titleHi : p.title}
+                  className="h-36 w-full object-cover"
+                />
+              </div>
+              <div className="mt-4 flex gap-3">
+                <SafeImage
+                  src={p.image}
+                  alt=""
+                  className="h-20 w-24 rounded-xl object-cover"
+                />
                 <div>
                   <h3 className="display-dt text-2xl">
                     {lang === "hi" && p.titleHi ? p.titleHi : p.title}
@@ -109,6 +121,23 @@ export default function BookingFrame({ active, children, summary = true }) {
                   <p className="mt-1 text-[11px] muted-dt">{p.temple}</p>
                   {p.code && <p className="mt-1 text-[10px] muted-dt font-mono">{p.code}</p>}
                 </div>
+              </div>
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                <SafeImage
+                  src="https://picsum.photos/seed/dharma-date/400/300"
+                  alt=""
+                  className="h-16 w-full rounded-lg object-cover"
+                />
+                <SafeImage
+                  src="https://picsum.photos/seed/dharma-package/400/300"
+                  alt=""
+                  className="h-16 w-full rounded-lg object-cover"
+                />
+                <SafeImage
+                  src="https://picsum.photos/seed/dharma-sankalp/400/300"
+                  alt=""
+                  className="h-16 w-full rounded-lg object-cover"
+                />
               </div>
               <div className="mt-6 grid gap-3 border-t border-dt pt-5 text-xs">
                 <div className="flex justify-between">

@@ -24,8 +24,7 @@ export default function AcharyaCard({ a, compact = false }) {
           loading="lazy"
           onError={(e) => {
             // Graceful fallback if the local profile image isn't present.
-            e.currentTarget.src =
-              "https://images.unsplash.com/photo-1604608672516-f1b9c1d5a5e1?auto=format&fit=crop&w=900&q=80";
+            e.currentTarget.src = "/images/placeholder.svg";
           }}
         />
         <div className="acharya-card-name-dt">{a.name}</div>

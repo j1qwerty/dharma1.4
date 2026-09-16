@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, MagnifyingGlass } from "@phosphor-icons/react";
-import { Reveal } from "../components/common/Motion";
+import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
 import { LeafBranch, LotusLine, Kalash, Trishul, SectionDecor } from "../components/common/decor";
 const bookings = [
@@ -24,13 +24,23 @@ export default function MyBookings() {
     <>
       <section className="ink-dt overflow-hidden has-decor-dt relative">
         <SectionDecor />
-        <div className="container-dt pt-20 pb-28">
+        <div className="container-dt grid min-h-[420px] items-end gap-10 py-20 pt-20 pb-28 lg:grid-cols-[1fr_.8fr]">
           <Reveal>
             <div className="eyebrow !text-gold-300">My bookings</div>
             <h1 className="display-dt mt-3 text-6xl">Every ritual, one place.</h1>
             <p className="mt-4 max-w-xl text-sm leading-7 text-white/55">
               Search, track, rebook, and open the media attached to each ceremony.
             </p>
+          </Reveal>
+          <Reveal>
+            <div className="overflow-hidden rounded-[24px]">
+              <ParallaxImage
+                src="https://picsum.photos/seed/dharma-bookings/1000/800"
+                alt="My bookings"
+                className="h-[280px] w-full lg:h-[340px]"
+                strength={25}
+              />
+            </div>
           </Reveal>
         </div>
         <SectionCurve edge="bottom" />

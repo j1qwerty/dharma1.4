@@ -11,7 +11,7 @@ import {
   BookmarkSimple,
   Sparkle,
 } from "@phosphor-icons/react";
-import { Reveal } from "../components/common/Motion";
+import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
 import { LeafBranch, LotusLine, Bell, Kalash, SectionDecor } from "../components/common/decor";
 import { useFavorites } from "../lib/favorites";
@@ -35,7 +35,15 @@ export default function Dashboard() {
                 </p>
               </div>
               <div className="panel-dt p-6 bg-white/[.04] border-white/10">
-                <div className="text-xs text-white/45">Next puja</div>
+                <div className="overflow-hidden rounded-xl">
+                  <ParallaxImage
+                    src="https://picsum.photos/seed/dharma-dashboard/800/500"
+                    alt="Next puja"
+                    className="h-36 w-full"
+                    strength={18}
+                  />
+                </div>
+                <div className="mt-4 text-xs text-white/45">Next puja</div>
                 <div className="display-dt mt-2 text-4xl">Maha Rudrabhishek</div>
                 <div className="mt-3 flex items-center gap-2 text-xs text-white/45">
                   <CalendarBlank size={15} /> Sep 09 · 07:30 AM

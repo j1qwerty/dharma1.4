@@ -16,7 +16,7 @@ export const pujas = [
     purpose: "Ancestral peace",
     type: "Shraadh",
     image:
-      "https://images.unsplash.com/photo-1604608672516-f1b9c7f84d1c?auto=format&fit=crop&w=1500&q=86",
+      "https://picsum.photos/seed/dharma-shraadh/1500/1000",
     desc: "Ancestral observance performed with śraddhā — at home with a Vedacharya, on your behalf from a temple, or at Gaya Ji.",
     descHi:
       "श्रद्धा के साथ संपन्न होने वाला पितृ अनुष्ठान — घर पर वेदाचार्य के साथ, आपकी ओर से मंदिर से, या गया जी में।",
@@ -53,7 +53,7 @@ export const pujas = [
     purpose: "New beginnings",
     type: "Archana",
     image:
-      "https://images.unsplash.com/photo-1567591414240-e6c5a9e0a0c4?auto=format&fit=crop&w=1500&q=86",
+      "https://picsum.photos/seed/dharma-ganesh/1500/1000",
     desc: "A focused Ganesh puja for a new chapter, journey, venture or important decision.",
     descHi: "नए अध्याय, यात्रा, उद्यम या महत्वपूर्ण निर्णय के लिए एक केंद्रित गणेश पूजा।",
   },
@@ -71,7 +71,7 @@ export const pujas = [
     purpose: "Wealth & prosperity",
     type: "Puja",
     image:
-      "https://images.unsplash.com/photo-1603561596112-0a132b5a965a?auto=format&fit=crop&w=1500&q=86",
+      "https://picsum.photos/seed/dharma-lakshmi/1500/1000",
     desc: "An intimate Lakshmi offering for Diwali and the season of new beginnings.",
     descHi: "दीवाली और नए आरंभ के मौसम के लिए एक अंतरंग लक्ष्मी अनुष्ठान।",
   },
@@ -107,7 +107,7 @@ export const pujas = [
     purpose: "Family & harmony",
     type: "Katha",
     image:
-      "https://images.unsplash.com/photo-1604608672516-f1b9c7f84d1c?auto=format&fit=crop&w=1500&q=86",
+      "https://picsum.photos/seed/dharma-shraadh/1500/1000",
     desc: "A family-oriented Satyanarayan ritual with personalized Sankalp.",
     descHi: "व्यक्तिगत संकल्प के साथ परिवार-उन्मुख सत्यनारायण अनुष्ठान।",
   },
@@ -161,7 +161,7 @@ export const pujas = [
     purpose: "Health & well-being",
     type: "Jaap",
     image:
-      "https://images.unsplash.com/photo-1532968961962-8a0e2b6fc5f6?auto=format&fit=crop&w=1500&q=86",
+      "https://picsum.photos/seed/dharma-mrityunjaya/1500/1000",
     desc: "A traditional mantra jaap experience with Sankalp and post-puja video delivery.",
     descHi: "संकल्प और पूजा के बाद वीडियो डिलीवरी के साथ एक पारंपरिक मंत्र जाप अनुभव।",
   },
@@ -174,7 +174,7 @@ export const festivals = [
     note: "Ten days of devotion",
     noteHi: "दस दिन की भक्ति",
     image:
-      "https://images.unsplash.com/photo-1579439302394-975be7b3f46c?auto=format&fit=crop&w=1200&q=84",
+      "https://picsum.photos/seed/dharma-ganesh-fest/1200/800",
   },
   {
     name: "Navratri",
@@ -183,7 +183,7 @@ export const festivals = [
     note: "Nine nights of devotion",
     noteHi: "नौ रातों की भक्ति",
     image:
-      "https://images.unsplash.com/photo-1565355528125-2b3c38b7f45f?auto=format&fit=crop&w=1200&q=84",
+      "https://picsum.photos/seed/dharma-navratri/1200/800",
   },
   {
     name: "Diwali",
@@ -192,7 +192,7 @@ export const festivals = [
     note: "Light, Lakshmi, new beginnings",
     noteHi: "प्रकाश, लक्ष्मी, नए आरंभ",
     image:
-      "https://images.unsplash.com/photo-1603561596112-0a132b5a965a?auto=format&fit=crop&w=1200&q=84",
+      "https://picsum.photos/seed/dharma-diwali/1200/800",
   },
   {
     name: "Mahashivratri",
@@ -213,7 +213,7 @@ export const stories = [
     read: "6 min",
     date: "Sep 04, 2026",
     image:
-      "https://images.unsplash.com/photo-1604608672516-f1b9c7f84d1c?auto=format&fit=crop&w=1400&q=84",
+      "https://picsum.photos/seed/dharma-sankalp/1400/900",
     excerpt: "A simple guide to the intention placed at the heart of a traditional puja.",
     excerptHi: "पारंपरिक पूजा के केंद्र में रखे गए संकल्प का सरल परिचय।",
   },
@@ -238,7 +238,7 @@ export const stories = [
     read: "8 min",
     date: "Aug 22, 2026",
     image:
-      "https://images.unsplash.com/photo-1604848533913-24d40c8054b9?auto=format&fit=crop&w=1400&q=84",
+      "https://picsum.photos/seed/dharma-shiva-ritual/1400/900",
     excerpt: "From the first offering to the final aarti, a ritual viewed through its sequence.",
     excerptHi: "पहले अर्पण से अंतिम आरती तक, एक अनुष्ठान अपने क्रम के माध्यम से।",
   },
@@ -262,7 +262,7 @@ export const stories = [
     read: "7 min",
     date: "Aug 11, 2026",
     image:
-      "https://images.unsplash.com/photo-1579439302394-975be7b3f46c?auto=format&fit=crop&w=1400&q=84",
+      "https://picsum.photos/seed/dharma-diwali-story/1400/900",
     excerpt: "How to bring the important ritual details forward before the festival rush.",
     excerptHi: "त्यौहार की भीड़ से पहले महत्वपूर्ण अनुष्ठान विवरण आगे कैसे लाएँ।",
   },
@@ -286,7 +286,7 @@ export const stories = [
     read: "4 min",
     date: "Jul 28, 2026",
     image:
-      "https://images.unsplash.com/photo-1602774891309-b8c7b6d9b8a8?auto=format&fit=crop&w=1400&q=84",
+      "https://picsum.photos/seed/dharma-temple-morning/1400/900",
     excerpt: "Bell, conch and chant. A closer look at the rhythm of an early temple morning.",
     excerptHi: "घंटा, शंख और मंत्र। एक मंदिर की प्रातः की लय पर एक नज़दीकी नज़र।",
   },
@@ -367,7 +367,7 @@ export const social = [
     label: "WhatsApp",
     type: "Channel",
     image:
-      "https://images.unsplash.com/photo-1603561596112-0a132b5a965a?auto=format&fit=crop&w=1000&q=84",
+      "https://picsum.photos/seed/dharma-whatsapp/1000/700",
     copy: "Festival reminders and live updates.",
   },
 ];

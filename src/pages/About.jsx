@@ -28,9 +28,9 @@ import { useLanguage } from "../components/common/LanguageToggle";
 const gallery = [
   "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=800&q=84",
   "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=800&q=84",
-  "https://images.unsplash.com/photo-1603561596112-0a132b5a965a?auto=format&fit=crop&w=800&q=84",
+  "https://picsum.photos/seed/dharma-lakshmi/800/600",
   "https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?auto=format&fit=crop&w=800&q=84",
-  "https://images.unsplash.com/photo-1567591414240-e6c5a9e0a0c4?auto=format&fit=crop&w=800&q=84",
+  "https://picsum.photos/seed/dharma-ganesh/800/600",
 ];
 
 export default function About() {
@@ -52,7 +52,12 @@ export default function About() {
           </Reveal>
           <Reveal>
             <div className="overflow-hidden rounded-[24px]">
-              <ParallaxImage src={gallery[0]} alt="Temple" className="h-[340px]" strength={25} />
+              <ParallaxImage
+                src={gallery[0]}
+                alt="Temple"
+                className="h-[340px] w-full lg:h-[440px]"
+                strength={25}
+              />
             </div>
           </Reveal>
         </div>

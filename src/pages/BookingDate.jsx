@@ -1,11 +1,14 @@
 import React from "react";
 import BookingFrame from "../components/common/BookingFrame";
+import SafeImage from "../components/common/SafeImage";
 import { CalendarBlank, Clock, CheckCircle } from "../components/common/Icons";
 import { useBooking } from "../lib/booking";
+import { pujas } from "../lib/data";
 import { useLanguage } from "../components/common/LanguageToggle";
 export default function BookingDate() {
   const { booking, update } = useBooking();
   const { t, lang } = useLanguage();
+  const p = pujas.find((x) => x.id === booking.pujaId) || pujas[0];
   const dates =
     lang === "hi"
       ? ["09 सितं", "10 सितं", "11 सितं", "12 सितं"]
@@ -23,6 +26,13 @@ export default function BookingDate() {
     <BookingFrame active="date">
       <div className="eyebrow">{t("bd.chooseDate")}</div>
       <h2 className="font-display mt-3 text-4xl">{t("bd.title")}</h2>
+      <div className="mt-6 overflow-hidden rounded-2xl">
+        <SafeImage
+          src={p.image}
+          alt={lang === "hi" && p.titleHi ? p.titleHi : p.title}
+          className="h-44 w-full object-cover"
+        />
+      </div>
       <div className="mt-7 grid gap-7 lg:grid-cols-2">
         <div>
           <label className="text-xs font-bold text-muted">{t("bd.september")}</label>

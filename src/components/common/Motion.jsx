@@ -15,7 +15,7 @@ export function Reveal({ children, className = "", delay = 0, amount = 0.18, y =
     </motion.div>
   );
 }
-export function ParallaxImage({ src, alt = "", className = "", strength = 22, scale = 1.07 }) {
+export function ParallaxImage({ src, alt = "", className = "", strength = 22, scale = 1.07, fallback = "/images/placeholder.svg" }) {
   const ref = useRef(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
@@ -27,6 +27,11 @@ export function ParallaxImage({ src, alt = "", className = "", strength = 22, sc
         alt={alt}
         style={reduce ? {} : { y, scale }}
         className="h-full w-full object-cover"
+        onError={(e) => {
+          if (e.currentTarget.src !== window.location.origin + fallback) {
+            e.currentTarget.src = fallback;
+          }
+        }}
       />
     </div>
   );

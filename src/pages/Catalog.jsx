@@ -11,7 +11,7 @@ import {
 import { pujas, festivals, intentions, deities, deityHi } from "../lib/data";
 import PujaCard from "../components/common/PujaCard";
 import SectionHeading from "../components/common/SectionHeading";
-import { Reveal } from "../components/common/Motion";
+import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
 import { LeafBranch, LotusLine, Rangoli, Toran, SectionDecor } from "../components/common/decor";
 import { useLanguage } from "../components/common/LanguageToggle";
@@ -97,11 +97,21 @@ export default function Catalog() {
     <>
       <section className="ink-dt overflow-hidden has-decor-dt relative">
         <SectionDecor />
-        <div className="container-dt pt-24 pb-32">
+        <div className="container-dt grid min-h-[480px] items-end gap-10 py-20 pt-24 pb-32 lg:grid-cols-[1fr_.8fr]">
           <Reveal>
             <div className="eyebrow !text-gold-300">{t("catalog.eyebrow")}</div>
             <h1 className="display-dt mt-3 max-w-4xl text-6xl sm:text-7xl">{t("catalog.title")}</h1>
             <p className="mt-5 max-w-2xl text-sm leading-7 text-white/55">{t("catalog.copy")}</p>
+          </Reveal>
+          <Reveal>
+            <div className="overflow-hidden rounded-[24px]">
+              <ParallaxImage
+                src="https://picsum.photos/seed/dharma-catalog/1000/800"
+                alt="Pujas"
+                className="h-[340px] w-full lg:h-[440px]"
+                strength={25}
+              />
+            </div>
           </Reveal>
         </div>
         <SectionCurve edge="bottom" />

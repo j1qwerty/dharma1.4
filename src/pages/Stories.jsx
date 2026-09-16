@@ -33,11 +33,21 @@ export default function Stories() {
     <>
       <section className="ink-dt overflow-hidden has-decor-dt relative">
         <SectionDecor />
-        <div className="container-dt pt-24 pb-32">
+        <div className="container-dt grid min-h-[480px] items-end gap-10 py-20 pt-24 pb-32 lg:grid-cols-[1fr_.8fr]">
           <Reveal>
             <div className="eyebrow !text-gold-300">{t("stories.eyebrow")}</div>
             <h1 className="display-dt mt-3 max-w-4xl text-6xl sm:text-7xl">{t("stories.title")}</h1>
             <p className="mt-5 max-w-2xl text-sm leading-7 text-white/55">{t("stories.copy")}</p>
+          </Reveal>
+          <Reveal>
+            <div className="overflow-hidden rounded-[24px]">
+              <ParallaxImage
+                src={feature.image}
+                alt={featureTitle}
+                className="h-[340px] w-full lg:h-[440px]"
+                strength={25}
+              />
+            </div>
           </Reveal>
         </div>
         <SectionCurve edge="bottom" />

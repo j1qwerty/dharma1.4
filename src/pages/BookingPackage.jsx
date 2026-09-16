@@ -1,13 +1,16 @@
 import React from "react";
 import BookingFrame from "../components/common/BookingFrame";
+import SafeImage from "../components/common/SafeImage";
 import { CheckCircle, Plus, VideoCamera } from "../components/common/Icons";
 import { useBooking } from "../lib/booking";
+import { pujas } from "../lib/data";
 import { useToast } from "../components/common/Toast";
 import { useLanguage } from "../components/common/LanguageToggle";
 export default function BookingPackage() {
   const { booking, update } = useBooking();
   const toast = useToast();
   const { t, lang } = useLanguage();
+  const currentPuja = pujas.find((x) => x.id === booking.pujaId) || pujas[0];
   const packs =
     lang === "hi"
       ? [
@@ -33,6 +36,23 @@ export default function BookingPackage() {
     <BookingFrame active="package">
       <div className="eyebrow">{t("bp.eyebrow")}</div>
       <h2 className="font-display mt-3 text-4xl">{t("bp.title")}</h2>
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        <SafeImage
+          src={currentPuja.image}
+          alt={lang === "hi" && currentPuja.titleHi ? currentPuja.titleHi : currentPuja.title}
+          className="h-28 w-full rounded-2xl object-cover"
+        />
+        <SafeImage
+          src="https://picsum.photos/seed/dharma-package-2/600/400"
+          alt=""
+          className="h-28 w-full rounded-2xl object-cover"
+        />
+        <SafeImage
+          src="https://picsum.photos/seed/dharma-package-3/600/400"
+          alt=""
+          className="h-28 w-full rounded-2xl object-cover"
+        />
+      </div>
       <div className="mt-7 grid gap-3 md:grid-cols-3">
         {packs.map((x) => {
           // Match against the canonical English label stored in booking state.
