@@ -1,7 +1,7 @@
 // Read-only tables for bookings / inquiries / users.
-// Users shows customer accounts only: admins/* members and hidden emails are
-// filtered out; Role reads "admin" for staff roles, blank for regular users.
-// Hidden emails are masked everywhere (cells + free text).
+// Users lists all accounts except hidden emails; staff (admins/* members or
+// staff roles) show Role "admin", regular users blank. Hidden emails are
+// masked everywhere (cells + free text).
 import { useEffect, useMemo, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db, firebaseConfigured } from "../../lib/firebase";
@@ -130,16 +130,18 @@ export function AdminUsers() {
 
   const users = useMemo(() => {
     if (!rows) return null;
-    return rows.filter(
-      (r) => !(adminIds?.has(r.id) || isHiddenEmail(r.email))
-    );
-  }, [rows, adminIds]);
+    return rows.filter((r) => !isHiddenEmail(r.email));
+  }, [rows]);
+
+  const staffIds = adminIds || new Set();
+  const displayRole = (r) =>
+    staffIds.has(r.id) ? "admin" : roleDisplay(r.role);
 
   return (
     <section>
       <div className="eyebrow">CMS · users</div>
       <h1 className="display-dt" style={{ fontSize: 38, marginTop: 8 }}>Users</h1>
-      <p className="text-sm muted-dt mt-2">Read-only directory of customer profiles (staff excluded).</p>
+      <p className="text-sm muted-dt mt-2">Read-only directory of accounts. Staff show as admin.</p>
       <div className="panel-dt p-4 mt-4" style={{ minWidth: 0, overflow: "hidden" }}>
         {!remote && <p className="text-xs">Firebase not configured.</p>}
         {(loading || !users) && <p className="text-xs muted-dt">Loading…</p>}
@@ -152,7 +154,7 @@ export function AdminUsers() {
               { key: "email", label: "Email", render: (r) => maskEmail(r.email || "—") },
               { key: "displayName", label: "Name", render: (r) => scrubText(r.displayName || "—") },
               { key: "phone", label: "Phone" },
-              { key: "role", label: "Role", render: (r) => roleDisplay(r.role) || "—" },
+              { key: "role", label: "Role", render: (r) => displayRole(r) || "—" },
               { key: "createdAt", label: "Created", render: (r) => fmt(r.createdAt) },
             ]}
           />
