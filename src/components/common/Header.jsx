@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   MagnifyingGlass,
   List,
@@ -9,19 +9,29 @@ import {
   CaretDown,
   PaintBrush,
   Globe,
+  Heart,
+  ArrowUpRight,
 } from "@phosphor-icons/react";
 import Brand from "./Brand";
-import { deities, deityHi } from "../../lib/data";
+import { deities, deityHi, pujas, stories, acharyas } from "../../lib/data";
 import { ThemeContext } from "./ThemeToggle";
 import { useLanguage } from "./LanguageToggle";
+import { useFavorites } from "../../lib/favorites";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [pujasOpen, setPujasOpen] = useState(false);
+  const [favOpen, setFavOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const closeTimer = useRef(null);
+  const searchInputRef = useRef(null);
+  const navigate = useNavigate();
   const { dark, toggle } = useContext(ThemeContext) ?? { dark: false, toggle: () => {} };
   const { lang, toggle: toggleLang, t } = useLanguage();
+  const { ids, count: favCount } = useFavorites();
+  const savedPujas = useMemo(() => pujas.filter((p) => ids.includes(p.id)), [ids]);
   const links = [
     ["nav.home", "/", true],
     ["nav.pujas", "/pujas", false],
@@ -60,6 +70,72 @@ export default function Header() {
       document.removeEventListener("click", onDocClick);
     };
   }, [pujasOpen]);
+
+  // Close wishlist + search dropdowns on Escape or click-outside.
+  useEffect(() => {
+    if (!favOpen && !searchOpen) return;
+    function onKey(e) {
+      if (e.key === "Escape") {
+        setFavOpen(false);
+        setSearchOpen(false);
+      }
+    }
+    function onDocClick(e) {
+      if (e.target.closest(".fav-wrap-dt")) return;
+      if (e.target.closest(".search-wrap-dt")) return;
+      setFavOpen(false);
+      setSearchOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("click", onDocClick);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("click", onDocClick);
+    };
+  }, [favOpen, searchOpen]);
+
+  // Focus the search field whenever the panel opens.
+  useEffect(() => {
+    if (searchOpen) {
+      const id = requestAnimationFrame(() => searchInputRef.current?.focus());
+      return () => cancelAnimationFrame(id);
+    }
+  }, [searchOpen]);
+
+  // Live search across pujas, stories and acharyas (EN + HI).
+  const results = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return { pujaResults: [], storyResults: [], acharyaResults: [] };
+    const pujaResults = pujas
+      .filter((p) =>
+        `${p.title} ${p.titleHi || ""} ${p.deity} ${p.temple} ${p.purpose || ""}`
+          .toLowerCase()
+          .includes(q)
+      )
+      .slice(0, 4);
+    const storyResults = stories
+      .filter((s) =>
+        `${s.title} ${s.titleHi || ""} ${s.category || ""} ${s.excerpt || ""} ${s.excerptHi || ""}`
+          .toLowerCase()
+          .includes(q)
+      )
+      .slice(0, 3);
+    const acharyaResults = acharyas
+      .filter((a) =>
+        `${a.name} ${a.tradition || ""} ${a.traditionHi || ""} ${a.expertise || ""} ${a.expertiseHi || ""} ${a.place || ""} ${a.placeHi || ""}`
+          .toLowerCase()
+          .includes(q)
+      )
+      .slice(0, 3);
+    return { pujaResults, storyResults, acharyaResults };
+  }, [query]);
+  const hasResults =
+    results.pujaResults.length + results.storyResults.length + results.acharyaResults.length > 0;
+
+  function closeSearch() {
+    setSearchOpen(false);
+    setQuery("");
+  }
 
   function toggleTheme() {
     toggle();
@@ -163,20 +239,236 @@ export default function Header() {
             >
               <PaintBrush size={16} weight="duotone" />
             </Link> */}
-            <button
-              className="hidden sm:grid place-items-center h-9 w-9 rounded-full border border-dt"
-              aria-label={t("nav.search")}
-            >
-              <MagnifyingGlass size={16} />
-            </button>
+            <div className="search-wrap-dt">
+              <button
+                onClick={() => {
+                  setSearchOpen((v) => !v);
+                  setFavOpen(false);
+                }}
+                className="hidden sm:grid place-items-center h-9 w-9 rounded-full border border-dt top-icon-dt"
+                aria-label={t("nav.search")}
+                title={t("nav.search")}
+                aria-expanded={searchOpen}
+              >
+                {searchOpen ? <X size={16} /> : <MagnifyingGlass size={16} />}
+              </button>
+              {searchOpen && (
+                <div className="search-panel-dt" role="dialog" aria-label={t("nav.search")}>
+                  <div className="search-field-dt">
+                    <MagnifyingGlass size={16} className="muted-dt flex-none" />
+                    <input
+                      ref={searchInputRef}
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && query.trim()) {
+                          navigate(`/pujas?search=${encodeURIComponent(query.trim())}`);
+                          closeSearch();
+                        }
+                      }}
+                      placeholder={
+                        lang === "hi"
+                          ? "पूजा, कथा या आचार्य खोजें"
+                          : "Search pujas, stories, acharyas"
+                      }
+                      aria-label={t("nav.search")}
+                    />
+                    {query && (
+                      <button
+                        onClick={() => setQuery("")}
+                        aria-label="Clear search"
+                        className="grid h-6 w-6 flex-none place-items-center rounded-full muted-dt hover:bg-surface-2-dt"
+                      >
+                        <X size={13} />
+                      </button>
+                    )}
+                  </div>
+                  <div className="search-results-dt">
+                    {!query.trim() ? (
+                      <p className="search-hint-dt">
+                        {lang === "hi"
+                          ? "पूजा, कथाएँ और आचार्य — एक ही जगह खोजें।"
+                          : "Pujas, stories and acharyas — search them all here."}
+                      </p>
+                    ) : !hasResults ? (
+                      <div className="search-empty-dt">
+                        <p>
+                          {lang === "hi" ? "कुछ नहीं मिला।" : "No matches found."}
+                        </p>
+                        <Link
+                          to="/pujas"
+                          onClick={closeSearch}
+                          className="text-[11px] font-bold text-gold-600 hover:underline"
+                        >
+                          {t("nav.viewAllPujas")}
+                        </Link>
+                      </div>
+                    ) : (
+                      <>
+                        {results.pujaResults.length > 0 && (
+                          <div className="search-group-dt">
+                            <div className="search-group-label-dt">
+                              {lang === "hi" ? "पूजा" : "Pujas"}
+                            </div>
+                            {results.pujaResults.map((p) => (
+                              <Link
+                                key={p.id}
+                                to={`/pujas/${p.id}`}
+                                onClick={closeSearch}
+                                className="search-item-dt"
+                              >
+                                <img src={p.image} alt="" />
+                                <span className="min-w-0 flex-1">
+                                  <span className="block truncate text-[13px] font-semibold">
+                                    {lang === "hi" && p.titleHi ? p.titleHi : p.title}
+                                  </span>
+                                  <span className="block text-[10px] muted-dt">
+                                    {p.deity} · ₹{p.price.toLocaleString("en-IN")}
+                                  </span>
+                                </span>
+                                <ArrowUpRight size={14} className="muted-dt flex-none" />
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                        {results.storyResults.length > 0 && (
+                          <div className="search-group-dt">
+                            <div className="search-group-label-dt">
+                              {lang === "hi" ? "कथाएँ" : "Stories"}
+                            </div>
+                            {results.storyResults.map((s) => (
+                              <Link
+                                key={s.id}
+                                to={`/stories/${s.id}`}
+                                onClick={closeSearch}
+                                className="search-item-dt"
+                              >
+                                <img src={s.image} alt="" />
+                                <span className="min-w-0 flex-1">
+                                  <span className="block truncate text-[13px] font-semibold">
+                                    {lang === "hi" && s.titleHi ? s.titleHi : s.title}
+                                  </span>
+                                  <span className="block text-[10px] muted-dt">
+                                    {s.category}
+                                  </span>
+                                </span>
+                                <ArrowUpRight size={14} className="muted-dt flex-none" />
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                        {results.acharyaResults.length > 0 && (
+                          <div className="search-group-dt">
+                            <div className="search-group-label-dt">
+                              {lang === "hi" ? "आचार्य" : "Acharyas"}
+                            </div>
+                            {results.acharyaResults.map((a) => (
+                              <Link
+                                key={a.id}
+                                to="/acharyas"
+                                onClick={closeSearch}
+                                className="search-item-dt"
+                              >
+                                <img src={a.image} alt={a.name} />
+                                <span className="min-w-0 flex-1">
+                                  <span className="block truncate text-[13px] font-semibold">
+                                    {a.name}
+                                  </span>
+                                  <span className="block truncate text-[10px] muted-dt">
+                                    {lang === "hi" && a.traditionHi ? a.traditionHi : a.tradition}
+                                  </span>
+                                </span>
+                                <ArrowUpRight size={14} className="muted-dt flex-none" />
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
             <button
               onClick={toggleTheme}
-              className="grid place-items-center h-9 w-9 rounded-full border border-dt"
+              className="grid place-items-center h-9 w-9 rounded-full border border-dt top-icon-dt"
               aria-label={t("nav.toggleTheme")}
               title={t("nav.toggleTheme")}
             >
               {dark ? <Sun size={16} /> : <Moon size={16} />}
             </button>
+            <div className="fav-wrap-dt">
+              <button
+                onClick={() => {
+                  setFavOpen((v) => !v);
+                  setSearchOpen(false);
+                }}
+                className="fav-nav-dt"
+                aria-label={lang === "hi" ? "सहेजी हुई पूजा" : "Saved pujas"}
+                title={lang === "hi" ? "सहेजी हुई पूजा" : "Saved pujas"}
+                aria-expanded={favOpen}
+              >
+                <Heart size={16} weight={favCount > 0 ? "fill" : "regular"} />
+                {favCount > 0 && <span className="fav-count-dt">{favCount}</span>}
+              </button>
+              {favOpen && (
+                <div className="fav-panel-dt" role="dialog" aria-label="Saved pujas">
+                  <div className="fav-panel-head-dt">
+                    <span>{lang === "hi" ? "सहेजी हुई पूजा" : "Saved pujas"}</span>
+                    <span className="muted-dt">{favCount}</span>
+                  </div>
+                  {savedPujas.length ? (
+                    <div className="fav-list-dt">
+                      {savedPujas.map((p) => (
+                        <Link
+                          key={p.id}
+                          to={`/pujas/${p.id}`}
+                          onClick={() => setFavOpen(false)}
+                          className="fav-item-dt"
+                        >
+                          <img src={p.image} alt="" />
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-[13px] font-semibold">
+                              {lang === "hi" && p.titleHi ? p.titleHi : p.title}
+                            </span>
+                            <span className="block text-[10px] muted-dt">
+                              {p.deity} · ₹{p.price.toLocaleString("en-IN")}
+                            </span>
+                          </span>
+                          <ArrowUpRight size={14} className="muted-dt flex-none" />
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="fav-empty-dt">
+                      <Heart size={22} className="mx-auto text-gold-600" />
+                      <p className="mt-2 text-xs leading-5 muted-dt">
+                        {lang === "hi"
+                          ? "अभी कुछ सहेजा नहीं है। किसी पूजा पर दिल दबाएँ।"
+                          : "Nothing saved yet. Tap the heart on any puja."}
+                      </p>
+                      <Link
+                        to="/pujas"
+                        onClick={() => setFavOpen(false)}
+                        className="mt-3 inline-block text-[11px] font-bold text-gold-600 hover:underline"
+                      >
+                        {t("nav.viewAllPujas")}
+                      </Link>
+                    </div>
+                  )}
+                  {savedPujas.length > 0 && (
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setFavOpen(false)}
+                      className="fav-panel-foot-dt"
+                    >
+                      {lang === "hi" ? "विशलिस्ट खोलें" : "Open wishlist"}
+                      <ArrowUpRight size={13} />
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
             <button
               onClick={toggleLang}
               className="lang-toggle-dt"
@@ -194,7 +486,7 @@ export default function Header() {
               {t("nav.bookPuja")}
             </Link>
             <button
-              className="lg:hidden grid place-items-center h-9 w-9 rounded-full border border-dt"
+              className="lg:hidden grid place-items-center h-9 w-9 rounded-full border border-dt top-icon-dt"
               onClick={() => setOpen((v) => !v)}
               aria-label="Menu"
             >
@@ -205,6 +497,16 @@ export default function Header() {
         {open && (
           <div className="lg:hidden border-t border-dt surface-dt">
             <div className="container-dt py-5 grid gap-1">
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  setFavOpen(false);
+                  setSearchOpen(true);
+                }}
+                className="py-3 text-xl display-dt border-b border-dt mobile-nav-dt inline-flex items-center gap-2"
+              >
+                <MagnifyingGlass size={18} /> {t("nav.search")}
+              </button>
               {links.map(([key, to, exact]) => (
                 <NavLink
                   className={({ isActive }) =>

@@ -557,7 +557,7 @@ export default function ShraadhContent() {
   return (
     <section className="site-section has-decor-dt shraadh-page-dt">
       <SectionDecor />
-      <div className="container-dt max-w-[940px] py-12">
+      <div className="container-dt py-12">
         {/* Intro */}
         <div className="shraadh-section-dt">
           <h2 className="display-dt text-5xl sm:text-6xl">{c.intro1}</h2>

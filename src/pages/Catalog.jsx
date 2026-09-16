@@ -20,7 +20,8 @@ export default function Catalog() {
   const { t, lang } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialDeity = searchParams.get("deity");
-  const [q, setQ] = useState("");
+  const initialSearch = searchParams.get("search");
+  const [q, setQ] = useState(initialSearch || "");
   const [tag, setTag] = useState("All");
   const [deity, setDeity] = useState(
     initialDeity && deities.includes(initialDeity) ? initialDeity : "All"
@@ -44,6 +45,8 @@ export default function Catalog() {
     const urlDeity = searchParams.get("deity");
     const resolved = urlDeity && deities.includes(urlDeity) ? urlDeity : "All";
     setDeity(resolved);
+    const urlSearch = searchParams.get("search");
+    if (typeof urlSearch === "string") setQ(urlSearch);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 

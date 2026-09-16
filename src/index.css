@@ -2739,9 +2739,9 @@ html.dark .ink-dt .decor-tone-yellow {
   border-color: rgba(246, 201, 93, 0.7);
 }
 .fav-toggle-dt.is-active {
-  color: #f6c95d;
-  border-color: rgba(246, 201, 93, 0.7);
-  background: rgba(120, 80, 12, 0.35);
+  color: #e5484d;
+  border-color: rgba(229, 72, 77, 0.55);
+  background: rgba(229, 72, 77, 0.14);
 }
 .fav-toggle-dt.is-active svg {
   animation: heart-pop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2766,9 +2766,190 @@ html.dark .ink-dt .decor-tone-yellow {
   color: var(--muted);
 }
 .fav-toggle-light-dt.is-active {
-  color: var(--gold-dark);
-  border-color: rgba(231, 182, 49, 0.6);
-  background: color-mix(in srgb, var(--gold) 12%, var(--surface));
+  color: #e5484d;
+  border-color: rgba(229, 72, 77, 0.5);
+  background: color-mix(in srgb, #e5484d 10%, var(--surface));
+}
+
+/* --- Wishlist heart in the header menu --- */
+.fav-nav-dt {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--line, rgba(10, 9, 6, 0.12));
+  color: inherit;
+  transition:
+    border-color 0.25s,
+    color 0.25s,
+    transform 0.25s;
+}
+.fav-nav-dt:hover {
+  border-color: rgba(229, 72, 77, 0.6);
+  color: #e5484d;
+  transform: translateY(-1px);
+}
+.fav-count-dt {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #e5484d;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 18px;
+  text-align: center;
+}
+.fav-count-inline-dt {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #e5484d;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* --- Top-bar icon buttons (search / theme / menu) --- */
+.top-icon-dt {
+  transition:
+    border-color 0.25s,
+    color 0.25s,
+    background 0.25s,
+    transform 0.25s;
+}
+.top-icon-dt:hover {
+  border-color: rgba(246, 201, 93, 0.65);
+  color: var(--gold-600, #b88a2a);
+  background: color-mix(in srgb, var(--gold) 8%, transparent);
+  transform: translateY(-1px);
+}
+:root.dark .top-icon-dt:hover {
+  color: #f6c95d;
+}
+
+/* --- Header dropdowns: wishlist + search --- */
+.fav-wrap-dt,
+.search-wrap-dt {
+  position: relative;
+}
+.fav-panel-dt,
+.search-panel-dt {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: min(92vw, 360px);
+  max-height: min(70vh, 480px);
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 24px 60px rgba(53, 44, 24, 0.16);
+  z-index: 60;
+  animation: megamenu-in 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fav-panel-head-dt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-600, #b88a2a);
+}
+.fav-list-dt {
+  display: grid;
+  gap: 4px;
+  padding: 0 8px 8px;
+}
+.fav-item-dt,
+.search-item-dt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 12px;
+  transition: background 0.2s;
+}
+.fav-item-dt:hover,
+.search-item-dt:hover {
+  background: color-mix(in srgb, var(--gold) 9%, transparent);
+}
+.fav-item-dt img,
+.search-item-dt img {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex: none;
+}
+.fav-empty-dt {
+  padding: 18px 16px 20px;
+  text-align: center;
+}
+.fav-panel-foot-dt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--gold-600, #b88a2a);
+}
+.fav-panel-foot-dt:hover {
+  text-decoration: underline;
+}
+.search-field-dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 12px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+}
+.search-field-dt input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  outline: none;
+  font-size: 13px;
+}
+.search-results-dt {
+  padding: 8px 8px 12px;
+}
+.search-hint-dt,
+.search-empty-dt {
+  padding: 14px 10px 10px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+  text-align: center;
+}
+.search-group-dt {
+  margin-top: 8px;
+}
+.search-group-label-dt {
+  padding: 6px 10px 4px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-600, #b88a2a);
 }
 
 /* --- PujaDetail sticky booking widget + price breakdown --- */

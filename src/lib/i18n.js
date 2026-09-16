@@ -20,6 +20,7 @@ export const STRINGS = {
   "nav.howBookingWorks": { en: "How booking works", hi: "बुकिंग कैसे काम करती है" },
 
   // Hero / home
+  
   "home.heroSlide1Title": {
     en: "Sacred rituals. Modern access.",
     hi: "पवित्र अनुष्ठान। आधुनिक सुविधा।",
