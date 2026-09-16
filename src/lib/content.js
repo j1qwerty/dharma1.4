@@ -1,0 +1,104 @@
+// Central CMS registry — single source of truth for the admin.
+// - Ordered admin nav (sidebar) + ordered homepage sections (mirrors Home.jsx top→bottom)
+// - Per-collection field schemas (bilingual EN/HI), image rules derived from
+//   existing public/ assets + render sizes, shared-content notes.
+// - Festivals = full history; everything else = last-5 quick versions
+//   (+ full history subcollection for audit).
+
+export const ADMIN_NAV = [
+  { key: "dashboard", label: "Dashboard", path: "/admin" },
+  { key: "pujas", label: "Pujas", path: "/admin/pujas", collection: "pujas" },
+  { key: "festivals", label: "Festivals + scheduling", path: "/admin/festivals", collection: "festivals" },
+  { key: "homepage", label: "Homepage sections", path: "/admin/homepage", collection: "homepage_sections" },
+  { key: "stories", label: "Stories", path: "/admin/stories", collection: "stories" },
+  { key: "acharyas", label: "Acharyas", path: "/admin/acharyas", collection: "acharyas" },
+  { key: "testimonials", label: "Testimonials", path: "/admin/testimonials", collection: "testimonials" },
+  { key: "bookings", label: "Bookings", path: "/admin/bookings", collection: "bookings", readOnly: true },
+  { key: "inquiries", label: "Inquiries", path: "/admin/inquiries", collection: "inquiries", readOnly: true },
+  { key: "users", label: "Users", path: "/admin/users", collection: "users", readOnly: true },
+  { key: "trash", label: "Trash (30 days)", path: "/admin/trash" },
+  { key: "settings", label: "Settings", path: "/admin/settings" },
+];
+
+// Homepage section order — MUST match Home.jsx render order top→bottom.
+// Homepage never duplicates puja/festival/story text: previews reference
+// live docs by id (config.pujaIds / config.festivalId) + local limit/mode.
+export const HOMEPAGE_SECTIONS = [
+  { key: "announcementBar", label: "Announcement bar", desc: "Thin top strip above hero." },
+  { key: "hero", label: "Hero carousel", desc: "2 slides, full-bleed 2000×1250. Titles via i18n + per-slide image." },
+  { key: "assurance", label: "Assurance strip (01–04)", desc: "4 icons, no images." },
+  { key: "countdown", label: "Festival countdown", desc: "Auto from festivals collection (soonest 2)." },
+  { key: "acharyasPreview", label: "Acharyas preview", desc: "Live preview of acharyas (3 cards)." },
+  { key: "upcomingPujas", label: "Dates people are booking", desc: "pujas.slice(0,6) via PujaCard." },
+  { key: "festivalStrip", label: "Marquee band", desc: "Festival names ticker, text only." },
+  { key: "festivalCalendar", label: "Calendar keeps moving", desc: "4 festivals, images h-[220px]/sm:h-[320px]." },
+  { key: "intentions", label: "Start with intention", desc: "Intentions list → /pujas filter." },
+  { key: "howItWorks", label: "Ritual journey 01–04", desc: "Reuses hero visual, steps via i18n." },
+  { key: "trustBand", label: "Trust band", desc: "Stats 50+/200+/4.9 + devotee quote." },
+  { key: "storiesPreview", label: "Stories preview", desc: "stories.slice(0,6), images min-h-[210px]." },
+  { key: "socialFeed", label: "Wider feed", desc: "/more/*.png, first tile col-span-7." },
+  { key: "recurringSeva", label: "Year-long recurring", desc: "Static i18n strings." },
+  { key: "templeNetwork", label: "Temple network", desc: "/temples/*, h-44/md:h-72." },
+  { key: "newsletter", label: "Newsletter", desc: "Email input only." },
+];
+
+// Recommended image rules, measured from current render sizes + public/ assets.
+// Admin ImageField shows these as "Recommended" + enforces soft limits + crop hint.
+export const IMAGE_RULES = {
+  puja: { label: "Puja card", aspect: "4 / 3", recommended: "1200 × 900", min: "800 × 600", maxMB: 2, accept: "jpg, png, webp", note: "PujaCard aspect-[4/3]. Existing: public/puja/*.jpg." },
+  festival: { label: "Festival calendar", aspect: "16 / 9", recommended: "1600 × 900", min: "1200 × 675", maxMB: 2, accept: "jpg, png, webp", note: "Calendar h-[220px]/sm:h-[320px] full-bleed. Existing: public/festivals/*.jpg." },
+  story: { label: "Story cover", aspect: "16 / 9", recommended: "1200 × 675", min: "800 × 450", maxMB: 1.5, accept: "png, jpg, webp", note: "StoryMasonry min-h-[210px]. Existing: public/stories/*.png." },
+  acharya: { label: "Acharya portrait", aspect: "3 / 4", recommended: "900 × 1200", min: "600 × 800", maxMB: 1.5, accept: "jpg, png, webp", note: "AcharyaCard portrait. Existing: /amitdiwedi.jpg, /mohitsharma.jpg, /chandrashekhar.jpg." },
+  hero: { label: "Homepage hero", aspect: "8 / 5", recommended: "2000 × 1250", min: "1600 × 1000", maxMB: 3, accept: "jpg, webp", note: "Full-bleed ParallaxImage + Ken Burns. Keep subject centred for crop." },
+  temple: { label: "Temple network", aspect: "3 / 2", recommended: "1200 × 800", min: "800 × 533", maxMB: 2, accept: "webp, jpg, png", note: "h-44/md:h-72. Existing: public/temples/*." },
+  generic: { label: "Section image", aspect: "free", recommended: "1600 × 1000", min: "800 × 500", maxMB: 2, accept: "jpg, png, webp", note: "Masonry /more/* has no fixed crop — centre-safe." },
+};
+
+export const COLLECTIONS = {
+  pujas: {
+    label: "Pujas", orderField: "priority", fullHistory: false,
+    fields: ["title", "titleHi", "deity", "temple", "date", "time", "price", "tag", "purpose", "type", "code", "image", "desc", "descHi"],
+    imageKind: "puja",
+    shared: "Homepage 'Dates people are booking' + Catalog + PujaDetail read these docs live. Edit here, preview on Home.",
+  },
+  festivals: {
+    label: "Festivals", orderField: "priority", fullHistory: true,
+    fields: ["name", "nameHi", "date", "eventDate", "note", "noteHi", "image", "startDate", "endDate", "linkedPujaIds", "homepageTakeover", "countdownTo"],
+    imageKind: "festival",
+    shared: "Countdown + marquee + calendar on Home read these. startDate/endDate control site visibility (see schedule.js). Full history kept.",
+  },
+  homepage_sections: {
+    label: "Homepage sections", orderField: "order", fullHistory: false,
+    fields: ["key", "enabled", "order", "title", "titleHi", "copy", "copyHi", "image", "startDate", "endDate"],
+    imageKind: "hero",
+    shared: "Order here = order on Home. enabled=false hides section without deleting.",
+  },
+  stories: {
+    label: "Stories", orderField: null, fullHistory: false,
+    fields: ["title", "titleHi", "category", "read", "date", "image", "excerpt", "excerptHi"],
+    imageKind: "story",
+    shared: "Home stories preview shows first 6 live stories.",
+  },
+  acharyas: {
+    label: "Acharyas", orderField: "order", fullHistory: false,
+    fields: ["name", "tradition", "traditionHi", "place", "placeHi", "expertise", "expertiseHi", "experience", "experienceHi", "phone", "email", "image", "bio", "bioHi"],
+    imageKind: "acharya",
+    shared: "Home acharyas preview + /acharyas page read these live.",
+  },
+  testimonials: {
+    label: "Testimonials", orderField: "order", fullHistory: false,
+    fields: ["name", "place", "quote", "quoteHi", "rating", "image"],
+    imageKind: "generic",
+    shared: "Trust band / social proof slots.",
+  },
+  bookings: { label: "Bookings", orderField: null, fullHistory: true, readOnly: true, fields: [] },
+  inquiries: { label: "Inquiries", orderField: null, fullHistory: true, readOnly: true, fields: [] },
+  users: { label: "Users", orderField: null, fullHistory: false, readOnly: true, fields: [] },
+};
+
+export const TRASH_RETENTION_DAYS = 30;
+export const VERSION_LIMIT = 5;
+
+export function imageRuleFor(collection) {
+  return IMAGE_RULES[COLLECTIONS[collection]?.imageKind] || IMAGE_RULES.generic;
+}

@@ -27,37 +27,59 @@ const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)
 async function main() {
   for (const [i, p] of pujas.entries()) {
     await setDoc(doc(db, "pujas", p.id || slug(p.title)), {
-      ...p, status: "published", priority: i, updatedAt: serverTimestamp(),
+      ...p, status: "published", priority: i,
+      version: 1, versions: [], deletedAt: null, deleteAt: null,
+      startDate: null, endDate: null, updatedAt: serverTimestamp(),
     }, { merge: true });
   }
   console.log(`pujas: ${pujas.length}`);
   for (const [i, f] of festivals.entries()) {
     await setDoc(doc(db, "festivals", slug(f.name)), {
       ...f, status: "published", priority: i,
-      eventDate: f.date || null, visibilityStart: null, visibilityEnd: null,
+      version: 1, versions: [], deletedAt: null, deleteAt: null,
+      eventDate: f.date || null, startDate: null, endDate: null,
+      visibilityStart: null, visibilityEnd: null,
       linkedPujaIds: [], homepageTakeover: false, updatedAt: serverTimestamp(),
     }, { merge: true });
   }
   console.log(`festivals: ${festivals.length}`);
   for (const s of stories) {
-    await setDoc(doc(db, "stories", s.id), { ...s, status: "published", updatedAt: serverTimestamp() }, { merge: true });
+    await setDoc(doc(db, "stories", s.id), {
+      ...s, status: "published", version: 1, versions: [],
+      deletedAt: null, deleteAt: null, startDate: null, endDate: null,
+      updatedAt: serverTimestamp(),
+    }, { merge: true });
   }
   console.log(`stories: ${stories.length}`);
   for (const [i, a] of acharyas.entries()) {
-    await setDoc(doc(db, "acharyas", a.id), { ...a, status: "published", order: i, updatedAt: serverTimestamp() }, { merge: true });
+    await setDoc(doc(db, "acharyas", a.id), {
+      ...a, status: "published", order: i, version: 1, versions: [],
+      deletedAt: null, deleteAt: null, startDate: null, endDate: null,
+      updatedAt: serverTimestamp(),
+    }, { merge: true });
   }
   console.log(`acharyas: ${acharyas.length}`);
   // Default homepage sections skeleton (disabled scheduling = always live when enabled)
-  const sections = ["announcementBar","hero","countdown","upcomingPujas","festivalStrip","featuredPujas","intentions","acharyas","howItWorks","trustBand","stories","social","recurringSeva","temples","newsletter"];
+  // Order matches HOMEPAGE_SECTIONS in src/lib/content.js (mirrors Home.jsx).
+  const sections = ["announcementBar","hero","assurance","countdown","acharyasPreview","upcomingPujas","festivalStrip","festivalCalendar","intentions","howItWorks","trustBand","storiesPreview","socialFeed","recurringSeva","templeNetwork","newsletter"];
   for (const [i, key] of sections.entries()) {
     await setDoc(doc(db, "homepage_sections", key), {
       key, enabled: true, order: i, status: "published",
-      title: null, titleHi: null, copy: null, copyHi: null,
+      version: 1, versions: [], deletedAt: null, deleteAt: null,
+      title: null, titleHi: null, copy: null, copyHi: null, image: null,
       config: { mode: "auto", limit: 6, pujaIds: [], festivalId: null },
       startDate: null, endDate: null, updatedAt: serverTimestamp(),
     }, { merge: true });
   }
   console.log(`homepage_sections: ${sections.length}`);
+  // Site-wide settings defaults (admin-writable, publicly readable).
+  await setDoc(doc(db, "site_settings", "global"), {
+    phoneAuth: { customer: false, admin: false },
+    whatsappNumber: "9958728666",
+    announcement: { enabled: false, text: null, textHi: null },
+    updatedAt: serverTimestamp(),
+  }, { merge: true });
+  console.log("site_settings/global: ok");
   console.log("Seed complete.");
 }
 
