@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Check, FlowerLotus } from "@phosphor-icons/react";
 import Brand from "../components/common/Brand";
 import Field from "../components/common/Field";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import { SectionDecor } from "../components/common/decor";
-import { useAuth } from "../lib/auth";
+import { postLoginPath, useAuth } from "../lib/auth";
 import PhoneLogin from "../components/common/PhoneLogin";
 import GoogleIcon from "../components/common/GoogleIcon";
 import { useSiteSettings, isPhoneEnabled } from "../lib/settings";
@@ -14,9 +14,53 @@ const art =
   "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1400&q=86";
 export default function Auth({ mode = "login" }) {
   const nav = useNavigate();
-  const { configured, signInWithGoogle } = useAuth();
+  const { user, isAdmin, loading, configured, signInWithGoogle, signInWithEmail, signUpWithEmail } = useAuth();
   const { settings } = useSiteSettings();
   const showPhone = configured && isPhoneEnabled(settings, "customer");
+  const [expectRedirect, setExpectRedirect] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailErr, setEmailErr] = useState(null);
+  const [emailBusy, setEmailBusy] = useState(false);
+
+  // Role-aware landing: staff → /admin, customers → /dashboard.
+  // Waits for the auth state (incl. admin lookup) to settle after sign-in.
+  useEffect(() => {
+    if (expectRedirect && !loading && user) {
+      setExpectRedirect(false);
+      nav(postLoginPath(isAdmin), { replace: true });
+    }
+  }, [expectRedirect, loading, user, isAdmin, nav]);
+
+  const goGoogle = async () => {
+    setEmailErr(null);
+    try { await signInWithGoogle(); setExpectRedirect(true); }
+    catch (e) { setEmailErr(e.message); }
+  };
+
+  const goEmail = async (e) => {
+    e?.preventDefault();
+    setEmailErr(null);
+    if (!email.trim() || password.length < 6) {
+      setEmailErr(mode === "register"
+        ? "Enter an email and a password of 6+ characters."
+        : "Enter your email and password.");
+      return;
+    }
+    setEmailBusy(true);
+    try {
+      if (mode === "register") await signUpWithEmail(email, password);
+      else await signInWithEmail(email, password);
+      setExpectRedirect(true);
+    } catch (err) {
+      setEmailErr(err?.code?.includes("email-already-in-use")
+        ? "Account exists — sign in instead."
+        : err?.code?.includes("invalid-credential") || err?.code?.includes("wrong-password")
+          ? "Wrong email or password."
+          : err?.message || "Sign-in failed.");
+    }
+    setEmailBusy(false);
+  };
   const title =
     mode === "login"
       ? "Welcome back."
@@ -88,17 +132,26 @@ export default function Auth({ mode = "login" }) {
               </button>
               {configured && (
                 <>
-                  <div className="mt-4 text-center text-xs muted-dt">or</div>
-                  <button
-                    onClick={() => signInWithGoogle().then(() => nav("/dashboard")).catch(() => {})}
-                    className="btn-ghost-dt mt-2 w-full"
-                  >
+                  <div className="mt-4 text-center text-xs muted-dt">or continue with</div>
+                  <button onClick={goGoogle} className="btn-ghost-dt mt-2 w-full">
                     <GoogleIcon />
                     Continue with Google
                   </button>
+                  <form onSubmit={goEmail} className="mt-4 grid gap-3">
+                    <input type="email" required placeholder="you@example.com" value={email}
+                      onChange={(e) => setEmail(e.target.value)} aria-label="Email"
+                      className="h-11 rounded-xl border border-dt bg-transparent px-3 text-sm outline-none" />
+                    <input type="password" required placeholder={mode === "register" ? "Create password (6+ characters)" : "Password"} value={password}
+                      onChange={(e) => setPassword(e.target.value)} aria-label="Password"
+                      className="h-11 rounded-xl border border-dt bg-transparent px-3 text-sm outline-none" />
+                    {emailErr && <p style={{ color: "#b3261e", fontSize: 13 }}>{emailErr}</p>}
+                    <button type="submit" disabled={emailBusy} className="btn-ghost-dt w-full">
+                      {emailBusy ? "Please wait…" : mode === "register" ? "Create account with email" : "Sign in with email"} <ArrowRight size={14} />
+                    </button>
+                  </form>
                   {showPhone && (
                     <div className="mt-4 border-t border-dt pt-4">
-                      <PhoneLogin compact onDone={() => nav("/dashboard")} />
+                      <PhoneLogin compact onDone={() => setExpectRedirect(true)} />
                     </div>
                   )}
                 </>

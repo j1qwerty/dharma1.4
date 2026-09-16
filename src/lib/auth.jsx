@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import { GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { auth, db, firebaseConfigured } from "./firebase";
 import { ROLES, canAccessAdmin } from "./roles";
@@ -53,17 +53,27 @@ export function AuthProvider({ children }) {
     return signInWithEmailAndPassword(auth, email.trim(), password);
   }, []);
 
+  const signUpWithEmail = useCallback(async (email, password) => {
+    if (!auth) throw new Error("Firebase not configured — add VITE_FIREBASE_* to .env.local");
+    return createUserWithEmailAndPassword(auth, email.trim(), password);
+  }, []);
+
   const isAdmin = canAccessAdmin(adminRole);
 
   const value = useMemo(() => ({
     user, role, adminRole, isAdmin, loading,
     configured: firebaseConfigured,
-    signInWithGoogle, signInWithEmail, logout,
-  }), [user, role, adminRole, isAdmin, loading, signInWithGoogle, signInWithEmail, logout]);
+    signInWithGoogle, signInWithEmail, signUpWithEmail, logout,
+  }), [user, role, adminRole, isAdmin, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, logout]);
 
   return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>;
 }
 
 export function useAuth() {
   return useContext(AuthCtx);
+}
+
+/** Post-login landing: staff go to the CMS, everyone else to their account. */
+export function postLoginPath(isAdmin) {
+  return isAdmin ? "/admin" : "/dashboard";
 }

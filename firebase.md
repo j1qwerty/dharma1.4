@@ -49,6 +49,7 @@ test site `dharmatribecms` (branch `firebase`).
 
 - `src/lib/firebase.js` — env init, `null` when unconfigured (site falls back to `data.js`).
 - `src/lib/auth.jsx` — Google + email/password + role lookup (`admins/{uid}`).
+  Post-login routing: `postLoginPath()` sends staff → `/admin`, customers → `/dashboard`.
 - `src/lib/cms.js` + `src/lib/schedule.js` — Firestore hooks, `isLive` windows, `?cmsPreview=`.
 - `src/components/common/PhoneLogin.jsx` — phone OTP (invisible reCAPTCHA), used in
   `/auth/*` and `/admin/login`. Needs `+91xxxxxxxxxx` format; test numbers go in
