@@ -3,68 +3,54 @@ import React from "react";
 let _medId = 0;
 
 /**
- * SacredMedallion
+ * SacredMedallion — "Celestial Bindu". A bold redesign of the sacred coin:
+ * a blazing gold medallion with a twin flame-ray halo, rope-twist rim,
+ * gem-studded orbit ring, twin lotus petal rings, a Sri-Yantra heart and a
+ * radiant bindu core. Pass `spin` to let the cosmos slowly turn.
  *
- * Premium sacred gold medallion featuring:
- * - Heavy braided outer rim
- * - Beaded inner rim
- * - Radial sun rays
- * - Four ornamental gemstones
- * - Ornate traditional diya
- * - Layered glowing flame
- * - Subtle flowing wind strokes
- * - Warm sacred aura
- *
- * No text / Om glyph.
+ * Props:
+ *   size      — pixel size of the medallion           (default 120)
+ *   glow      — soft outer aura                       (default true)
+ *   rays      — flame-ray halo behind the disc        (default true)
+ *   spin      — animate rings/petals/rays             (default false)
+ *   spinSpeed — multiplier on the animation speeds    (default 1)
  */
 export function SacredMedallion({
   size = 120,
   className = "",
   glow = true,
   rays = true,
+  spin = false,
+  spinSpeed = 1,
 }) {
-  const uid = React.useId
-    ? React.useId().replace(/:/g, "")
-    : `m${++_medId}`;
+  const uid = React.useId ? React.useId().replace(/:/g, "") : `m${++_medId}`;
+  const gFace  = `mf-${uid}`;
+  const gEdge  = `me-${uid}`;
+  const gRope  = `mr-${uid}`;
+  const gFlame = `mfl-${uid}`;
+  const gCore  = `mc-${uid}`;
+  const gInner = `mi-${uid}`;
+  const gSheen = `ms-${uid}`;
 
-  const ids = {
-    face: `sm-face-${uid}`,
-    rim: `sm-rim-${uid}`,
-    rope: `sm-rope-${uid}`,
-    inner: `sm-inner-${uid}`,
-    diya: `sm-diya-${uid}`,
-    diyaLight: `sm-diya-light-${uid}`,
-    flame: `sm-flame-${uid}`,
-    flameInner: `sm-flame-inner-${uid}`,
-    aura: `sm-aura-${uid}`,
-    ray: `sm-ray-${uid}`,
-    shadow: `sm-shadow-${uid}`,
-    wind: `sm-wind-${uid}`,
-    windGlow: `sm-wind-glow-${uid}`,
-  };
+  const rot = (dur, rev = false) =>
+    spin
+      ? {
+          animation: `${rev ? `med-rr-${uid}` : `med-rf-${uid}`} ${(dur / spinSpeed).toFixed(2)}s linear infinite`,
+          transformOrigin: "60px 60px",
+          transformBox: "view-box",
+        }
+      : undefined;
 
-  const center = 60;
-
-  const polar = (radius, angle) => {
-    const a = (angle * Math.PI) / 180;
-
-    return {
-      x: center + Math.cos(a) * radius,
-      y: center + Math.sin(a) * radius,
-    };
+  const pt = (r, deg) => {
+    const a = (deg * Math.PI) / 180;
+    return [60 + r * Math.cos(a), 60 + r * Math.sin(a)];
   };
 
   return (
     <span
       className={className}
+      style={{ position: "relative", display: "inline-block", width: size, height: size }}
       aria-hidden="true"
-      style={{
-        position: "relative",
-        display: "inline-block",
-        width: size,
-        height: size,
-        flexShrink: 0,
-      }}
     >
       {glow && (
         <span
@@ -73,856 +59,170 @@ export function SacredMedallion({
             inset: "-32%",
             borderRadius: "50%",
             background:
-              "radial-gradient(circle, rgba(255,210,82,.5) 0%, rgba(255,176,35,.22) 38%, transparent 72%)",
-            filter: "blur(8px)",
-            pointerEvents: "none",
+              "radial-gradient(circle, rgba(255,214,110,0.55) 0%, rgba(255,190,80,0.22) 45%, transparent 72%)",
+            filter: "blur(4px)",
           }}
         />
       )}
 
       <svg
         viewBox="0 0 120 120"
-        width="100%"
-        height="100%"
         fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        style={{
-          position: "relative",
-          display: "block",
-          overflow: "visible",
-        }}
+        style={{ position: "relative", width: "100%", height: "100%", display: "block" }}
       >
+        <style>{`
+          @keyframes med-rf-${uid} { to { transform: rotate(360deg); } }
+          @keyframes med-rr-${uid} { to { transform: rotate(-360deg); } }
+        `}</style>
+
         <defs>
-          {/* Main medallion face */}
-          <radialGradient
-            id={ids.face}
-            cx="36%"
-            cy="28%"
-            r="78%"
-          >
-            <stop offset="0%" stopColor="#FFF8DB" />
-            <stop offset="22%" stopColor="#F9E49A" />
-            <stop offset="48%" stopColor="#EFC457" />
-            <stop offset="72%" stopColor="#D69720" />
-            <stop offset="100%" stopColor="#895A0B" />
+          <radialGradient id={gFace} cx="36%" cy="30%" r="85%">
+            <stop offset="0%"  stopColor="#fffbe9" />
+            <stop offset="28%" stopColor="#ffe494" />
+            <stop offset="52%" stopColor="#f2b32c" />
+            <stop offset="76%" stopColor="#c07f14" />
+            <stop offset="100%" stopColor="#6a4007" />
           </radialGradient>
-
-          {/* Dark outer depth */}
-          <radialGradient
-            id={ids.rim}
-            cx="50%"
-            cy="50%"
-            r="50%"
-          >
-            <stop
-              offset="72%"
-              stopColor="rgba(255,244,198,0)"
-            />
-            <stop
-              offset="86%"
-              stopColor="rgba(135,88,7,.3)"
-            />
-            <stop
-              offset="94%"
-              stopColor="rgba(108,67,4,.72)"
-            />
-            <stop
-              offset="100%"
-              stopColor="rgba(52,30,2,.96)"
-            />
+          <radialGradient id={gEdge} cx="50%" cy="50%" r="50%">
+            <stop offset="78%" stopColor="rgba(80,48,6,0)" />
+            <stop offset="88%" stopColor="rgba(80,48,6,0.5)" />
+            <stop offset="100%" stopColor="rgba(28,17,2,0.95)" />
           </radialGradient>
-
-          {/* Braided gold */}
-          <linearGradient
-            id={ids.rope}
-            x1="0"
-            y1="0"
-            x2="1"
-            y2="1"
-          >
-            <stop offset="0%" stopColor="#FFF4C8" />
-            <stop offset="20%" stopColor="#F4CC65" />
-            <stop offset="48%" stopColor="#C98A17" />
-            <stop offset="72%" stopColor="#87570B" />
-            <stop offset="100%" stopColor="#E7B946" />
+          <linearGradient id={gRope} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"  stopColor="#fff7d2" />
+            <stop offset="45%" stopColor="#e9b73a" />
+            <stop offset="78%" stopColor="#8a5a0c" />
+            <stop offset="100%" stopColor="#3f2704" />
           </linearGradient>
-
-          {/* Inner surface */}
-          <radialGradient
-            id={ids.inner}
-            cx="50%"
-            cy="38%"
-            r="68%"
-          >
-            <stop
-              offset="0%"
-              stopColor="#FFF2B1"
-              stopOpacity=".5"
-            />
-            <stop
-              offset="35%"
-              stopColor="#EBC45E"
-              stopOpacity=".2"
-            />
-            <stop
-              offset="100%"
-              stopColor="#9E6810"
-              stopOpacity=".08"
-            />
+          <linearGradient id={gFlame} gradientUnits="userSpaceOnUse" x1="60" y1="3" x2="60" y2="17">
+            <stop offset="0%"  stopColor="#fff8d2" />
+            <stop offset="60%" stopColor="#ffd45e" />
+            <stop offset="100%" stopColor="#dd9410" />
+          </linearGradient>
+          <radialGradient id={gCore} cx="38%" cy="34%" r="75%">
+            <stop offset="0%"  stopColor="#ffffff" />
+            <stop offset="30%" stopColor="#fff3bd" />
+            <stop offset="65%" stopColor="#ffd054" />
+            <stop offset="100%" stopColor="#dd9410" />
           </radialGradient>
-
-          {/* Diya bowl */}
-          <linearGradient
-            id={ids.diya}
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="1"
-          >
-            <stop offset="0%" stopColor="#FFF1A7" />
-            <stop offset="22%" stopColor="#F0C653" />
-            <stop offset="55%" stopColor="#D58E18" />
-            <stop offset="82%" stopColor="#9B610A" />
-            <stop offset="100%" stopColor="#684007" />
-          </linearGradient>
-
-          {/* Bowl highlight */}
-          <linearGradient
-            id={ids.diyaLight}
-            x1="0"
-            y1="0"
-            x2="1"
-            y2="1"
-          >
-            <stop
-              offset="0%"
-              stopColor="#FFFFFF"
-              stopOpacity=".68"
-            />
-            <stop
-              offset="32%"
-              stopColor="#FFF2B1"
-              stopOpacity=".25"
-            />
-            <stop
-              offset="100%"
-              stopColor="#FFFFFF"
-              stopOpacity="0"
-            />
-          </linearGradient>
-
-          {/* Main flame */}
-          <linearGradient
-            id={ids.flame}
-            x1="0"
-            y1="1"
-            x2="0"
-            y2="0"
-          >
-            <stop offset="0%" stopColor="#FF8B08" />
-            <stop offset="30%" stopColor="#FFB51E" />
-            <stop offset="58%" stopColor="#FFD95B" />
-            <stop offset="82%" stopColor="#FFF0AD" />
-            <stop offset="100%" stopColor="#FFFFFF" />
-          </linearGradient>
-
-          {/* Inner flame */}
-          <linearGradient
-            id={ids.flameInner}
-            x1="0"
-            y1="1"
-            x2="0"
-            y2="0"
-          >
-            <stop offset="0%" stopColor="#FFE061" />
-            <stop offset="55%" stopColor="#FFF4BF" />
-            <stop offset="100%" stopColor="#FFFFFF" />
-          </linearGradient>
-
-          {/* Flame aura */}
-          <radialGradient id={ids.aura}>
-            <stop
-              offset="0%"
-              stopColor="#FFE98A"
-              stopOpacity=".85"
-            />
-            <stop
-              offset="42%"
-              stopColor="#FFB31B"
-              stopOpacity=".3"
-            />
-            <stop
-              offset="100%"
-              stopColor="#FF8A00"
-              stopOpacity="0"
-            />
+          <radialGradient id={gInner} cx="50%" cy="45%" r="60%">
+            <stop offset="0%" stopColor="rgba(255,244,190,0.4)" />
+            <stop offset="100%" stopColor="rgba(255,244,190,0)" />
           </radialGradient>
-
-          {/* Rays */}
-          <linearGradient
-            id={ids.ray}
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="1"
-          >
-            <stop
-              offset="0%"
-              stopColor="#FFF0AA"
-              stopOpacity=".82"
-            />
-            <stop
-              offset="100%"
-              stopColor="#93600E"
-              stopOpacity=".12"
-            />
+          <linearGradient id={gSheen} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"  stopColor="rgba(255,255,255,0.65)" />
+            <stop offset="45%" stopColor="rgba(255,255,255,0)" />
           </linearGradient>
-
-          {/* Wind */}
-          <linearGradient
-            id={ids.wind}
-            x1="0"
-            y1="0"
-            x2="1"
-            y2="0"
-          >
-            <stop
-              offset="0%"
-              stopColor="#FFF4B7"
-              stopOpacity="0"
-            />
-            <stop
-              offset="30%"
-              stopColor="#FFE88A"
-              stopOpacity=".8"
-            />
-            <stop
-              offset="100%"
-              stopColor="#FFF3B6"
-              stopOpacity="0"
-            />
-          </linearGradient>
-
-          {/* Wind glow */}
-          <linearGradient
-            id={ids.windGlow}
-            x1="0"
-            y1="0"
-            x2="1"
-            y2="0"
-          >
-            <stop
-              offset="0%"
-              stopColor="#FFD75A"
-              stopOpacity="0"
-            />
-            <stop
-              offset="45%"
-              stopColor="#FFD75A"
-              stopOpacity=".35"
-            />
-            <stop
-              offset="100%"
-              stopColor="#FFD75A"
-              stopOpacity="0"
-            />
-          </linearGradient>
-
-          {/* Shadow */}
-          <filter
-            id={ids.shadow}
-            x="-30%"
-            y="-30%"
-            width="160%"
-            height="160%"
-          >
-            <feDropShadow
-              dx="0"
-              dy="3"
-              stdDeviation="2.4"
-              floodColor="#6A4204"
-              floodOpacity=".45"
-            />
-          </filter>
         </defs>
 
-        {/* -------------------------------------------------
-            OUTER AURA
-        ------------------------------------------------- */}
-
-        {glow && (
-          <circle
-            cx="60"
-            cy="60"
-            r="58"
-            fill={`url(#${ids.aura})`}
-            opacity=".35"
-          />
+        {/* ——— twin flame-ray halo ——— */}
+        {rays && (
+          <g style={rot(46)}>
+            {Array.from({ length: 24 }).map((_, i) => (
+              <path
+                key={`fl${i}`}
+                d="M60 3 C63 7.5 63.6 12 60 16.5 C56.4 12 57 7.5 60 3 Z"
+                transform={`rotate(${i * 15} 60 60)`}
+                fill={`url(#${gFlame})`}
+                stroke="rgba(140,88,10,0.45)"
+                strokeWidth="0.4"
+              />
+            ))}
+            {Array.from({ length: 24 }).map((_, i) => (
+              <path
+                key={`sp${i}`}
+                d="M60 6 C61.5 9 61.7 11.5 60 14 C58.3 11.5 58.5 9 60 6 Z"
+                transform={`rotate(${i * 15 + 7.5} 60 60)`}
+                fill="#ffe9a6"
+                opacity="0.85"
+              />
+            ))}
+          </g>
         )}
 
-        {/* -------------------------------------------------
-            SUN RAYS
-        ------------------------------------------------- */}
+        {/* ——— the disc ——— */}
+        <circle cx="60" cy="60" r="50" fill={`url(#${gFace})`} />
+        <circle cx="60" cy="60" r="50" fill={`url(#${gEdge})`} />
 
-        {rays &&
-          Array.from({ length: 32 }).map((_, i) => {
-            const angle = (i / 32) * 360;
-
-            const p1 = polar(49, angle);
-            const p2 = polar(
-              i % 2 === 0 ? 56 : 54,
-              angle
-            );
-
+        {/* ——— rope-twist rim + gem-studded orbit ——— */}
+        <g style={rot(70, true)}>
+          {Array.from({ length: 30 }).map((_, i) => {
+            const [x1, y1] = pt(47, (i / 30) * 360);
+            const [x2, y2] = pt(47, ((i + 0.5) / 30) * 360);
             return (
-              <line
-                key={`ray-${i}`}
-                x1={p1.x}
-                y1={p1.y}
-                x2={p2.x}
-                y2={p2.y}
-                stroke={`url(#${ids.ray})`}
-                strokeWidth={
-                  i % 2 === 0 ? 0.75 : 0.45
-                }
+              <path
+                key={`rp${i}`}
+                d={`M${x1} ${y1} A47 47 0 0 1 ${x2} ${y2}`}
+                stroke={`url(#${gRope})`}
+                strokeWidth="3"
                 strokeLinecap="round"
+                opacity={i % 2 === 0 ? 0.9 : 0.5}
               />
             );
           })}
+          {Array.from({ length: 36 }).map((_, i) => {
+            const a = (i / 36) * 360;
+            const [x, y] = pt(41.5, a);
+            return i % 3 === 0 ? (
+              <path
+                key={`gm${i}`}
+                d={`M${x} ${y - 1.6} L${x + 1.3} ${y} L${x} ${y + 1.6} L${x - 1.3} ${y} Z`}
+                fill="#5f3b07"
+                stroke="#ffeaae"
+                strokeWidth="0.35"
+              />
+            ) : (
+              <circle key={`bd${i}`} cx={x} cy={y} r="0.95" fill="#6e460b" />
+            );
+          })}
+        </g>
 
-        {/* -------------------------------------------------
-            MAIN MEDALLION
-        ------------------------------------------------- */}
+        {/* ——— orbit separators ——— */}
+        <circle cx="60" cy="60" r="38.8" stroke="rgba(96,60,6,0.55)" strokeWidth="0.7" strokeDasharray="1.6 3.2" />
+        <circle cx="60" cy="60" r="36.4" fill={`url(#${gInner})`} />
+        <circle cx="60" cy="60" r="36.4" stroke="rgba(96,60,6,0.4)" strokeWidth="0.6" />
 
-        <circle
-          cx="60"
-          cy="60"
-          r="51"
-          fill={`url(#${ids.face})`}
-          filter={`url(#${ids.shadow})`}
-        />
-
-        <circle
-          cx="60"
-          cy="60"
-          r="51"
-          fill={`url(#${ids.rim})`}
-        />
-
-        {/* -------------------------------------------------
-            BRAIDED OUTER RIM
-        ------------------------------------------------- */}
-
-        {Array.from({ length: 28 }).map((_, i) => {
-          const a1 = (i / 28) * 360;
-          const a2 = ((i + 0.55) / 28) * 360;
-
-          const p1 = polar(47.3, a1);
-          const p2 = polar(47.3, a2);
-
-          return (
+        {/* ——— twin lotus rings ——— */}
+        <g style={rot(90)}>
+          {Array.from({ length: 16 }).map((_, i) => (
             <path
-              key={`rope-${i}`}
-              d={`
-                M ${p1.x} ${p1.y}
-                A 47.3 47.3 0 0 1 ${p2.x} ${p2.y}
-              `}
-              stroke={`url(#${ids.rope})`}
-              strokeWidth="2.8"
-              strokeLinecap="round"
-              opacity={i % 2 === 0 ? 0.96 : 0.55}
+              key={`p${i}`}
+              d="M60 22.5 C64 27.5 64.6 32.5 60 37.5 C55.4 32.5 56 27.5 60 22.5 Z"
+              transform={`rotate(${i * 22.5} 60 60)`}
+              stroke="rgba(110,70,8,0.6)"
+              strokeWidth="0.8"
+              fill="rgba(255,236,150,0.16)"
             />
-          );
-        })}
-
-        {/* -------------------------------------------------
-            BEADED INNER RING
-        ------------------------------------------------- */}
-
-        {Array.from({ length: 48 }).map((_, i) => {
-          const angle = (i / 48) * 360;
-          const p = polar(41.4, angle);
-
-          return (
-            <circle
-              key={`bead-${i}`}
-              cx={p.x}
-              cy={p.y}
-              r=".82"
-              fill="rgba(102,66,7,.7)"
-            />
-          );
-        })}
-
-        <circle
-          cx="60"
-          cy="60"
-          r="39"
-          stroke="rgba(103,67,8,.56)"
-          strokeWidth=".8"
-        />
-
-        <circle
-          cx="60"
-          cy="60"
-          r="37"
-          fill={`url(#${ids.inner})`}
-        />
-
-        {/* -------------------------------------------------
-            FOUR CARDINAL JEWEL ORNAMENTS
-        ------------------------------------------------- */}
-
-        {[0, 90, 180, 270].map((angle) => {
-          const p = polar(47.8, angle);
-
-          return (
-            <g
-              key={`gem-${angle}`}
-              transform={`
-                translate(${p.x} ${p.y})
-                rotate(${angle})
-              `}
-            >
-              <path
-                d="
-                  M 0 -5.5
-                  L 4.3 0
-                  L 0 5.5
-                  L -4.3 0
-                  Z
-                "
-                fill={`url(#${ids.diya})`}
-                stroke="rgba(104,64,5,.9)"
-                strokeWidth=".8"
-              />
-
-              <path
-                d="
-                  M 0 -4.3
-                  L 2.2 0
-                  L 0 0
-                  Z
-                "
-                fill="#FFF7C9"
-                opacity=".75"
-              />
-
-              <circle
-                cx="0"
-                cy="0"
-                r=".8"
-                fill="#FFF5AA"
-              />
-            </g>
-          );
-        })}
-
-        {/* -------------------------------------------------
-            DECORATIVE INNER ARCHES
-        ------------------------------------------------- */}
-
-        <path
-          d="
-            M 31 48
-            C 35 33 48 24 60 24
-            C 72 24 85 33 89 48
-          "
-          stroke="rgba(111,70,7,.38)"
-          strokeWidth=".65"
-        />
-
-        <path
-          d="
-            M 31 72
-            C 35 87 48 96 60 96
-            C 72 96 85 87 89 72
-          "
-          stroke="rgba(111,70,7,.25)"
-          strokeWidth=".65"
-        />
-
-        {/* -------------------------------------------------
-            FLAME AURA
-        ------------------------------------------------- */}
-
-        <ellipse
-          cx="60"
-          cy="45"
-          rx="21"
-          ry="25"
-          fill={`url(#${ids.aura})`}
-          opacity=".8"
-        />
-
-        {/* -------------------------------------------------
-            WIND — BACK LAYER
-        ------------------------------------------------- */}
-
-        <g opacity=".6">
-          <path
-            d="
-              M 34 44
-              C 39 40 44 40 47 42
-              C 51 45 55 44 58 40
-            "
-            stroke={`url(#${ids.windGlow})`}
-            strokeWidth="1.1"
-            strokeLinecap="round"
-          />
-
-          <path
-            d="
-              M 81 47
-              C 76 44 72 45 69 48
-              C 66 51 63 51 60 48
-            "
-            stroke={`url(#${ids.windGlow})`}
-            strokeWidth=".85"
-            strokeLinecap="round"
-          />
-        </g>
-
-        {/* -------------------------------------------------
-            DIYA FLAME
-        ------------------------------------------------- */}
-
-        <g>
-          {/* Outer flame */}
-          <path
-            d="
-              M 60 56
-
-              C 51 53
-                49 47
-                53 42
-
-              C 55 39
-                59 36
-                58 29
-
-              C 65 35
-                69 40
-                67 45
-
-              C 66 49
-                64 53
-                60 56
-
-              Z
-            "
-            fill={`url(#${ids.flame})`}
-            stroke="rgba(116,68,3,.4)"
-            strokeWidth=".55"
-          />
-
-          {/* Flame white/gold core */}
-          <path
-            d="
-              M 60 53
-
-              C 55 50
-                55 46
-                58 42
-
-              C 60 40
-                61 38
-                60 35
-
-              C 64 40
-                65 44
-                64 47
-
-              C 64 50
-                62 52
-                60 53
-
-              Z
-            "
-            fill={`url(#${ids.flameInner})`}
-          />
-
-          {/* Bright flame center */}
-          <ellipse
-            cx="60"
-            cy="47"
-            rx="2.8"
-            ry="6"
-            fill="#FFFCE6"
-            opacity=".85"
-          />
-
-          {/* Flame highlight */}
-          <path
-            d="
-              M 59 38
-              C 57.7 42
-                58.2 45
-                59.5 47
-            "
-            stroke="#FFFFFF"
-            strokeWidth=".9"
-            strokeLinecap="round"
-            opacity=".75"
-          />
-        </g>
-
-        {/* -------------------------------------------------
-            WICK
-        ------------------------------------------------- */}
-
-        <path
-          d="
-            M 60 57
-            C 59.4 54.8
-              59.7 53.2
-              60.4 51.8
-          "
-          stroke="#704305"
-          strokeWidth="1.2"
-          strokeLinecap="round"
-        />
-
-        {/* -------------------------------------------------
-            DIYA BOWL
-        ------------------------------------------------- */}
-
-        <g filter={`url(#${ids.shadow})`}>
-          {/* Back lip */}
-          <ellipse
-            cx="60"
-            cy="57.5"
-            rx="18.5"
-            ry="4.1"
-            fill={`url(#${ids.diya})`}
-            stroke="rgba(102,61,4,.85)"
-            strokeWidth=".85"
-          />
-
-          {/* Bowl body */}
-          <path
-            d="
-              M 40 57
-
-              C 42 66
-                48 72
-                60 74
-
-              C 72 72
-                78 66
-                80 57
-
-              C 73 61
-                47 61
-                40 57
-
-              Z
-            "
-            fill={`url(#${ids.diya})`}
-            stroke="rgba(101,61,4,.88)"
-            strokeWidth=".85"
-          />
-
-          {/* Upper gold lip */}
-          <path
-            d="
-              M 40 57
-              C 48 60
-                72 60
-                80 57
-            "
-            stroke="#FFE58A"
-            strokeWidth="1.35"
-            strokeLinecap="round"
-            opacity=".8"
-          />
-
-          {/* Bowl highlight */}
-          <path
-            d="
-              M 44 59
-              C 47 65
-                51 68
-                56 69
-            "
-            stroke={`url(#${ids.diyaLight})`}
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            opacity=".65"
-          />
-
-          {/* Bowl engraved band */}
-          <path
-            d="
-              M 45 66
-              C 51 69
-                69 69
-                75 66
-            "
-            stroke="rgba(103,62,4,.52)"
-            strokeWidth=".65"
-          />
-
-          {/* Small decorative dots */}
-          {[48, 54, 60, 66, 72].map((x, i) => (
-            <circle
-              key={`bowl-dot-${i}`}
-              cx={x}
-              cy={67.1}
-              r=".65"
-              fill="#FFE292"
-              opacity=".72"
+          ))}
+          {Array.from({ length: 16 }).map((_, i) => (
+            <path
+              key={`ip${i}`}
+              d="M60 29 C62.7 32.3 63.1 35 60 38.2 C56.9 35 57.3 32.3 60 29 Z"
+              transform={`rotate(${i * 22.5 + 11.25} 60 60)`}
+              stroke="rgba(110,70,8,0.5)"
+              strokeWidth="0.7"
+              fill="rgba(255,236,150,0.1)"
             />
           ))}
         </g>
 
-        {/* -------------------------------------------------
-            DIYA BASE
-        ------------------------------------------------- */}
-
-        <path
-          d="
-            M 48 73
-            C 51 77
-              55 79
-              60 79
-
-            C 65 79
-              69 77
-              72 73
-          "
-          stroke="rgba(104,63,5,.72)"
-          strokeWidth=".9"
-        />
-
-        <path
-          d="
-            M 51 76
-            C 53 80
-              56 82
-              60 82
-
-            C 64 82
-              67 80
-              69 76
-          "
-          fill={`url(#${ids.diya})`}
-          stroke="rgba(105,64,5,.75)"
-          strokeWidth=".8"
-        />
-
-        <ellipse
-          cx="60"
-          cy="81.5"
-          rx="9"
-          ry="2.2"
-          fill="rgba(114,69,5,.28)"
-        />
-
-        {/* -------------------------------------------------
-            FRONT WIND — LIGHTER, CLOSER TO FLAME
-        ------------------------------------------------- */}
-
-        <g>
-          <path
-            d="
-              M 29 49
-              C 36 46
-                42 47
-                47 50
-
-              C 50 52
-                53 52
-                56 50
-            "
-            stroke={`url(#${ids.wind})`}
-            strokeWidth=".9"
-            strokeLinecap="round"
-            opacity=".75"
-          />
-
-          <path
-            d="
-              M 92 51
-              C 85 48
-                79 49
-                75 52
-
-              C 72 54
-                69 54
-                67 52
-            "
-            stroke={`url(#${ids.wind})`}
-            strokeWidth=".72"
-            strokeLinecap="round"
-            opacity=".62"
-          />
-
-          <path
-            d="
-              M 32 54
-              C 38 52
-                42 53
-                45 55
-            "
-            stroke={`url(#${ids.wind})`}
-            strokeWidth=".55"
-            strokeLinecap="round"
-            opacity=".48"
-          />
-        </g>
-
-        {/* -------------------------------------------------
-            DECORATIVE FLAME SPARKS
-        ------------------------------------------------- */}
-
-        {[
-          [52, 32, 0.8],
-          [69, 34, 0.65],
-          [48, 41, 0.5],
-          [73, 43, 0.45],
-        ].map(([x, y, r], i) => (
-          <g key={`spark-${i}`}>
-            <circle
-              cx={x}
-              cy={y}
-              r={r}
-              fill="#FFF0A0"
-              opacity=".8"
-            />
-
-            <circle
-              cx={x}
-              cy={y}
-              r={r * 2.5}
-              fill="#FFD65C"
-              opacity=".08"
-            />
-          </g>
+        {/* ——— Sri-Yantra heart ——— */}
+        <circle cx="60" cy="60" r="20.5" stroke="rgba(96,60,6,0.4)" strokeWidth="0.6" strokeDasharray="2.5 2.5" />
+        <path d="M60 43 L74.72 68.5 L45.28 68.5 Z" stroke="rgba(88,54,6,0.85)" strokeWidth="0.9" />
+        <path d="M60 77 L45.28 51.5 L74.72 51.5 Z" stroke="rgba(88,54,6,0.85)" strokeWidth="0.9" />
+        {[[60, 43], [74.72, 68.5], [45.28, 68.5], [60, 77], [45.28, 51.5], [74.72, 51.5]].map(([x, y], i) => (
+          <circle key={`vx${i}`} cx={x} cy={y} r="1.05" fill="rgba(88,54,6,0.9)" />
         ))}
 
-        {/* -------------------------------------------------
-            TOP HIGHLIGHT
-        ------------------------------------------------- */}
+        {/* ——— bindu core ——— */}
+        <circle cx="60" cy="60" r="10.5" fill={`url(#${gCore})`} stroke="rgba(120,75,8,0.6)" strokeWidth="1" />
+        <circle cx="60" cy="60" r="7.6" stroke="rgba(255,252,235,0.65)" strokeWidth="0.7" />
+        <circle cx="56.8" cy="56.2" r="1.7" fill="#ffffff" opacity="0.9" />
+        <path d="M64 51.8 L64.7 53.9 L66.8 54.6 L64.7 55.3 L64 57.4 L63.3 55.3 L61.2 54.6 L63.3 53.9 Z" fill="#ffffff" opacity="0.95" />
+        <path d="M56 62.4 L56.4 63.8 L57.8 64.2 L56.4 64.6 L56 66 L55.6 64.6 L54.2 64.2 L55.6 63.8 Z" fill="#ffffff" opacity="0.55" />
 
-        <ellipse
-          cx="45"
-          cy="32"
-          rx="20"
-          ry="10"
-          fill="#FFFFFF"
-          opacity=".12"
-          transform="rotate(-18 45 32)"
-        />
-
-        {/* Fine inner circle */}
-        <circle
-          cx="60"
-          cy="60"
-          r="34"
-          stroke="rgba(111,70,7,.25)"
-          strokeWidth=".55"
-        />
+        {/* ——— sheen ——— */}
+        <ellipse cx="51.5" cy="37.5" rx="27" ry="13.5" fill={`url(#${gSheen})`} opacity="0.75" />
       </svg>
     </span>
   );

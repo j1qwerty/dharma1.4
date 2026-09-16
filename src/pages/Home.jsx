@@ -350,12 +350,16 @@ export default function Home() {
           </svg>
           <span className="hero-curve-coin-dt coin-left-dt">
             <span className="medallion-wrap">
-              <SacredMedallion size={74} />
+              {/* <SacredMedallion size={75} glow={false} rays={false} /> */}
+                            <SacredMedallion size={75} spin spinSpeed={1.2} />
+
+
             </span>
           </span>
           <span className="hero-curve-coin-dt coin-right-dt">
             <span className="medallion-wrap delay">
-              <SacredMedallion size={74} />
+              <SacredMedallion size={75} spin spinSpeed={1.2} />
+
             </span>
           </span>
           <span className="hero-curve-drop-dt" />
