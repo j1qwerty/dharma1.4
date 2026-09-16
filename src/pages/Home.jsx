@@ -128,6 +128,7 @@ export default function Home() {
             key={current.image}
             src={current.image}
             alt=""
+            referrerPolicy="no-referrer"
             className={reduce ? "" : "kb-dt"}
             initial={reduce ? false : { scale: 1.08, opacity: 0.6 }}
             animate={reduce ? undefined : { scale: 1, opacity: 1 }}

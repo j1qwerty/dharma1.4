@@ -1,7 +1,7 @@
-// Generic CMS editor: ordered list (left) + form prefilled with current
-// values (centre) + last-5 versions on the right (click refills the form).
-// Used by every content section (pujas, festivals, homepage, stories,
-// acharyas, testimonials). Festivals pass fullHistory to expose full audit.
+// Generic CMS editor v2 — split-view with tabbed form.
+// Left: searchable item list. Right: panel with header (title + meta),
+// tabbed form sections (Overview / Content / Schedule / Image / Settings),
+// and a sticky save bar at the bottom.
 import { useEffect, useMemo, useState } from "react";
 import {
   createContent, getVersions, saveContent, softDeleteContent,
@@ -53,6 +53,26 @@ function formToDoc(form, fields) {
   return o;
 }
 
+// Group fields into tabs.
+function buildTabs(fields) {
+  const tabs = [
+    { key: "overview", label: "Overview", fields: [] },
+    { key: "content", label: "Content", fields: [] },
+    { key: "schedule", label: "Schedule", fields: [] },
+    { key: "image", label: "Image", fields: [] },
+    { key: "other", label: "More", fields: [] },
+  ];
+  for (const f of fields) {
+    if (f.type === "image") tabs[3].fields.push(f);
+    else if (f.type === "datetime") tabs[2].fields.push(f);
+    else if (f.type === "textarea") tabs[1].fields.push(f);
+    else if (["title", "titleHi", "name", "nameHi", "code", "deity", "tag", "type", "category", "read", "date", "eventDate", "countdownTo", "linkedPujaIds", "homepageTakeover", "key", "enabled", "place", "placeHi", "phone", "email", "price", "temple", "purpose"].includes(f.key)) tabs[0].fields.push(f);
+    else tabs[4].fields.push(f);
+  }
+  // Remove empty tabs.
+  return tabs.filter((t) => t.fields.length > 0);
+}
+
 export default function CollectionEditor({
   collection, title, subtitle, sharedNote,
   fields, orderField, fullHistory = false,
@@ -66,21 +86,32 @@ export default function CollectionEditor({
   const [form, setForm] = useState(() => ({ ...emptyFromFields(fields), _status: "draft", _order: "" }));
   const [versions, setVersions] = useState([]);
   const [msg, setMsg] = useState(null);
+  const [msgKind, setMsgKind] = useState("info");
   const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [search, setSearch] = useState("");
+
+  const tabs = useMemo(() => buildTabs(fields), [fields]);
 
   const list = useMemo(() => {
     const live = remote ? (rows || []) : fallbackRows;
-    const sorted = [...live];
+    let sorted = [...live];
     if (orderField) sorted.sort((a, b) => (a[orderField] ?? 999) - (b[orderField] ?? 999));
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      sorted = sorted.filter((d) =>
+        String(d.title || d.name || d.key || d.id || "").toLowerCase().includes(q) ||
+        String(d.id || "").toLowerCase().includes(q)
+      );
+    }
     return sorted;
-  }, [rows, remote, fallbackRows, orderField]);
+  }, [rows, remote, fallbackRows, orderField, search]);
 
   const selected = useMemo(
     () => list.find((d) => (d[idField] || d.id) === selectedId) || null,
     [list, selectedId, idField]
   );
 
-  // Prefill form with CURRENT values whenever selection changes.
   useEffect(() => {
     if (selected) {
       setForm(docToForm(selected, fields));
@@ -91,6 +122,11 @@ export default function CollectionEditor({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
 
+  // Reset to first tab when selection changes.
+  useEffect(() => {
+    if (tabs[0]) setActiveTab(tabs[0].key);
+  }, [selectedId, isNew, tabs[0]?.key]);
+
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   const startNew = () => {
@@ -100,6 +136,7 @@ export default function CollectionEditor({
     setForm({ ...emptyFromFields(fields), _status: "draft", _order: list.length });
     setVersions([]);
     setMsg(null);
+    if (tabs[0]) setActiveTab(tabs[0].key);
   };
 
   const onSave = async () => {
@@ -112,15 +149,18 @@ export default function CollectionEditor({
         const id = (newId || data.title || data.name || data.key || "").trim();
         const created = await createContent(collection, { ...data, ...(id ? { id } : {}) }, user, { status: form._status });
         setMsg(`Created "${created}" as ${form._status}.`);
+        setMsgKind("success");
         setSelectedId(created);
         setIsNew(false);
       } else {
         await saveContent(collection, selected.id, data, user, { status: form._status });
         setMsg(`Saved "${selected.id}" (${form._status}). Previous state kept in versions.`);
+        setMsgKind("success");
         getVersions(collection, selected.id).then(setVersions).catch(() => {});
       }
     } catch (e) {
       setMsg(`Save failed: ${e.message}`);
+      setMsgKind("error");
     }
     setSaving(false);
   };
@@ -130,15 +170,18 @@ export default function CollectionEditor({
     try {
       await softDeleteContent(collection, selected.id, user);
       setMsg(`"${selected.id}" moved to Trash (30 days).`);
+      setMsgKind("warn");
       setSelectedId(null);
     } catch (e) {
       setMsg(`Delete failed: ${e.message}`);
+      setMsgKind("error");
     }
   };
 
   const onRestoreVersion = (data) => {
     setForm(docToForm({ ...selected, ...data }, fields));
     setMsg("Version loaded into the form — press Save to apply (restore is versioned).");
+    setMsgKind("info");
   };
 
   const renderInput = (f) => {
@@ -157,105 +200,220 @@ export default function CollectionEditor({
     return <TextInput value={v} onChange={(e) => set(f.key, e.target.value)} placeholder={f.hint} />;
   };
 
-  return (
-    <section>
-      <div className="eyebrow">CMS · {collection}</div>
-      <h1 className="display-dt" style={{ fontSize: 38, marginTop: 8 }}>{title}</h1>
-      {subtitle && <p className="text-sm muted-dt mt-2">{subtitle}</p>}
-      {sharedNote && <p className="text-xs muted-dt mt-2 panel-dt p-3">🔗 {sharedNote}</p>}
-      {!remote && <p className="text-xs mt-3" style={{ color: "#8a6d1b" }}>Firebase not configured — showing local fallback values (read-only preview).</p>}
+  const msgCls = msgKind === "success" ? "ad-msg-success"
+    : msgKind === "error" ? "ad-msg-error"
+    : msgKind === "warn" ? "ad-msg-warn" : "ad-msg-info";
 
-      <style>{`.admin-ed-grid{display:grid;gap:16px;grid-template-columns:250px minmax(0,1fr) 250px;margin-top:18px}.admin-ed-grid>*,.admin-ed-grid .panel-dt{min-width:0;overflow-wrap:anywhere}@media(max-width:1100px){.admin-ed-grid{grid-template-columns:1fr}}`}</style>
-      <div className="admin-ed-grid">
-        <div className="panel-dt p-4" style={{ alignSelf: "start", minWidth: 0, overflow: "hidden" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
-            <h3 className="text-sm font-semibold" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Items ({list.length})</h3>
-            <button className="btn-ghost-dt text-xs" style={{ flexShrink: 0 }} onClick={startNew} disabled={!remote}>+ New</button>
-          </div>
-          <div style={{ display: "grid", gap: 6, marginTop: 12, minWidth: 0 }}>
-            {loading && <p className="text-xs muted-dt">Loading…</p>}
-            {list.map((d) => {
-              const id = d[idField] || d.id;
-              const active = id === selectedId;
-              return (
-                <button
-                  key={id}
-                  onClick={() => setSelectedId(id)}
-                  className="text-left"
-                  title={d.title || d.name || d.key || id}
-                  style={{
-                    width: "100%", minWidth: 0, overflow: "hidden",
-                    padding: "8px 10px", borderRadius: 10, fontSize: 13,
-                    background: active ? "rgba(231,182,49,.16)" : "transparent",
-                    border: "1px solid var(--border-dt,#e8e0cf)", fontWeight: active ? 700 : 500,
-                  }}
-                >
-                  <span style={{ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>
-                    {d.title || d.name || d.key || id}
-                  </span>
-                  <span style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0, marginTop: 2 }}>
-                    <span className="text-[11px] muted-dt" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{id}</span>
-                    <span style={{ flexShrink: 0 }}><StatusBadge status={d.status} /></span>
-                  </span>
-                </button>
-              );
-            })}
-            {!loading && list.length === 0 && <p className="text-xs muted-dt">Empty — run <code>node scripts/seedFirestore.mjs</code>.</p>}
+  const headTitle = isNew ? "New item" : (selected?.title || selected?.name || selected?.key || selected?.id || "Select an item");
+  const headMeta = isNew ? (newId ? `id · ${newId}` : "id · auto from title") : (selected ? `id · ${selected.id}` : "");
+
+  return (
+    <div className="admin-root">
+      <header className="ad-page-head">
+        <div className="ad-page-head-text">
+          <div className="ad-eyebrow">CMS · {collection}</div>
+          <h1 className="ad-page-title">{title}</h1>
+          {subtitle && <p className="ad-page-sub">{subtitle}</p>}
+          {sharedNote && (
+            <p className="ad-msg ad-msg-warn" style={{ marginTop: 12, maxWidth: 720 }}>
+              <span aria-hidden="true">🔗</span>&nbsp;{sharedNote}
+            </p>
+          )}
+          {!remote && (
+            <p className="ad-msg ad-msg-warn" style={{ marginTop: 12, maxWidth: 720 }}>
+              Firebase not configured — showing local fallback values (read-only preview).
+            </p>
+          )}
+        </div>
+        <div className="ad-page-actions">
+          <button className="ad-btn ad-btn-gold ad-btn-sm" onClick={startNew} disabled={!remote}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            New item
+          </button>
+        </div>
+      </header>
+
+      <div className="ad-ed">
+        {/* Left column: item list */}
+        <div className="ad-ed-col-list">
+          <div className="ad-card ad-card-tight">
+            <div className="ad-item-list-head">
+              <span className="ad-item-list-title">Items · {list.length}</span>
+            </div>
+            <input
+              className="ad-input ad-input-sm ad-item-search"
+              type="search"
+              placeholder="Search items…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <div className="ad-item-list">
+              {loading && <p className="ad-stat-foot">Loading…</p>}
+              {list.map((d) => {
+                const id = d[idField] || d.id;
+                const active = id === selectedId;
+                return (
+                  <button
+                    key={id}
+                    onClick={() => setSelectedId(id)}
+                    className={`ad-item ${active ? "active" : ""}`}
+                    title={d.title || d.name || d.key || id}
+                  >
+                    <span className="ad-item-title">
+                      {d.title || d.name || d.key || id}
+                    </span>
+                    <span className="ad-item-meta">
+                      <span className="ad-item-id">{id}</span>
+                      <StatusBadge status={d.status} />
+                    </span>
+                  </button>
+                );
+              })}
+              {!loading && list.length === 0 && (
+                <p className="ad-stat-foot">
+                  {search ? "No matches." : <>Empty — run <code className="ad-code">node scripts/seedFirestore.mjs</code>.</>}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="panel-dt p-5">
-          {!selected && !isNew && <p className="text-sm muted-dt">Select an item on the left to edit its current values, or create new.</p>}
-          {(selected || isNew) && (
-            <div style={{ display: "grid", gap: 14 }}>
-              {isNew && (
-                <Field label="Document ID" hint="Lowercase slug, e.g. maha-rudra-special. Auto from title if empty.">
-                  <TextInput value={newId} onChange={(e) => setNewId(e.target.value)} placeholder="auto-from-title" />
-                </Field>
-              )}
-              <FormRow>
-                <Field label="Status">
-                  <Select value={form._status} onChange={(e) => set("._status", e.target.value)}>
-                    <option value="published">published (live)</option>
-                    <option value="draft">draft (hidden)</option>
-                  </Select>
-                </Field>
-                {orderField && (
-                  <Field label={orderField === "priority" ? "Priority (order)" : "Order"} hint="Lower shows first on site.">
-                    <NumberInput value={form._order} onChange={(e) => set("._order", e.target.value)} />
-                  </Field>
-                )}
-              </FormRow>
-              {fields.map((f) => (
-                f.type === "checkbox"
-                  ? <div key={f.key}>{renderInput(f)}</div>
-                  : <Field key={f.key} label={f.label} hint={f.type === "list" ? "Comma-separated" : undefined}>{renderInput(f)}</Field>
-              ))}
-              {msg && <p className="text-xs muted-dt">{msg}</p>}
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <button className="btn-gold-dt" onClick={onSave} disabled={saving || !remote}>
-                  {saving ? "Saving…" : isNew ? "Create" : "Save changes"}
-                </button>
-                {!isNew && (
-                  <button className="btn-ghost-dt" onClick={onDelete} disabled={!remote}>
-                    Soft-delete (30-day trash)
-                  </button>
-                )}
-              </div>
+        {/* Centre column: editor panel */}
+        <div className="ad-ed-panel">
+          <div className="ad-ed-head">
+            <div style={{ minWidth: 0 }}>
+              <div className="ad-ed-head-title">{headTitle}</div>
+              {headMeta && <div className="ad-ed-head-meta">{headMeta}</div>}
             </div>
+            {(selected || isNew) && <StatusBadge status={form._status} />}
+          </div>
+
+          {!selected && !isNew && (
+            <div className="ad-ed-empty">
+              <div className="ad-ed-empty-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="9" y1="15" x2="15" y2="15" />
+                </svg>
+              </div>
+              <p className="ad-ed-empty-text">
+                Select an item from the list to edit its values, or use <strong>New item</strong> in the top right to create one.
+              </p>
+            </div>
+          )}
+
+          {(selected || isNew) && (
+            <>
+              {/* Tabs */}
+              <div className="ad-tabs">
+                {tabs.map((t) => (
+                  <button
+                    key={t.key}
+                    className={`ad-tab ${activeTab === t.key ? "active" : ""}`}
+                    onClick={() => setActiveTab(t.key)}
+                    type="button"
+                  >
+                    {t.label}
+                    <span className="ad-tab-count">{t.fields.length}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Tab panel */}
+              <div className="ad-tab-panel">
+                {isNew && (
+                  <div className="ad-tab-panel-section">
+                    <div className="ad-tab-panel-section-title">Identity</div>
+                    <Field label="Document ID" hint="Lowercase slug, e.g. maha-rudra-special. Auto from title if empty.">
+                      <TextInput value={newId} onChange={(e) => setNewId(e.target.value)} placeholder="auto-from-title" />
+                    </Field>
+                  </div>
+                )}
+
+                {/* Status + order always visible */}
+                <div className="ad-tab-panel-section">
+                  <div className="ad-tab-panel-section-title">Status & ordering</div>
+                  <FormRow>
+                    <Field label="Status">
+                      <Select value={form._status} onChange={(e) => set("._status", e.target.value)}>
+                        <option value="published">published (live)</option>
+                        <option value="draft">draft (hidden)</option>
+                      </Select>
+                    </Field>
+                    {orderField && (
+                      <Field label={orderField === "priority" ? "Priority (order)" : "Order"} hint="Lower shows first on site.">
+                        <NumberInput value={form._order} onChange={(e) => set("._order", e.target.value)} />
+                      </Field>
+                    )}
+                  </FormRow>
+                </div>
+
+                {/* Active tab fields */}
+                {tabs.filter((t) => t.key === activeTab).map((t) => (
+                  <div key={t.key} className="ad-tab-panel-section">
+                    <div className="ad-tab-panel-section-title">{t.label}</div>
+                    <div style={{ display: "grid", gap: 14 }}>
+                      {t.fields.map((f) => (
+                        f.type === "checkbox"
+                          ? <div key={f.key}>{renderInput(f)}</div>
+                          : <Field key={f.key} label={f.label} hint={f.type === "list" ? "Comma-separated" : undefined}>{renderInput(f)}</Field>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Sticky save bar */}
+              <div className="ad-ed-foot">
+                <div className="ad-ed-foot-msg">
+                  {msg ? (
+                    <span className={`ad-msg ${msgCls}`} style={{ display: "inline-block", padding: "6px 10px" }}>
+                      {msg}
+                    </span>
+                  ) : (
+                    <span>Changes are versioned. Soft-deletes go to Trash for 30 days.</span>
+                  )}
+                </div>
+                <div className="ad-ed-foot-actions">
+                  {!isNew && (
+                    <button className="ad-btn ad-btn-danger ad-btn-sm" onClick={onDelete} disabled={!remote}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M5 6l1 14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-14" />
+                      </svg>
+                      Soft-delete
+                    </button>
+                  )}
+                  <button className="ad-btn ad-btn-primary" onClick={onSave} disabled={saving || !remote}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                      <polyline points="17 21 17 13 7 13 7 21" />
+                      <polyline points="7 3 7 8 15 8" />
+                    </svg>
+                    {saving ? "Saving…" : isNew ? "Create" : "Save changes"}
+                  </button>
+                </div>
+              </div>
+            </>
           )}
         </div>
 
-        <div className="panel-dt p-4" style={{ alignSelf: "start" }}>
-          <VersionPanel
-            collection={collection}
-            docId={selected?.id}
-            versions={versions}
-            fullHistory={fullHistory}
-            onRestore={onRestoreVersion}
-          />
+        {/* Right column: version history */}
+        <div className="ad-ed-col-versions">
+          <div className="ad-card ad-card-tight">
+            <VersionPanel
+              collection={collection}
+              docId={selected?.id}
+              versions={versions}
+              fullHistory={fullHistory}
+              onRestore={onRestoreVersion}
+            />
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

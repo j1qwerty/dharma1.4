@@ -25,6 +25,9 @@ export function ParallaxImage({ src, alt = "", className = "", strength = 22, sc
       <motion.img
         src={src}
         alt={alt}
+        // Strip Referer so external URLs (Shutterstock, Imgur, Pixiv, …)
+        // bypass hotlink protection and render reliably on the live site.
+        referrerPolicy="no-referrer"
         style={reduce ? {} : { y, scale }}
         className="h-full w-full object-cover"
         onError={(e) => {

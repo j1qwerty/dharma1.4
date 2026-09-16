@@ -39,42 +39,67 @@ function useAdminIds() {
 
 function Table({ cols, rows }) {
   return (
-    <div style={{ overflowX: "auto" }}>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-        <thead>
-          <tr>
-            {cols.map((c) => (
-              <th key={c.key} style={{ textAlign: "left", padding: "8px 10px", borderBottom: "1px solid var(--border-dt,#e8e0cf)", whiteSpace: "nowrap" }}>{c.label}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {(rows || []).map((r) => (
-            <tr key={r.id}>
+    <div className="ad-table-wrap">
+      <div className="ad-table-scroll">
+        <table className="ad-table">
+          <thead>
+            <tr>
               {cols.map((c) => (
-                <td key={c.key} style={{ padding: "8px 10px", borderBottom: "1px solid #f0ead9", verticalAlign: "top", overflowWrap: "anywhere", minWidth: 90 }}>
-                  {c.render ? c.render(r) : String(r[c.key] ?? "—")}
-                </td>
+                <th key={c.key}>{c.label}</th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {(rows || []).map((r) => (
+              <tr key={r.id}>
+                {cols.map((c) => (
+                  <td key={c.key}>
+                    {c.render ? c.render(r) : String(r[c.key] ?? "—")}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
+  );
+}
+
+function PageHead({ eyebrow, title, sub, count }) {
+  return (
+    <header className="ad-page-head">
+      <div className="ad-page-head-text">
+        <div className="ad-eyebrow">{eyebrow}</div>
+        <h1 className="ad-page-title">{title}</h1>
+        <p className="ad-page-sub">{sub}</p>
+      </div>
+      {count != null && (
+        <div className="ad-page-actions">
+          <div className="ad-stat" style={{ padding: "8px 14px", minWidth: 100 }}>
+            <div className="ad-stat-label">Total</div>
+            <div className="ad-stat-value">{count}</div>
+          </div>
+        </div>
+      )}
+    </header>
   );
 }
 
 export function AdminBookings() {
   const { rows, loading, remote } = useAdminCollection("bookings", { max: 200 });
   return (
-    <section>
-      <div className="eyebrow">CMS · bookings</div>
-      <h1 className="display-dt" style={{ fontSize: 38, marginTop: 8 }}>Bookings</h1>
-      <p className="text-sm muted-dt mt-2">Read-only. Every booking is stored here even when the devotee continues on WhatsApp.</p>
-      <div className="panel-dt p-4 mt-4" style={{ minWidth: 0, overflow: "hidden" }}>
-        {!remote && <p className="text-xs">Firebase not configured.</p>}
-        {loading && <p className="text-xs muted-dt">Loading…</p>}
-        {!loading && (!rows || rows.length === 0) && <p className="text-xs muted-dt">No bookings yet.</p>}
+    <div className="admin-root">
+      <PageHead
+        eyebrow="Read-only · Bookings"
+        title="Bookings"
+        sub="Every booking is stored here even when the devotee continues on WhatsApp."
+        count={rows?.length}
+      />
+      <div style={{ marginTop: 8 }}>
+        {!remote && <p className="ad-msg ad-msg-warn">Firebase not configured.</p>}
+        {loading && <p className="ad-stat-foot">Loading…</p>}
+        {!loading && (!rows || rows.length === 0) && <p className="ad-stat-foot">No bookings yet.</p>}
         {rows && rows.length > 0 && (
           <Table
             rows={rows}
@@ -91,21 +116,24 @@ export function AdminBookings() {
           />
         )}
       </div>
-    </section>
+    </div>
   );
 }
 
 export function AdminInquiries() {
   const { rows, loading, remote } = useAdminCollection("inquiries", { max: 200 });
   return (
-    <section>
-      <div className="eyebrow">CMS · inquiries</div>
-      <h1 className="display-dt" style={{ fontSize: 38, marginTop: 8 }}>Inquiries</h1>
-      <p className="text-sm muted-dt mt-2">Read-only. “Ask on WhatsApp” taps are logged here first, then WhatsApp opens.</p>
-      <div className="panel-dt p-4 mt-4" style={{ minWidth: 0, overflow: "hidden" }}>
-        {!remote && <p className="text-xs">Firebase not configured.</p>}
-        {loading && <p className="text-xs muted-dt">Loading…</p>}
-        {!loading && (!rows || rows.length === 0) && <p className="text-xs muted-dt">No inquiries yet.</p>}
+    <div className="admin-root">
+      <PageHead
+        eyebrow="Read-only · Inquiries"
+        title="Inquiries"
+        sub="“Ask on WhatsApp” taps are logged here first, then WhatsApp opens."
+        count={rows?.length}
+      />
+      <div style={{ marginTop: 8 }}>
+        {!remote && <p className="ad-msg ad-msg-warn">Firebase not configured.</p>}
+        {loading && <p className="ad-stat-foot">Loading…</p>}
+        {!loading && (!rows || rows.length === 0) && <p className="ad-stat-foot">No inquiries yet.</p>}
         {rows && rows.length > 0 && (
           <Table
             rows={rows}
@@ -120,7 +148,7 @@ export function AdminInquiries() {
           />
         )}
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -138,14 +166,17 @@ export function AdminUsers() {
     staffIds.has(r.id) ? "admin" : roleDisplay(r.role);
 
   return (
-    <section>
-      <div className="eyebrow">CMS · users</div>
-      <h1 className="display-dt" style={{ fontSize: 38, marginTop: 8 }}>Users</h1>
-      <p className="text-sm muted-dt mt-2">Read-only directory of accounts. Staff show as admin.</p>
-      <div className="panel-dt p-4 mt-4" style={{ minWidth: 0, overflow: "hidden" }}>
-        {!remote && <p className="text-xs">Firebase not configured.</p>}
-        {(loading || !users) && <p className="text-xs muted-dt">Loading…</p>}
-        {users && users.length === 0 && <p className="text-xs muted-dt">No users yet.</p>}
+    <div className="admin-root">
+      <PageHead
+        eyebrow="Read-only · Users"
+        title="Users"
+        sub="Read-only directory of accounts. Staff show as admin."
+        count={users?.length}
+      />
+      <div style={{ marginTop: 8 }}>
+        {!remote && <p className="ad-msg ad-msg-warn">Firebase not configured.</p>}
+        {(loading || !users) && <p className="ad-stat-foot">Loading…</p>}
+        {users && users.length === 0 && <p className="ad-stat-foot">No users yet.</p>}
         {users && users.length > 0 && (
           <Table
             rows={users}
@@ -160,6 +191,6 @@ export function AdminUsers() {
           />
         )}
       </div>
-    </section>
+    </div>
   );
 }

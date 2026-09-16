@@ -1,42 +1,38 @@
-// Shared admin form primitives — same look as the site (panel-dt / btn-*).
+// Shared admin form primitives. Uses ad-* classnames from admin.css v2.
 export function Field({ label, hint, children }) {
   return (
-    <label style={{ display: "grid", gap: 6 }}>
-      <span className="text-xs font-semibold">{label}</span>
+    <label className="ad-field">
+      <span className="ad-field-label">{label}</span>
       {children}
-      {hint && <span className="text-[11px] muted-dt">{hint}</span>}
+      {hint && <span className="ad-field-hint">{hint}</span>}
     </label>
   );
 }
 
-const inputCls =
-  "h-11 rounded-xl border border-dt bg-transparent px-3 text-sm outline-none w-full";
-
 export function TextInput(props) {
-  return <input {...props} className={`${inputCls} ${props.className || ""}`} />;
+  const { className = "", ...rest } = props;
+  return <input {...rest} className={`ad-input ${className}`} />;
 }
 
 export function NumberInput(props) {
-  return <input type="number" {...props} className={`${inputCls} ${props.className || ""}`} />;
+  const { className = "", ...rest } = props;
+  return <input type="number" {...rest} className={`ad-input ${className}`} />;
 }
 
 export function DateTimeInput(props) {
-  return <input type="datetime-local" {...props} className={`${inputCls} ${props.className || ""}`} />;
+  const { className = "", ...rest } = props;
+  return <input type="datetime-local" {...rest} className={`ad-input ${className}`} />;
 }
 
 export function TextArea({ rows = 3, ...props }) {
-  return (
-    <textarea
-      rows={rows}
-      {...props}
-      className={`rounded-xl border border-dt bg-transparent px-3 py-2 text-sm outline-none w-full ${props.className || ""}`}
-    />
-  );
+  const { className = "", ...rest } = props;
+  return <textarea rows={rows} {...rest} className={`ad-textarea ${className}`} />;
 }
 
 export function Select({ children, ...props }) {
+  const { className = "", ...rest } = props;
   return (
-    <select {...props} className={`${inputCls} ${props.className || ""}`}>
+    <select {...rest} className={`ad-select ${className}`}>
       {children}
     </select>
   );
@@ -44,37 +40,34 @@ export function Select({ children, ...props }) {
 
 export function Toggle({ label, desc, value, onChange }) {
   return (
-    <label style={{ display: "flex", gap: 12, alignItems: "flex-start", cursor: "pointer" }}>
+    <label className="ad-toggle">
       <input
         type="checkbox"
+        className="ad-toggle-input"
         checked={Boolean(value)}
         onChange={(e) => onChange(e.target.checked)}
-        className="mt-1"
-        style={{ width: 18, height: 18 }}
       />
+      <span className="ad-toggle-switch" aria-hidden="true" />
       <span>
-        <span className="block text-sm font-semibold">{label}</span>
-        {desc && <span className="block text-xs muted-dt mt-1">{desc}</span>}
+        <span className="ad-toggle-label">{label}</span>
+        {desc && <span className="ad-toggle-desc">{desc}</span>}
       </span>
     </label>
   );
 }
 
 export function StatusBadge({ status }) {
-  const color =
-    status === "published" ? "#1e7e34" : status === "deleted" ? "#b3261e" : "#8a6d1b";
+  const cls = status === "published" ? "published" : status === "deleted" ? "deleted" : "draft";
   return (
-    <span
-      className="text-[11px] font-semibold"
-      style={{ color, border: `1px solid ${color}44`, borderRadius: 999, padding: "2px 10px" }}
-    >
+    <span className={`ad-badge ${cls}`}>
+      <span className="ad-badge-dot" aria-hidden="true" />
       {status || "—"}
     </span>
   );
 }
 
 export function FormRow({ children }) {
-  return <div style={{ display: "grid", gap: 14, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>{children}</div>;
+  return <div className="ad-form-row">{children}</div>;
 }
 
 // Firestore Timestamp | ISO string | Date | datetime-local string → datetime-local value.

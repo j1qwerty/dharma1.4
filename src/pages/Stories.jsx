@@ -130,7 +130,7 @@ export default function Stories() {
                           className="flex items-center gap-4 border-t border-dt py-4"
                         >
                           <div className="h-14 w-16 overflow-hidden rounded-xl">
-                            <img src={s.image} className="h-full w-full object-cover" alt="" />
+                            <img src={s.image} referrerPolicy="no-referrer" className="h-full w-full object-cover" alt="" />
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="text-[9px] uppercase tracking-[.16em] text-gold-600">

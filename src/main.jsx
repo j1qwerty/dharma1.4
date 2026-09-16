@@ -17,6 +17,7 @@ import About from "./pages/About";
 import Acharyas from "./pages/Acharyas";
 import NotFound from "./pages/NotFound";
 import "./index.css";
+import "./admin/admin.css";
 
 // Code-split the heavier, below-the-fold routes so the home route paints fast.
 const BookingDate = lazy(() => import("./pages/BookingDate"));

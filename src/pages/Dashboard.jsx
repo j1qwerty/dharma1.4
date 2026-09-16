@@ -169,6 +169,7 @@ export default function Dashboard() {
                     <img
                       src={p.image}
                       alt=""
+                      referrerPolicy="no-referrer"
                       className="h-16 w-16 rounded-xl object-cover flex-none"
                     />
                     <div className="min-w-0 flex-1">
