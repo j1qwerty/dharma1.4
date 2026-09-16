@@ -387,6 +387,18 @@ select {
   color: #fffdf4;
   text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
 }
+/* Hindi hero: Devanagari glyphs need roomier leading, a wider measure for
+   two lines, and extra clearance above the heading. */
+.hero-redesign-dt.lang-hi .hero-eyebrow-dt {
+  margin-bottom: 26px;
+}
+.hero-redesign-dt.lang-hi .hero-copy-inner-dt {
+  max-width: 860px;
+}
+.hero-redesign-dt.lang-hi .hero-title-dt {
+  margin-top: 4px;
+  line-height: 1.3;
+}
 .hero-sub-dt {
   margin: 20px 0 0;
   max-width: 520px;
@@ -2835,6 +2847,112 @@ html.dark .ink-dt .decor-tone-yellow {
 }
 :root.dark .top-icon-dt:hover {
   color: #f6c95d;
+}
+
+/* --- Expanding search bar: icon button grows into a typing bar in place --- */
+.search-expand-dt {
+  display: none;
+}
+@media (min-width: 640px) {
+  .search-expand-dt {
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    width: 36px;
+    border-radius: 999px;
+    border: 1px solid var(--line, rgba(10, 9, 6, 0.12));
+    overflow: hidden;
+    transition:
+      width 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s,
+      background 0.25s,
+      color 0.25s;
+  }
+  .search-expand-dt:not(.is-open):hover {
+    border-color: rgba(246, 201, 93, 0.65);
+    color: var(--gold-600, #b88a2a);
+    background: color-mix(in srgb, var(--gold) 8%, transparent);
+  }
+  .search-expand-dt.is-open {
+    width: min(320px, 32vw);
+    background: color-mix(in srgb, var(--gold) 6%, transparent);
+  }
+}
+/* Small screens: the commented-out popup held the mobile field, so the
+   open bar overlays below the header instead of hiding. */
+@media (max-width: 639px) {
+  .search-expand-dt.is-open {
+    display: inline-flex;
+    align-items: center;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: min(92vw, 340px);
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--line, rgba(10, 9, 6, 0.12));
+    background: var(--surface);
+    box-shadow: 0 24px 60px rgba(53, 44, 24, 0.18);
+    z-index: 60;
+    overflow: hidden;
+  }
+}
+.search-lens-dt {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  color: inherit;
+  cursor: pointer;
+}
+/* Icons never swallow the click — the button always receives it. */
+.search-lens-dt svg {
+  pointer-events: none;
+}
+.search-expand-dt.is-open .search-lens-dt:hover {
+  color: var(--gold-600, #b88a2a);
+}
+.search-expand-input-dt {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  outline: none;
+  border: 0;
+  box-shadow: none;
+  font-size: 12.5px;
+  padding-right: 12px;
+  margin-right: 4px;
+  color: inherit;
+}
+/* No inner ring on the typing field — the outer pill carries the border. */
+.search-expand-input-dt:focus,
+.search-expand-input-dt:focus-visible {
+  outline: none;
+  border: 0;
+  box-shadow: none;
+}
+.search-expand-input-dt::placeholder {
+  color: var(--muted);
+  opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.search-clear-dt {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  border-radius: 999px;
+  color: var(--muted);
+}
+.search-clear-dt:hover {
+  background: rgba(128, 128, 128, 0.16);
+  color: inherit;
 }
 
 /* --- Header dropdowns: wishlist + search --- */

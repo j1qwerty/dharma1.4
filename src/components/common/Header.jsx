@@ -27,6 +27,7 @@ export default function Header() {
   const [query, setQuery] = useState("");
   const closeTimer = useRef(null);
   const searchInputRef = useRef(null);
+  const searchInputMobileRef = useRef(null);
   const navigate = useNavigate();
   const { dark, toggle } = useContext(ThemeContext) ?? { dark: false, toggle: () => {} };
   const { lang, toggle: toggleLang, t } = useLanguage();
@@ -72,12 +73,14 @@ export default function Header() {
   }, [pujasOpen]);
 
   // Close wishlist + search dropdowns on Escape or click-outside.
+  // Closing the search also clears the query so the bar fully contracts.
   useEffect(() => {
     if (!favOpen && !searchOpen) return;
     function onKey(e) {
       if (e.key === "Escape") {
         setFavOpen(false);
         setSearchOpen(false);
+        setQuery("");
       }
     }
     function onDocClick(e) {
@@ -85,6 +88,7 @@ export default function Header() {
       if (e.target.closest(".search-wrap-dt")) return;
       setFavOpen(false);
       setSearchOpen(false);
+      setQuery("");
     }
     document.addEventListener("keydown", onKey);
     document.addEventListener("click", onDocClick);
@@ -94,10 +98,16 @@ export default function Header() {
     };
   }, [favOpen, searchOpen]);
 
-  // Focus the search field whenever the panel opens.
+  // Focus the visible search field whenever the panel opens so typing
+  // starts immediately (desktop bar input, mobile panel input).
   useEffect(() => {
     if (searchOpen) {
-      const id = requestAnimationFrame(() => searchInputRef.current?.focus());
+      const id = requestAnimationFrame(() => {
+        const desktop = searchInputRef.current;
+        const target =
+          desktop && desktop.offsetParent !== null ? desktop : searchInputMobileRef.current;
+        target?.focus();
+      });
       return () => cancelAnimationFrame(id);
     }
   }, [searchOpen]);
@@ -240,22 +250,27 @@ export default function Header() {
               <PaintBrush size={16} weight="duotone" />
             </Link> */}
             <div className="search-wrap-dt">
-              <button
-                onClick={() => {
-                  setSearchOpen((v) => !v);
-                  setFavOpen(false);
-                }}
-                className="hidden sm:grid place-items-center h-9 w-9 rounded-full border border-dt top-icon-dt"
-                aria-label={t("nav.search")}
-                title={t("nav.search")}
-                aria-expanded={searchOpen}
-              >
-                {searchOpen ? <X size={16} /> : <MagnifyingGlass size={16} />}
-              </button>
-              {searchOpen && (
-                <div className="search-panel-dt" role="dialog" aria-label={t("nav.search")}>
-                  <div className="search-field-dt">
-                    <MagnifyingGlass size={16} className="muted-dt flex-none" />
+              {/* Expanding search bar: collapsed icon button grows into a
+                  typing bar in place. Placeholder carries the hint text. */}
+              <div className={`search-expand-dt${searchOpen ? " is-open" : ""}`}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (searchOpen) closeSearch();
+                    else {
+                      setSearchOpen(true);
+                      setFavOpen(false);
+                    }
+                  }}
+                  className="search-lens-dt"
+                  aria-label={t("nav.search")}
+                  title={t("nav.search")}
+                  aria-expanded={searchOpen}
+                >
+                  {searchOpen ? <X size={16} /> : <MagnifyingGlass size={16} />}
+                </button>
+                {searchOpen && (
+                  <>
                     <input
                       ref={searchInputRef}
                       value={query}
@@ -269,7 +284,43 @@ export default function Header() {
                       placeholder={
                         lang === "hi"
                           ? "पूजा, कथा या आचार्य खोजें"
-                          : "Search pujas, stories, acharyas"
+                          : "Pujas, stories and acharyas — search them all here."
+                      }
+                      aria-label={t("nav.search")}
+                      className="search-expand-input-dt"
+                    />
+                    {query && (
+                      <button
+                        type="button"
+                        onClick={() => setQuery("")}
+                        aria-label="Clear search"
+                        className="search-clear-dt"
+                      >
+                        <X size={13} />
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+              {/* Search results popup — temporarily disabled; kept for later use.
+              {searchOpen && (
+                <div className="search-panel-dt" role="dialog" aria-label={t("nav.search")}>
+                  <div className="search-field-dt sm:hidden">
+                    <MagnifyingGlass size={16} className="muted-dt flex-none" />
+                    <input
+                      ref={searchInputMobileRef}
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && query.trim()) {
+                          navigate(`/pujas?search=${encodeURIComponent(query.trim())}`);
+                          closeSearch();
+                        }
+                      }}
+                      placeholder={
+                        lang === "hi"
+                          ? "पूजा, कथा या आचार्य खोजें"
+                          : "Pujas, stories and acharyas — search them all here."
                       }
                       aria-label={t("nav.search")}
                     />
@@ -388,6 +439,7 @@ export default function Header() {
                   </div>
                 </div>
               )}
+              */}
             </div>
             <button
               onClick={toggleTheme}

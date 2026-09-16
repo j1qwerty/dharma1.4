@@ -50,6 +50,10 @@ const TRUST_ITEMS = ({ t }) => [
 ];
 
 function splitTitle(title) {
+  // Split after the first sentence terminator — Latin period or Hindi danda —
+  // keeping the original punctuation so both languages render as two lines.
+  const m = title.match(/^(.+?[।.])(?:\s+)(.+)$/s);
+  if (m) return [m[1].trim(), m[2].trim()];
   const parts = title.split(/\.\s*/).filter(Boolean);
   if (parts.length >= 2) {
     return [`${parts[0]}.`, `${parts.slice(1).join(". ")}${title.trim().endsWith(".") ? "" : ""}`];
@@ -271,7 +275,7 @@ export default function Home() {
   return (
     <>
       <section
-        className="hero-redesign-dt"
+        className={`hero-redesign-dt${lang === "hi" ? " lang-hi" : ""}`}
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         onKeyDown={onKey}
