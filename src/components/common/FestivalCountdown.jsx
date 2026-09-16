@@ -11,11 +11,15 @@ import { festivalDate } from "../../lib/dates";
  * Dates come from data.js festivals via lib/dates (single source).
  * ------------------------------------------------------------------ */
 
-function getNextFestival(now) {
+export function getUpcomingFestivals(now, count = 2) {
   const candidates = festivals
     .map((f) => ({ name: f.name, note: f.note, date: festivalDate(f, now) }))
     .filter((f) => f.date);
-  return candidates.sort((a, b) => a.date.getTime() - b.date.getTime())[0] || null;
+  return candidates.sort((a, b) => a.date.getTime() - b.date.getTime()).slice(0, count);
+}
+
+function getNextFestival(now) {
+  return getUpcomingFestivals(now, 1)[0] || null;
 }
 
 function splitDuration(ms) {
@@ -32,7 +36,9 @@ function pad(n) {
   return String(n).padStart(2, "0");
 }
 
-export default function FestivalCountdown() {
+/* variant: "gold" (default) or "crimson" (alt color/style, same animation).
+ * Pass `festival` to pin a specific upcoming festival; otherwise the next one. */
+export default function FestivalCountdown({ festival = null, variant = "gold", eyebrow = null }) {
   const reduce = useReducedMotion();
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
@@ -41,7 +47,7 @@ export default function FestivalCountdown() {
     return () => clearInterval(t);
   }, [reduce]);
 
-  const next = getNextFestival(new Date(now));
+  const next = festival || getNextFestival(new Date(now));
   if (!next) return null;
   const remaining = splitDuration(next.date.getTime() - now);
   const units = [
@@ -52,7 +58,7 @@ export default function FestivalCountdown() {
   ];
 
   return (
-    <div className="festival-countdown-dt fc-v2-dt">
+    <div className={`festival-countdown-dt fc-v2-dt${variant === "crimson" ? " fc-alt-dt" : ""}`}>
       <div className="fc-frame-dt" aria-hidden="true">
         <span className="fc-frame-line-dt fc-fl-l-dt" />
         <span className="fc-frame-line-dt fc-fl-r-dt" />
@@ -61,7 +67,7 @@ export default function FestivalCountdown() {
 
       <div className="fc-head-dt">
         <span className="fc-eyebrow-dt">
-          <Sparkle size={13} weight="fill" /> Next sacred window
+          <Sparkle size={13} weight="fill" /> {eyebrow || "Next sacred window"}
         </span>
         <span className="fc-date-dt">
           <CalendarBlank size={13} />

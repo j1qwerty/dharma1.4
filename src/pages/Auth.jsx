@@ -6,6 +6,7 @@ import Field from "../components/common/Field";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import { SectionDecor } from "../components/common/decor";
 import { useAuth } from "../lib/auth";
+import PhoneLogin from "../components/common/PhoneLogin";
 
 const art =
   "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1400&q=86";
@@ -90,6 +91,9 @@ export default function Auth({ mode = "login" }) {
                   >
                     Continue with Google
                   </button>
+                  <div className="mt-4 border-t border-dt pt-4">
+                    <PhoneLogin compact onDone={() => nav("/dashboard")} />
+                  </div>
                 </>
               )}
               <div className="mt-8 text-center text-xs muted-dt">

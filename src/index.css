@@ -2059,6 +2059,46 @@ html.dark .ink-dt .decor-tone-yellow {
   font-size: 30px;
   line-height: 1;
 }
+/* Alt countdown card: deep sindoor/crimson style, same structure + animation */
+.fc-alt-dt {
+  background: linear-gradient(160deg, #2b0e0e 0%, #471414 55%, #5c1a1a 100%);
+  border-color: color-mix(in srgb, #e0574a 45%, transparent);
+}
+.fc-alt-dt::before {
+  background: radial-gradient(
+    circle at 15% 10%,
+    color-mix(in srgb, #ffb199 26%, transparent),
+    transparent 55%
+  );
+}
+.fc-alt-dt .fc-eyebrow-dt {
+  color: #ffb199;
+}
+.fc-alt-dt .fc-date-dt {
+  color: rgba(255, 235, 225, 0.65);
+}
+.fc-alt-dt .fc-name-dt {
+  color: #fff7f0;
+}
+.fc-alt-dt .fc-note-dt {
+  color: rgba(255, 235, 225, 0.6);
+}
+.fc-alt-dt .fc-value-dt {
+  color: #ffd9a8;
+}
+.fc-alt-dt .fc-label-dt {
+  color: rgba(255, 235, 225, 0.55);
+}
+.fc-alt-dt .fc-frame-line-dt {
+  background: color-mix(in srgb, #ff8a7a 55%, transparent);
+}
+.fc-alt-dt .fc-frame-lotus-dt {
+  color: #ffb199;
+  background: #3d1212;
+}
+.fc-alt-dt .fc-sep-dt {
+  color: color-mix(in srgb, #ff8a7a 70%, transparent);
+}
 @media (max-width: 767px) {
   .fc-name-dt {
     font-size: 32px;

@@ -1,23 +1,16 @@
 import { Link } from "react-router-dom";
-import { useCollection, useDoc } from "../../lib/cms";
-import { getActiveFestival, getPreviewNow } from "../../lib/schedule";
-import { festivals as localFestivals } from "../../lib/data";
+import { useDoc } from "../../lib/cms";
 
-/* AnnouncementBar — missing section, now CMS-driven.
- * Source: live festival (visibility window) or site_settings/global.announcement.
- * Renders nothing when Firebase is unconfigured and no local fallback applies,
- * so existing Header notice-bar stays untouched. */
+/* AnnouncementBar — CMS-driven custom announcements only.
+ * Festival promos were removed from the top bar; they now live in the
+ * home page countdown section. Renders nothing unless a custom
+ * site_settings/global.announcement is set, so the bar stays hidden. */
 export default function AnnouncementBar() {
-  const { data: remoteFestivals } = useCollection("festivals");
   const { data: settings } = useDoc("site_settings", "global");
-  const { now } = getPreviewNow();
 
-  const list = remoteFestivals?.length ? remoteFestivals : localFestivals;
-  const active = getActiveFestival(list, now);
   const custom = settings?.announcement;
-
-  const text = custom?.text || (active ? `${active.name} · ${active.date || ""}` : null);
-  const link = custom?.link || (active ? "/pujas" : null);
+  const text = custom?.text || null;
+  const link = custom?.link || null;
   if (!text) return null;
 
   return (

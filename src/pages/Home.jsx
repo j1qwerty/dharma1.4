@@ -35,7 +35,7 @@ import {
   Yantra,
   SectionDecor,
 } from "../components/common/decor";
-import FestivalCountdown from "../components/common/FestivalCountdown";
+import FestivalCountdown, { getUpcomingFestivals } from "../components/common/FestivalCountdown";
 import AcharyaCard from "../components/common/AcharyaCard";
 import { pujas, festivals, intentions, stories, social, acharyas } from "../lib/data";
 import { upcomingFestivals } from "../lib/dates";
@@ -260,7 +260,20 @@ export default function Home() {
               </div>
             </Reveal>
             <Reveal delay={0.1}>
-              <FestivalCountdown />
+              <div className="grid gap-5">
+                {getUpcomingFestivals(new Date(), 2).map((f, i) =>
+                  i === 0 ? (
+                    <FestivalCountdown key={f.name} festival={f} />
+                  ) : (
+                    <FestivalCountdown
+                      key={f.name}
+                      festival={f}
+                      variant="crimson"
+                      eyebrow="Also approaching"
+                    />
+                  )
+                )}
+              </div>
             </Reveal>
           </div>
         </div>
