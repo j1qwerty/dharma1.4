@@ -164,8 +164,8 @@ export default function Header() {
     <>
       <div id="header-sentinel-dt" aria-hidden="true" style={{ height: 1 }} />
       <header className={`header-dt ${scrolled ? "header-scrolled-dt" : ""}`}>
-        <div className="container-dt flex h-[70px] items-center justify-between gap-5">
-          <Link to="/" aria-label="DharmaTribe home">
+        <div className="container-dt flex h-[64px] sm:h-[70px] items-center justify-between gap-2 sm:gap-5">
+          <Link to="/" aria-label="DharmaTribe home" className="min-w-0 shrink">
             <Brand />
           </Link>
           <nav className="hidden lg:flex items-center gap-8" aria-label="Primary">
@@ -241,7 +241,7 @@ export default function Header() {
               )
             )}
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-none items-center gap-1 sm:gap-2">
             {/* <Link
               to="/decor"
               className="hidden sm:grid place-items-center h-9 w-9 rounded-full border border-dt hover:border-gold-400 hover:text-gold-600 transition"
@@ -444,7 +444,7 @@ export default function Header() {
             </div>
             <button
               onClick={toggleTheme}
-              className="grid place-items-center h-9 w-9 rounded-full border border-dt top-icon-dt"
+              className="grid place-items-center h-8 w-8 sm:h-9 sm:w-9 rounded-full border border-dt top-icon-dt"
               aria-label={t("nav.toggleTheme")}
               title={t("nav.toggleTheme")}
             >
@@ -539,7 +539,7 @@ export default function Header() {
               {t("nav.bookPuja")}
             </Link>
             <button
-              className="lg:hidden grid place-items-center h-9 w-9 rounded-full border border-dt top-icon-dt"
+              className="lg:hidden grid place-items-center h-8 w-8 sm:h-9 sm:w-9 rounded-full border border-dt top-icon-dt"
               onClick={() => setOpen((v) => !v)}
               aria-label="Menu"
             >

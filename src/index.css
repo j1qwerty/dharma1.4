@@ -3598,3 +3598,41 @@ input[type="radio"]:focus-visible {
 .review-block-dt {
   border-left: 3px solid color-mix(in srgb, var(--gold) 65%, transparent);
 }
+
+/* --- Mobile overflow guard: no swipeable gap on the right --- */
+html,
+body {
+  overflow-x: clip;
+}
+.header-dt {
+  overflow-x: clip;
+}
+
+/* --- Compact topbar on small phones: smaller icons, tighter gaps --- */
+.brand-dt {
+  white-space: nowrap;
+}
+@media (max-width: 639px) {
+  .brand-dt {
+    gap: 8px;
+  }
+  .brand-mark-dt {
+    width: 30px;
+    height: 30px;
+  }
+  .brand-word-dt {
+    font-size: 18px;
+  }
+  .lang-toggle-dt {
+    height: 32px;
+    width: 58px;
+    min-width: 58px;
+    padding: 0 8px;
+    gap: 4px;
+    font-size: 10px;
+  }
+  .fav-nav-dt {
+    width: 32px;
+    height: 32px;
+  }
+}
