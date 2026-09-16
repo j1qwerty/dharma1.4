@@ -17,7 +17,7 @@ export default function PujaCard({ p, featured = false, index = 0 }) {
         <div className={`media-dt ${featured ? "aspect-[16/10]" : "aspect-[4/3]"}`}>
           <ParallaxImage src={p.image} alt={title} className="h-full w-full" strength={12} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-          <div className="absolute left-4 top-4 rounded-full border border-white/20 bg-black/25 px-2.5 py-1.5 text-[9px] font-bold text-white backdrop-blur">
+          <div className="puja-tag-photo-dt absolute left-4 top-4 rounded-full border border-white/20 bg-black/25 px-2.5 py-1.5 text-[9px] font-bold text-white backdrop-blur">
             {p.tag}
           </div>
           <div className="absolute right-3 top-3">
@@ -38,6 +38,7 @@ export default function PujaCard({ p, featured = false, index = 0 }) {
           </div>
         </div>
         <div className="p-4">
+          <span className="puja-tag-inline-dt">{p.tag}</span>
           <p className="text-xs leading-6 text-muted-dt">{desc}</p>
           <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[10px] text-muted-dt">
             <span className="inline-flex items-center gap-1">

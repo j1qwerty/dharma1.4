@@ -494,7 +494,7 @@ export default function Home() {
             copy={t("home.calendarCopy")}
             action={{ label: t("home.exploreCatalogue"), to: "/pujas" }}
           />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {festivals.map((f, i) => {
               const fName = lang === "hi" && f.nameHi ? f.nameHi : f.name;
               const fNote = lang === "hi" && f.noteHi ? f.noteHi : f.note;
@@ -502,7 +502,7 @@ export default function Home() {
                 <Reveal key={f.name} delay={i * 0.05}>
                   <TiltCard max={7}>
                     <Link
-                      className="relative block h-[320px] overflow-hidden rounded-[20px] bg-black"
+                      className="relative block h-[220px] sm:h-[320px] overflow-hidden rounded-[20px] bg-black"
                       to="/pujas"
                     >
                       <ParallaxImage
@@ -511,11 +511,11 @@ export default function Home() {
                         strength={16}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/5 to-transparent" />
-                      <div className="absolute bottom-5 left-5 right-5">
+                      <div className="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5">
                         <div className="text-[10px] font-bold uppercase tracking-[.16em] text-gold-300">
                           {f.date}
                         </div>
-                        <h3 className="title-soft mt-1 text-3xl text-white">{fName}</h3>
+                        <h3 className="title-soft mt-1 text-xl sm:text-3xl text-white">{fName}</h3>
                         <p className="mt-1 text-xs text-white/55">{fNote}</p>
                       </div>
                     </Link>
@@ -712,16 +712,16 @@ export default function Home() {
         <LotusLine className="decor-dt decor-tr hide-mobile soft-tone" />
         <div className="container-dt">
           <SectionHeading title={t("home.widerFeed")} copy={t("home.widerFeedCopy")} soft />
-          <div className="grid gap-4 md:grid-cols-12">
+          <div className="grid grid-cols-2 gap-3 md:gap-4 md:grid-cols-12">
             {social.map((x, i) => (
               <Reveal
                 key={x.label}
                 delay={i * 0.05}
-                className={i === 0 ? "md:col-span-7" : "md:col-span-5"}
+                className={i === 0 ? "col-span-2 md:col-span-7" : "md:col-span-5"}
               >
                 <a
                   href="#"
-                  className="relative block min-h-[290px] overflow-hidden rounded-[20px] bg-black"
+                  className="relative block min-h-[210px] md:min-h-[290px] overflow-hidden rounded-[20px] bg-black"
                 >
                   <ParallaxImage
                     src={x.image}
@@ -729,11 +729,11 @@ export default function Home() {
                     strength={12}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-                  <div className="absolute bottom-5 left-5 right-5 text-white">
+                  <div className="absolute bottom-4 left-4 right-4 md:bottom-5 md:left-5 md:right-5 text-white">
                     <div className="text-[10px] uppercase tracking-[.17em] text-gold-300">
                       {x.label} · {x.type}
                     </div>
-                    <div className="mt-2 text-3xl display-dt">{x.copy}</div>
+                    <div className="mt-2 text-2xl md:text-3xl display-dt">{x.copy}</div>
                     <div className="mt-3 inline-flex items-center gap-2 text-[11px] font-bold text-gold-300">
                       {t("home.openChannel")} <ArrowUpRight size={13} />
                     </div>
@@ -790,7 +790,7 @@ export default function Home() {
         <LotusLine className="decor-dt decor-tl hide-mobile soft-tone" />
         <div className="container-dt">
           <SectionHeading title={t("home.templeNetwork")} copy={t("home.templeNetworkCopy")} soft />
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid grid-cols-2 gap-4 md:gap-5 md:grid-cols-3">
             {[
               [
                 lang === "hi" ? "वाराणसी" : "Varanasi",
@@ -817,13 +817,13 @@ export default function Home() {
                   : "A future temple detail route with seva and story content.",
               ],
             ].map(([place, name, img, note], i) => (
-              <Reveal key={name} delay={i * 0.05}>
+              <Reveal key={name} delay={i * 0.05} className={i === 0 ? "col-span-2 md:col-span-1" : ""}>
                 <TiltCard max={6}>
                   <div className="temple-card-dt">
-                    <ParallaxImage src={img} className="h-72" strength={14} />
+                    <ParallaxImage src={img} className="h-44 md:h-72" strength={14} />
                     <div className="p-5 text-white">
                       <div className="text-[10px] text-gold-300">{place}</div>
-                      <h3 className="mt-2 text-3xl display-dt">{name}</h3>
+                      <h3 className="mt-2 text-2xl md:text-3xl display-dt">{name}</h3>
                       <p className="mt-2 text-xs text-white/50">{note}</p>
                     </div>
                   </div>

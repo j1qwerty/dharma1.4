@@ -676,6 +676,30 @@ html.dark .hero-trust-item-dt svg {
     padding: 12px;
   }
 }
+/* Mobile only: tag moves off the photo into the details block
+   (scoped to the home "dates booking" grid; desktop untouched). */
+.puja-tag-inline-dt {
+  display: none;
+}
+@media (max-width: 639px) {
+  .puja-grid-dt .puja-tag-photo-dt {
+    display: none;
+  }
+  .puja-grid-dt .puja-tag-inline-dt {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    margin-bottom: 8px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+  }
+}
 .section-head-copy-dt {
   max-width: 650px;
 }
