@@ -1,31 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Sparkle, CalendarBlank, FlowerLotus } from "@phosphor-icons/react";
+import { festivals } from "../../lib/data";
+import { festivalDate } from "../../lib/dates";
 
 /* ------------------------------------------------------------------ *
  * FestivalCountdown - a refined live countdown to the next festival.
  * Uses the handpicked display + timer fonts (Cormorant Garamond +
  * Marcellus) for a devotional, manuscript feel. Reduced-motion safe.
+ * Dates come from data.js festivals via lib/dates (single source).
  * ------------------------------------------------------------------ */
 
-// Festival dates (month is 0-indexed). Kept in sync with data.js festivals.
-const FESTIVAL_DATES = [
-  { name: "Ganesh Chaturthi", month: 8, day: 12, note: "Ten days of devotion" },
-  { name: "Navratri", month: 9, day: 11, note: "Nine nights of devotion" },
-  { name: "Diwali", month: 9, day: 20, note: "Light, Lakshmi, new beginnings" },
-  { name: "Mahashivratri", month: 1, day: 15, note: "Night of Shiva" },
-];
-
 function getNextFestival(now) {
-  const year = now.getFullYear();
-  const candidates = FESTIVAL_DATES.map((f) => {
-    let d = new Date(year, f.month, f.day, 0, 0, 0);
-    if (d.getTime() <= now.getTime()) {
-      d = new Date(year + 1, f.month, f.day, 0, 0, 0);
-    }
-    return { ...f, date: d };
-  });
-  return candidates.sort((a, b) => a.date.getTime() - b.date.getTime())[0];
+  const candidates = festivals
+    .map((f) => ({ name: f.name, note: f.note, date: festivalDate(f, now) }))
+    .filter((f) => f.date);
+  return candidates.sort((a, b) => a.date.getTime() - b.date.getTime())[0] || null;
 }
 
 function splitDuration(ms) {
@@ -52,6 +42,7 @@ export default function FestivalCountdown() {
   }, [reduce]);
 
   const next = getNextFestival(new Date(now));
+  if (!next) return null;
   const remaining = splitDuration(next.date.getTime() - now);
   const units = [
     { label: "Days", value: remaining.days },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -40,6 +40,7 @@ import {
 import FestivalCountdown from "../components/common/FestivalCountdown";
 import AcharyaCard from "../components/common/AcharyaCard";
 import { pujas, festivals, intentions, stories, social, acharyas } from "../lib/data";
+import { upcomingFestivals } from "../lib/dates";
 import { useLanguage } from "../components/common/LanguageToggle";
 
 const TRUST_ITEMS = ({ t }) => [
@@ -240,6 +241,8 @@ function AcharyasHomeSlider() {
 
 export default function Home() {
   const { t, lang } = useLanguage();
+  // Festivals soonest-first: order flips automatically as dates pass.
+  const orderedFestivals = useMemo(() => upcomingFestivals(festivals), []);
   const heroSlides = [
     {
       title: t("home.heroSlide1Title"),
@@ -468,7 +471,7 @@ export default function Home() {
           <div className="marquee-dt display-dt text-3xl text-white/40">
             {Array.from({ length: 2 }).map((_, k) => (
               <span key={k} className="flex items-center gap-16">
-                {festivals.map((f) => {
+                {orderedFestivals.map((f) => {
                   const fName = lang === "hi" && f.nameHi ? f.nameHi : f.name;
                   return (
                     <span key={f.name + k} className="flex items-center gap-16">
@@ -495,7 +498,7 @@ export default function Home() {
             action={{ label: t("home.exploreCatalogue"), to: "/pujas" }}
           />
           <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {festivals.map((f, i) => {
+            {orderedFestivals.map((f, i) => {
               const fName = lang === "hi" && f.nameHi ? f.nameHi : f.name;
               const fNote = lang === "hi" && f.noteHi ? f.noteHi : f.note;
               return (

@@ -1,18 +1,27 @@
-import React from "react";
+import React, { useMemo } from "react";
+import { useParams } from "react-router-dom";
 import BookingFrame from "../components/common/BookingFrame";
 import SafeImage from "../components/common/SafeImage";
 import { CalendarBlank, Clock, CheckCircle } from "../components/common/Icons";
 import { useBooking } from "../lib/booking";
 import { pujas } from "../lib/data";
+import {
+  pujaEventDate,
+  bookingDays,
+  formatDayShort,
+  formatDayValue,
+  formatMonthYear,
+} from "../lib/dates";
 import { useLanguage } from "../components/common/LanguageToggle";
 export default function BookingDate() {
   const { booking, update } = useBooking();
+  const { id } = useParams();
   const { t, lang } = useLanguage();
-  const p = pujas.find((x) => x.id === booking.pujaId) || pujas[0];
-  const dates =
-    lang === "hi"
-      ? ["09 सितं", "10 सितं", "11 सितं", "12 सितं"]
-      : ["Sep 09", "Sep 10", "Sep 11", "Sep 12"];
+  const p = pujas.find((x) => x.id === (id || booking.pujaId)) || pujas[0];
+  // Event day + the following 7 days, derived from the puja's own date
+  // (e.g. event 15/9/2026 -> 15/9, 16/9, 17/9, 18/9 ...). Falls back to
+  // today for season-long labels like "Pitru Paksha".
+  const days = useMemo(() => bookingDays(pujaEventDate(p)), [p.id, p.date]);
   const slots = [
     "06:00 AM - 07:00 AM",
     "07:30 AM - 08:30 AM",
@@ -20,7 +29,7 @@ export default function BookingDate() {
     "11:00 AM - 12:00 PM",
     "05:30 PM - 06:30 PM",
   ];
-  // Match a stored English date like "Sep 09, 2026" or "Sep 09" so the highlight works either way.
+  // Match a stored English value like "Sep 15, 2026" so the highlight works either way.
   const bookedDay = (booking.date || "").split(",")[0].trim();
   return (
     <BookingFrame active="date">
@@ -35,22 +44,25 @@ export default function BookingDate() {
       </div>
       <div className="mt-7 grid gap-7 lg:grid-cols-2">
         <div>
-          <label className="text-xs font-bold text-muted">{t("bd.september")}</label>
+          <label className="text-xs font-bold text-muted">
+            {formatMonthYear(days[0], lang)}
+          </label>
           <div className="mt-3 grid grid-cols-2 gap-2">
-            {dates.map((x, i) => {
-              const enDate = `Sep 0${9 + i}`;
-              const active = bookedDay === enDate || bookedDay === x;
+            {days.map((d, i) => {
+              const label = formatDayShort(d, lang);
+              const value = formatDayValue(d);
+              const active = bookedDay === value.split(",")[0].trim() || bookedDay === label;
               return (
                 <button
-                  key={x}
-                  onClick={() => update({ date: `${enDate}, 2026` })}
+                  key={value}
+                  onClick={() => update({ date: value })}
                   className={`choice ${active ? "active" : ""}`}
                 >
                   <div className="flex items-center justify-between text-xs text-muted">
                     <CalendarBlank size={15} />
                     {i === 0 ? t("bd.closest") : ""}
                   </div>
-                  <div className="mt-3 text-lg font-semibold">{x}</div>
+                  <div className="mt-3 text-lg font-semibold">{label}</div>
                 </button>
               );
             })}

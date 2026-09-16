@@ -9,6 +9,7 @@ import {
   House,
 } from "@phosphor-icons/react";
 import { pujas, festivals, intentions, deities, deityHi } from "../lib/data";
+import { upcomingFestivals } from "../lib/dates";
 import PujaCard from "../components/common/PujaCard";
 import SectionHeading from "../components/common/SectionHeading";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
@@ -85,6 +86,9 @@ export default function Catalog() {
     const prices = result.map((p) => p.price);
     return { min: Math.min(...prices), max: Math.max(...prices) };
   }, [result]);
+
+  // Seasonal shelves soonest-first: order flips automatically as dates pass.
+  const orderedFestivals = useMemo(() => upcomingFestivals(festivals), []);
 
   const SORTS = [
     { key: "popular", label: t("catalog.sortPopular") },
@@ -281,7 +285,7 @@ export default function Catalog() {
             <Rangoli className="decor-dt decor-bl hide-mobile soft-tone" />
             <SectionHeading title={t("catalog.seasonalShelves")} copy={t("catalog.seasonalCopy")} />
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {festivals.map((f, i) => {
+              {orderedFestivals.map((f, i) => {
                 const name = lang === "hi" && f.nameHi ? f.nameHi : f.name;
                 const note = lang === "hi" && f.noteHi ? f.noteHi : f.note;
                 return (
