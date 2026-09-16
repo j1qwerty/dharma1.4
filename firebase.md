@@ -29,9 +29,10 @@ Goal: Firebase Auth (Google) + Firestore + Storage for the CMS. Hosting stays on
 8. **Admin access (all three):**
    - `admin@dharmatribe.com` (email/password) — run after `.env.local` is filled (password via env, never committed):
      ```powershell
-     $env:ADMIN_EMAIL="admin@dharmatribe.com"; $env:ADMIN_PASSWORD="12345678"
+     $env:ADMIN_EMAIL="admin@dharmatribe.com"; $env:ADMIN_PASSWORD="<strong-password>"
      node scripts/createEmailAdmin.mjs
      ```
+     (Password via env only, never committed. Rotate it periodically in Console → Authentication → Users.)
      Change this weak starter password later in Console → Authentication → Users.
    - `du18ck@gmail.com` (Google) — log in once at `/admin/login` (shows “not an admin” first time), then copy its UID from **Authentication → Users** and create Firestore doc `admins/{UID}`:
      ```text

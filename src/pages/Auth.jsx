@@ -7,6 +7,7 @@ import { Reveal, ParallaxImage } from "../components/common/Motion";
 import { SectionDecor } from "../components/common/decor";
 import { useAuth } from "../lib/auth";
 import PhoneLogin from "../components/common/PhoneLogin";
+import GoogleIcon from "../components/common/GoogleIcon";
 
 const art =
   "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1400&q=86";
@@ -89,6 +90,7 @@ export default function Auth({ mode = "login" }) {
                     onClick={() => signInWithGoogle().then(() => nav("/dashboard")).catch(() => {})}
                     className="btn-ghost-dt mt-2 w-full"
                   >
+                    <GoogleIcon />
                     Continue with Google
                   </button>
                   <div className="mt-4 border-t border-dt pt-4">
