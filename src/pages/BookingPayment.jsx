@@ -5,11 +5,14 @@ import BookingFrame from "../components/common/BookingFrame";
 import SafeImage from "../components/common/SafeImage";
 import { CheckCircle, LockKey } from "../components/common/Icons";
 import { useBooking, buildBookingWhatsAppHref } from "../lib/booking";
+import { useAuth } from "../lib/auth";
+import { logBooking } from "../lib/cmsAdmin";
 import { pujas } from "../lib/data";
 import { useLanguage } from "../components/common/LanguageToggle";
 
 export default function BookingPayment() {
   const { booking } = useBooking();
+  const { user } = useAuth();
   const { id } = useParams();
   const nav = useNavigate();
   const { t, lang } = useLanguage();
@@ -79,6 +82,8 @@ export default function BookingPayment() {
         rel="noreferrer"
         className="btn-whatsapp-dt mt-7"
         onClick={() => {
+          // Store the booking even when the devotee continues on WhatsApp.
+          logBooking({ ...effectiveBooking, lang }, user, { source: "whatsapp", status: "new" });
           // Give the WhatsApp tab a beat to open before we route to confirmation.
           setTimeout(() => nav("/booking/confirmation"), 1200);
         }}

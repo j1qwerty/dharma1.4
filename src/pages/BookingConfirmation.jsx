@@ -11,6 +11,7 @@ import {
 import { useBooking, buildBookingWhatsAppHref } from "../lib/booking";
 import { useAuth } from "../lib/auth";
 import { saveBooking } from "../lib/orders";
+import { logBooking } from "../lib/cmsAdmin";
 import { pujas } from "../lib/data";
 import { Reveal } from "../components/common/Motion";
 import SafeImage from "../components/common/SafeImage";
@@ -27,10 +28,20 @@ export default function BookingConfirmation() {
   const { booking } = useBooking();
   const { user } = useAuth();
   const { t, lang } = useLanguage();
-  // Persist to the customer's Firestore order history in the background.
-  // Idempotent (deterministic doc id) — safe on re-renders and refreshes.
+  // Persist every confirmation to Firestore (signed-in upsert + universal log),
+  // so bookings exist in admin even for guests / WhatsApp continuations.
+  // Idempotent saveBooking + one-shot logBooking guard against re-renders.
   React.useEffect(() => {
     if (user?.uid) saveBooking(user.uid, booking);
+    try {
+      const key = `dt-logged-${booking?.pujaId}-${booking?.date}-${booking?.time}`;
+      if (!sessionStorage.getItem(key)) {
+        sessionStorage.setItem(key, "1");
+        logBooking({ ...booking, lang }, user, { source: "web-confirmation", status: "confirmed" });
+      }
+    } catch {
+      logBooking({ ...booking, lang }, user, { source: "web-confirmation", status: "confirmed" });
+    }
   }, [user?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
   const p = pujas.find((x) => x.id === booking.pujaId) || pujas[0];
   const waHref = buildBookingWhatsAppHref(booking, lang);

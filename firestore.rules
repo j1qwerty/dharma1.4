@@ -38,10 +38,11 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    // Bookings v1: read-only in CMS. Owner can create/read own; admins read all.
+    // Bookings v1: read-only in CMS. Anyone can create (guest checkout logs
+    // even before sign-in); only owner/admin can read, only admin can mutate.
     match /bookings/{id} {
       allow read: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
-      allow create: if isSignedIn();
+      allow create: if true;
       allow update, delete: if isAdmin();
     }
 

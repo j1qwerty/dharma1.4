@@ -27,11 +27,14 @@ import FaqAccordion from "../components/common/FaqAccordion";
 import { GalleryTile } from "../components/common/Lightbox";
 import { useLanguage } from "../components/common/LanguageToggle";
 import ShraadhContent from "../components/common/ShraadhContent";
-import { buildInquiryHref } from "../lib/booking";
+import { buildInquiryHref, buildInquiryMessage } from "../lib/booking";
+import { useAuth } from "../lib/auth";
+import { logInquiry } from "../lib/cmsAdmin";
 
 export default function PujaDetail() {
   const { id } = useParams();
   const { t, lang } = useLanguage();
+  const { user } = useAuth();
   const p = pujas.find((x) => x.id === id) || pujas[0];
   const toast = useToast();
   const title = lang === "hi" && p.titleHi ? p.titleHi : p.title;
@@ -85,6 +88,14 @@ export default function PujaDetail() {
                 href={buildInquiryHref(p, lang)}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => {
+                  // Log the inquiry first — the record exists even on WhatsApp.
+                  logInquiry(
+                    { pujaId: p.id, pujaCode: p.code, message: buildInquiryMessage(p, lang), lang },
+                    user,
+                    { source: "puja-page" }
+                  );
+                }}
               >
                 {lang === "hi" ? "WhatsApp पर पूछें" : "Ask on WhatsApp"}{" "}
                 <ArrowUpRight size={14} />

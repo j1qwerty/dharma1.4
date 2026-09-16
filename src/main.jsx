@@ -8,6 +8,7 @@ import { BookingProvider } from "./lib/booking";
 import { FavoritesProvider } from "./lib/favorites";
 import { AuthProvider } from "./lib/auth";
 import RequireAdmin from "./admin/components/RequireAdmin";
+import AdminLayout from "./admin/components/AdminLayout";
 import { ToastProvider } from "./components/common/Toast";
 import Home from "./pages/Home";
 import Catalog from "./pages/Catalog";
@@ -33,6 +34,14 @@ const Auth = lazy(() => import("./pages/Auth"));
 const AdminLogin = lazy(() => import("./admin/pages/AdminLogin"));
 const AdminSettings = lazy(() => import("./admin/pages/AdminSettings"));
 const Admin = lazy(() => import("./admin/pages/Admin"));
+const AdminPujas = lazy(() => import("./admin/pages/AdminPujas"));
+const AdminFestivals = lazy(() => import("./admin/pages/AdminFestivals"));
+const AdminHomepage = lazy(() => import("./admin/pages/AdminHomepage"));
+const AdminStories = lazy(() => import("./admin/pages/AdminStories"));
+const AdminAcharyas = lazy(() => import("./admin/pages/AdminAcharyas"));
+const AdminTestimonials = lazy(() => import("./admin/pages/AdminTestimonials"));
+const AdminTrash = lazy(() => import("./admin/pages/AdminTrash"));
+import { AdminBookings, AdminInquiries, AdminUsers } from "./admin/pages/AdminTables";
 const Legal = lazy(() => import("./pages/Legal"));
 const DecorPreview = lazy(() => import("./pages/DecorPreview"));
 const Review = lazy(() => import("./pages/Review"));
@@ -233,23 +242,24 @@ function App() {
                     <Route
                       path="/admin"
                       element={
-                        <Suspense fallback={<PageFallback />}>
-                          <RequireAdmin>
-                            <Admin />
-                          </RequireAdmin>
-                        </Suspense>
+                        <RequireAdmin>
+                          <AdminLayout />
+                        </RequireAdmin>
                       }
-                    />
-                    <Route
-                      path="/admin/settings"
-                      element={
-                        <Suspense fallback={<PageFallback />}>
-                          <RequireAdmin>
-                            <AdminSettings />
-                          </RequireAdmin>
-                        </Suspense>
-                      }
-                    />
+                    >
+                      <Route index element={<Suspense fallback={<PageFallback />}><Admin /></Suspense>} />
+                      <Route path="pujas" element={<Suspense fallback={<PageFallback />}><AdminPujas /></Suspense>} />
+                      <Route path="festivals" element={<Suspense fallback={<PageFallback />}><AdminFestivals /></Suspense>} />
+                      <Route path="homepage" element={<Suspense fallback={<PageFallback />}><AdminHomepage /></Suspense>} />
+                      <Route path="stories" element={<Suspense fallback={<PageFallback />}><AdminStories /></Suspense>} />
+                      <Route path="acharyas" element={<Suspense fallback={<PageFallback />}><AdminAcharyas /></Suspense>} />
+                      <Route path="testimonials" element={<Suspense fallback={<PageFallback />}><AdminTestimonials /></Suspense>} />
+                      <Route path="bookings" element={<Suspense fallback={<PageFallback />}><AdminBookings /></Suspense>} />
+                      <Route path="inquiries" element={<Suspense fallback={<PageFallback />}><AdminInquiries /></Suspense>} />
+                      <Route path="users" element={<Suspense fallback={<PageFallback />}><AdminUsers /></Suspense>} />
+                      <Route path="trash" element={<Suspense fallback={<PageFallback />}><AdminTrash /></Suspense>} />
+                      <Route path="settings" element={<Suspense fallback={<PageFallback />}><AdminSettings /></Suspense>} />
+                    </Route>
                     <Route path="*" element={<NotFound />} />
                   </Route>
                 </Routes>
