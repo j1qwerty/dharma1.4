@@ -4,6 +4,7 @@ import { useAuth } from "../../lib/auth";
 import { useAdminCollection, purgeExpiredTrash } from "../../lib/cmsAdmin";
 import { useCollection } from "../../lib/cms";
 import { getActiveFestivals, getPreviewNow } from "../../lib/schedule";
+import { maskEmail } from "../../lib/privacy";
 
 const LINKS = [
   ["Pujas", "/admin/pujas", "pujas", "Catalogue, detail + home preview"],
@@ -40,7 +41,7 @@ export default function Admin() {
     <section>
       <div className="eyebrow">CMS · dashboard</div>
       <h1 className="display-dt" style={{ fontSize: 44, marginTop: 8 }}>Dashboard</h1>
-      <p className="text-sm muted-dt">Signed in as {user?.email}</p>
+      <p className="text-sm muted-dt">Signed in as {maskEmail(user?.email, "admin") || "admin"}</p>
 
       <div className="panel-dt p-5 mt-6">
         <h3 className="text-xl">Access check</h3>

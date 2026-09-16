@@ -165,14 +165,14 @@ export default function CollectionEditor({
       {sharedNote && <p className="text-xs muted-dt mt-2 panel-dt p-3">🔗 {sharedNote}</p>}
       {!remote && <p className="text-xs mt-3" style={{ color: "#8a6d1b" }}>Firebase not configured — showing local fallback values (read-only preview).</p>}
 
-      <style>{`.admin-ed-grid{display:grid;gap:16px;grid-template-columns:250px minmax(0,1fr) 250px;margin-top:18px}@media(max-width:1100px){.admin-ed-grid{grid-template-columns:1fr}}`}</style>
+      <style>{`.admin-ed-grid{display:grid;gap:16px;grid-template-columns:250px minmax(0,1fr) 250px;margin-top:18px}.admin-ed-grid>*,.admin-ed-grid .panel-dt{min-width:0;overflow-wrap:anywhere}@media(max-width:1100px){.admin-ed-grid{grid-template-columns:1fr}}`}</style>
       <div className="admin-ed-grid">
-        <div className="panel-dt p-4" style={{ alignSelf: "start" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h3 className="text-sm font-semibold">Items ({list.length})</h3>
-            <button className="btn-ghost-dt text-xs" onClick={startNew} disabled={!remote}>+ New</button>
+        <div className="panel-dt p-4" style={{ alignSelf: "start", minWidth: 0, overflow: "hidden" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
+            <h3 className="text-sm font-semibold" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Items ({list.length})</h3>
+            <button className="btn-ghost-dt text-xs" style={{ flexShrink: 0 }} onClick={startNew} disabled={!remote}>+ New</button>
           </div>
-          <div style={{ display: "grid", gap: 6, marginTop: 12 }}>
+          <div style={{ display: "grid", gap: 6, marginTop: 12, minWidth: 0 }}>
             {loading && <p className="text-xs muted-dt">Loading…</p>}
             {list.map((d) => {
               const id = d[idField] || d.id;
@@ -182,16 +182,21 @@ export default function CollectionEditor({
                   key={id}
                   onClick={() => setSelectedId(id)}
                   className="text-left"
+                  title={d.title || d.name || d.key || id}
                   style={{
+                    width: "100%", minWidth: 0, overflow: "hidden",
                     padding: "8px 10px", borderRadius: 10, fontSize: 13,
                     background: active ? "rgba(231,182,49,.16)" : "transparent",
                     border: "1px solid var(--border-dt,#e8e0cf)", fontWeight: active ? 700 : 500,
                   }}
                 >
-                  <span style={{ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <span style={{ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>
                     {d.title || d.name || d.key || id}
                   </span>
-                  <span className="text-[11px] muted-dt">{id} · <StatusBadge status={d.status} /></span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0, marginTop: 2 }}>
+                    <span className="text-[11px] muted-dt" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{id}</span>
+                    <span style={{ flexShrink: 0 }}><StatusBadge status={d.status} /></span>
+                  </span>
                 </button>
               );
             })}

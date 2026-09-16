@@ -30,8 +30,8 @@ function TrashBlock({ collection }) {
       {!loading && (!rows || rows.length === 0) && <p className="text-xs muted-dt mt-2">Empty.</p>}
       <div style={{ display: "grid", gap: 8, marginTop: 10 }}>
         {(rows || []).map((d) => (
-          <div key={d.id} style={{ display: "flex", gap: 8, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
-            <span className="text-xs">
+          <div key={d.id} style={{ display: "flex", gap: 8, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", minWidth: 0 }}>
+            <span className="text-xs" style={{ minWidth: 0, overflowWrap: "anywhere" }}>
               <strong>{d.title || d.name || d.key || d.id}</strong>
               <span className="muted-dt"> · {d.id} · {daysLeft(d)}</span>
             </span>

@@ -85,6 +85,8 @@ export default function ImageField({ label = "Image", collection, value, onChang
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
+                minWidth: 0,
+                flex: 1,
               }}
               title={value}
             >

@@ -5,6 +5,7 @@ import PhoneLogin from "../../components/common/PhoneLogin";
 import GoogleIcon from "../../components/common/GoogleIcon";
 
 import { useSiteSettings, isPhoneEnabled } from "../../lib/settings";
+import { maskEmail } from "../../lib/privacy";
 
 export default function AdminLogin() {
   const { user, isAdmin, loading, configured, signInWithGoogle, signInWithEmail } = useAuth();
@@ -38,7 +39,7 @@ export default function AdminLogin() {
       <h1 className="display-dt" style={{ fontSize: 40, marginTop: 8 }}>Admin login</h1>
       <p className="mt-4 text-sm leading-7 muted-dt">Sign in with an authorized Google account.</p>
       {!loading && user && !isAdmin && (
-        <p style={{ color: "#b3261e", fontSize: 13 }}>Signed in as {user.email} — not an admin. Ask a super-admin to add your UID.</p>
+        <p style={{ color: "#b3261e", fontSize: 13 }}>Signed in as {maskEmail(user.email, "this account")} — not an admin. Ask a super-admin to add your UID.</p>
       )}
       {err && <p style={{ color: "#b3261e", fontSize: 13 }}>{err}</p>}
       <button className="btn-gold-dt mt-6 w-full" onClick={goGoogle}>

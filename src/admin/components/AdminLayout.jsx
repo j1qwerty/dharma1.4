@@ -2,6 +2,7 @@
 // (src/lib/content.js) so the sidebar always matches the site structure.
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ADMIN_NAV } from "../../lib/content";
+import { maskEmail } from "../../lib/privacy";
 import { useAuth } from "../../lib/auth";
 
 export default function AdminLayout() {
@@ -15,7 +16,9 @@ export default function AdminLayout() {
   };
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", minHeight: "80vh", gap: 0 }}>
+    <>
+      <style>{`.admin-shell{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:80vh;gap:0}.admin-shell aside{min-width:0}.admin-shell main{min-width:0;overflow-wrap:anywhere}@media(max-width:800px){.admin-shell{grid-template-columns:1fr}.admin-shell aside{position:static !important;min-height:0 !important;border-right:none !important;border-bottom:1px solid var(--border-dt,#e8e0cf)}}`}</style>
+    <div className="admin-shell">
       <aside
         style={{
           borderRight: "1px solid var(--border-dt, #e8e0cf)",
@@ -51,8 +54,8 @@ export default function AdminLayout() {
           })}
         </nav>
         <div style={{ marginTop: 18, padding: "0 12px" }}>
-          <p className="text-[11px] muted-dt" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-            {user?.email || "admin"}
+          <p className="text-[11px] muted-dt" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {maskEmail(user?.email, "admin") || "admin"}
           </p>
           <button className="underline text-xs mt-1" onClick={onLogout}>
             Sign out
@@ -64,9 +67,10 @@ export default function AdminLayout() {
           </p>
         </div>
       </aside>
-      <div style={{ padding: "28px 28px 60px", minWidth: 0 }}>
+      <div style={{ padding: "28px 28px 60px", minWidth: 0, overflow: "hidden" }}>
         <Outlet />
       </div>
     </div>
+    </>
   );
 }
