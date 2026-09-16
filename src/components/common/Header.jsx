@@ -1,15 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { MagnifyingGlass, List, X, Sun, Moon, CaretDown, PaintBrush } from "@phosphor-icons/react";
 import Brand from "./Brand";
 import { deities } from "../../lib/data";
+import { ThemeContext } from "./ThemeToggle";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [pujasOpen, setPujasOpen] = useState(false);
   const closeTimer = useRef(null);
-  const [dark, setDark] = useState(() => document.documentElement.classList.contains("dark"));
+  const { dark, toggle } = useContext(ThemeContext) ?? { dark: false, toggle: () => {} };
   const links = [
     ["Home", "/", true],
     ["Pujas", "/pujas", false],
@@ -50,10 +51,7 @@ export default function Header() {
   }, [pujasOpen]);
 
   function toggleTheme() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem("dt-theme", next ? "dark" : "light");
+    toggle();
   }
 
   function openPujas() {
@@ -149,14 +147,14 @@ export default function Header() {
             )}
           </nav>
           <div className="flex items-center gap-2">
-            <Link
+            {/* <Link
               to="/decor"
               className="hidden sm:grid place-items-center h-9 w-9 rounded-full border border-dt hover:border-gold-400 hover:text-gold-600 transition"
               aria-label="Decor preview"
               title="Decor preview"
             >
               <PaintBrush size={16} weight="duotone" />
-            </Link>
+            </Link> */}
             <button
               className="hidden sm:grid place-items-center h-9 w-9 rounded-full border border-dt"
               aria-label="Search"
