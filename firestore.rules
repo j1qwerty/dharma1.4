@@ -39,6 +39,14 @@ service cloud.firestore {
       allow create: if isSignedIn() && request.auth.uid == uid;
       allow update: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
       allow delete: if isAdmin();
+
+      // Saved delivery addresses (users/{uid}/addresses/*) — new since the
+      // addresses feature landed. Owner manages own; admins can read/write
+      // (bookings drawer + support). Parent match does NOT cover subcollections.
+      match /addresses/{addrId} {
+        allow read: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+        allow create, update, delete: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+      }
     }
 
     // Bookings v1: read-only in CMS. Anyone can create (guest checkout logs
