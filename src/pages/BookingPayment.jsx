@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { WhatsappLogo } from "@phosphor-icons/react";
 import BookingFrame from "../components/common/BookingFrame";
@@ -7,7 +7,8 @@ import { CheckCircle, LockKey } from "../components/common/Icons";
 import { useBooking, buildBookingWhatsAppHref } from "../lib/booking";
 import { useAuth } from "../lib/auth";
 import { logBooking } from "../lib/cmsAdmin";
-import { pujas } from "../lib/data";
+import { pujas as defaultPujas } from "../lib/data";
+import { useLivePujas } from "../lib/cms";
 import { useLanguage } from "../components/common/LanguageToggle";
 
 export default function BookingPayment() {
@@ -16,7 +17,16 @@ export default function BookingPayment() {
   const { id } = useParams();
   const nav = useNavigate();
   const { t, lang } = useLanguage();
-  const p = pujas.find((x) => x.id === (id || booking.pujaId)) || pujas[0];
+  // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
+  // in the background when published overrides arrive.
+  const { items: livePujas } = useLivePujas();
+  const p = useMemo(
+    () =>
+      livePujas.find((x) => x.id === (id || booking.pujaId)) ||
+      defaultPujas.find((x) => x.id === (id || booking.pujaId)) ||
+      defaultPujas[0],
+    [livePujas, id, booking.pujaId]
+  );
   const effectiveBooking = { ...booking, pujaId: p.id };
   const waHref = buildBookingWhatsAppHref(effectiveBooking, lang);
   const family = Number(booking?.sankalp?.family) || 0;

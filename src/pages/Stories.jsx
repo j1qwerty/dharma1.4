@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { MagnifyingGlass, ArrowUpRight, CalendarBlank } from "@phosphor-icons/react";
-import { stories } from "../lib/data";
+import { useLiveStories } from "../lib/cms";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import { StoryMasonry } from "../components/common/Masonry";
 import SectionCurve from "../components/common/SectionCurve";
@@ -12,6 +12,9 @@ export default function Stories() {
   const { t, lang } = useLanguage();
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("All");
+  // Cache-first: render hardcoded stories instantly, then merge Firestore
+  // published overrides + new items in the background.
+  const { items: stories } = useLiveStories();
   const cats = [
     "All",
     "Festivals",
@@ -20,14 +23,18 @@ export default function Stories() {
     "Temple Histories",
     "Devotee Stories",
   ];
-  const items = stories.filter(
-    (s) =>
-      (cat === "All" || s.category === cat) &&
-      `${s.title} ${s.titleHi || ""} ${s.excerpt}`.toLowerCase().includes(q.toLowerCase())
+  const items = useMemo(
+    () =>
+      stories.filter(
+        (s) =>
+          (cat === "All" || s.category === cat) &&
+          `${s.title} ${s.titleHi || ""} ${s.excerpt}`.toLowerCase().includes(q.toLowerCase())
+      ),
+    [stories, cat, q]
   );
   const feature = items[0] || stories[0];
-  const featureTitle = lang === "hi" && feature.titleHi ? feature.titleHi : feature.title;
-  const featureExcerpt = lang === "hi" && feature.excerptHi ? feature.excerptHi : feature.excerpt;
+  const featureTitle = lang === "hi" && feature?.titleHi ? feature.titleHi : feature?.title;
+  const featureExcerpt = lang === "hi" && feature?.excerptHi ? feature.excerptHi : feature?.excerpt;
 
   return (
     <>
@@ -130,7 +137,12 @@ export default function Stories() {
                           className="flex items-center gap-4 border-t border-dt py-4"
                         >
                           <div className="h-14 w-16 overflow-hidden rounded-xl">
-                            <img src={s.image} referrerPolicy="no-referrer" className="h-full w-full object-cover" alt="" />
+                            <img
+                              src={s.image}
+                              referrerPolicy="no-referrer"
+                              className="h-full w-full object-cover"
+                              alt=""
+                            />
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="text-[9px] uppercase tracking-[.16em] text-gold-600">

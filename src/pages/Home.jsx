@@ -37,9 +37,15 @@ import {
 } from "../components/common/decor";
 import FestivalCountdown, { getUpcomingFestivals } from "../components/common/FestivalCountdown";
 import AcharyaCard from "../components/common/AcharyaCard";
-import { pujas, festivals, intentions, stories, social, acharyas } from "../lib/data";
+import { intentions, social } from "../lib/data";
 import { upcomingFestivals } from "../lib/dates";
-import { useHomepageOverrides } from "../lib/cms";
+import {
+  useHomepageOverrides,
+  useLivePujas,
+  useLiveFestivals,
+  useLiveStories,
+  useLiveAcharyas,
+} from "../lib/cms";
 import { useLanguage } from "../components/common/LanguageToggle";
 
 const TRUST_ITEMS = ({ t }) => [
@@ -63,8 +69,15 @@ function splitTitle(title) {
 
 export default function Home() {
   const { t, lang } = useLanguage();
+  // Cache-first: render hardcoded defaults instantly. Each useLive* hook then
+  // fetches the published Firestore docs in the background and merges them by
+  // id (Firestore wins on non-empty fields, new items appended at the end).
+  const { items: livePujas } = useLivePujas();
+  const { items: liveFestivals } = useLiveFestivals();
+  const { items: liveStories } = useLiveStories();
+  const { items: liveAcharyas } = useLiveAcharyas();
   // Festivals soonest-first: order flips automatically as dates pass.
-  const orderedFestivals = useMemo(() => upcomingFestivals(festivals), []);
+  const orderedFestivals = useMemo(() => upcomingFestivals(liveFestivals), [liveFestivals]);
   // Homepage overrides — loaded in the background from Firestore. The site
   // renders hardcoded defaults immediately, then merges any admin overrides
   // when they arrive (no flicker for visitors).
@@ -197,15 +210,12 @@ export default function Home() {
           <span className="hero-curve-coin-dt coin-left-dt">
             <span className="medallion-wrap">
               {/* <SacredMedallion size={75} glow={false} rays={false} /> */}
-                            <SacredMedallion size={75} spin={heroSpin} spinSpeed={1.2} />
-
-
+              <SacredMedallion size={75} spin={heroSpin} spinSpeed={1.2} />
             </span>
           </span>
           <span className="hero-curve-coin-dt coin-right-dt">
             <span className="medallion-wrap delay">
               <SacredMedallion size={75} spin={heroSpin} spinSpeed={1.2} />
-
             </span>
           </span>
           <span className="hero-curve-drop-dt" />
@@ -268,7 +278,7 @@ export default function Home() {
             </Reveal>
             <Reveal delay={0.1}>
               <div className="grid gap-5">
-                {getUpcomingFestivals(new Date(), 2).map((f, i) =>
+                {getUpcomingFestivals(new Date(), 2, liveFestivals).map((f, i) =>
                   i === 0 ? (
                     <FestivalCountdown key={f.name} festival={f} />
                   ) : (
@@ -303,7 +313,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="mt-12 acharya-grid-dt">
-            {acharyas.map((a, i) => (
+            {liveAcharyas.map((a, i) => (
               <Reveal key={a.id} delay={i * 0.05}>
                 <AcharyaCard a={a} />
               </Reveal>
@@ -323,7 +333,7 @@ export default function Home() {
             soft
           />
           <div className="grid grid-cols-2 gap-5 lg:grid-cols-3 puja-grid-dt">
-            {pujas.slice(0, 6).map((p, i) => (
+            {livePujas.slice(0, 6).map((p, i) => (
               <div key={p.id}>
                 <PujaCard p={p} index={i} />
               </div>
@@ -526,7 +536,7 @@ export default function Home() {
             action={{ label: t("home.readAllStories"), to: "/stories" }}
           />
           <StoryMasonry
-            items={stories.slice(0, 6)}
+            items={liveStories.slice(0, 6)}
             render={(s) => {
               const sTitle = lang === "hi" && s.titleHi ? s.titleHi : s.title;
               const sExcerpt = lang === "hi" && s.excerptHi ? s.excerptHi : s.excerpt;
@@ -665,7 +675,11 @@ export default function Home() {
                   : "A future temple detail route with seva and story content.",
               ],
             ].map(([place, name, img, note], i) => (
-              <Reveal key={name} delay={i * 0.05} className={i === 0 ? "col-span-2 md:col-span-1" : ""}>
+              <Reveal
+                key={name}
+                delay={i * 0.05}
+                className={i === 0 ? "col-span-2 md:col-span-1" : ""}
+              >
                 <TiltCard max={6}>
                   <div className="temple-card-dt">
                     <ParallaxImage src={img} className="h-44 md:h-72" strength={14} />

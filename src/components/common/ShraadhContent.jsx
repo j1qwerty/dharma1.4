@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import { useLanguage } from "./LanguageToggle";
 import { SectionDecor } from "./decor";
-import { pujas } from "../../lib/data";
+import { pujas as defaultPujas } from "../../lib/data";
+import { useLivePujas } from "../../lib/cms";
 import { buildInquiryHref, buildGayaJiHref } from "../../lib/booking";
 
 /* ------------------------------------------------------------------ *
@@ -16,7 +17,10 @@ import { buildInquiryHref, buildGayaJiHref } from "../../lib/booking";
 export default function ShraadhContent() {
   const { lang } = useLanguage();
   const hi = lang === "hi";
-  const shraadhPuja = pujas.find((x) => x.id === "shraadh") || pujas[0];
+  // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
+  // in the background when published overrides arrive.
+  const { items: pujas } = useLivePujas();
+  const shraadhPuja = pujas.find((x) => x.id === "shraadh") || defaultPujas[0];
   const vedacharyaHref = buildInquiryHref(shraadhPuja, lang);
   const gayaJiHref = buildGayaJiHref(lang);
 
@@ -942,23 +946,13 @@ export default function ShraadhContent() {
             <em>{c.ctaTrust}</em>
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
-            <a
-              href={vedacharyaHref}
-              target="_blank"
-              rel="noreferrer"
-              className="btn-gold-dt"
-            >
+            <a href={vedacharyaHref} target="_blank" rel="noreferrer" className="btn-gold-dt">
               {c.ctaBtn1} <ArrowUpRight size={14} />
             </a>
             <Link className="btn-ghost-dt" to="/booking/shraadh/date">
               {c.ctaBtn2} <ArrowUpRight size={14} />
             </Link>
-            <a
-              href={gayaJiHref}
-              target="_blank"
-              rel="noreferrer"
-              className="btn-ghost-dt"
-            >
+            <a href={gayaJiHref} target="_blank" rel="noreferrer" className="btn-ghost-dt">
               {c.ctaBtn3} <ArrowUpRight size={14} />
             </a>
           </div>

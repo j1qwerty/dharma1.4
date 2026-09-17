@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, FlowerLotus, Sparkle } from "@phosphor-icons/react";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
@@ -11,14 +11,20 @@ import {
   SectionDecor,
 } from "../components/common/decor";
 import AcharyaCard from "../components/common/AcharyaCard";
-import { acharyas } from "../lib/data";
+import { useLiveAcharyas } from "../lib/cms";
 import { useLanguage } from "../components/common/LanguageToggle";
 
 export default function Acharyas() {
   const { t, lang } = useLanguage();
   const [tradition, setTradition] = useState("All");
+  // Cache-first: render hardcoded acharyas instantly, then merge Firestore
+  // published overrides + new items in the background.
+  const { items: acharyas } = useLiveAcharyas();
   // Use English tradition label as the canonical key so filter works across langs.
-  const traditions = ["All", ...Array.from(new Set(acharyas.map((a) => a.tradition)))];
+  const traditions = useMemo(
+    () => ["All", ...Array.from(new Set(acharyas.map((a) => a.tradition)))],
+    [acharyas]
+  );
   const filtered =
     tradition === "All" ? acharyas : acharyas.filter((a) => a.tradition === tradition);
 

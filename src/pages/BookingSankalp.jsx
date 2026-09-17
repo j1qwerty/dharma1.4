@@ -1,18 +1,28 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import BookingFrame from "../components/common/BookingFrame";
 import Field from "../components/common/Field";
 import SankalpPreview from "../components/common/SankalpPreview";
 import SafeImage from "../components/common/SafeImage";
 import { useBooking } from "../lib/booking";
-import { pujas } from "../lib/data";
+import { pujas as defaultPujas } from "../lib/data";
+import { useLivePujas } from "../lib/cms";
 import { Heart } from "../components/common/Icons";
 import { useLanguage } from "../components/common/LanguageToggle";
 export default function BookingSankalp() {
   const { booking, update } = useBooking();
   const { id } = useParams();
   const { t, lang } = useLanguage();
-  const p = pujas.find((x) => x.id === id) || pujas[0];
+  // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
+  // in the background when published overrides arrive.
+  const { items: livePujas } = useLivePujas();
+  const p = useMemo(
+    () =>
+      livePujas.find((x) => x.id === id) ||
+      defaultPujas.find((x) => x.id === id) ||
+      defaultPujas[0],
+    [livePujas, id]
+  );
   const pujaTitle = lang === "hi" && p.titleHi ? p.titleHi : p.title;
   const set = (k, v) => update({ sankalp: { ...booking.sankalp, [k]: v } });
   return (
@@ -21,11 +31,7 @@ export default function BookingSankalp() {
       <h2 className="font-display mt-3 text-4xl">{t("bs.title")}</h2>
       <p className="mt-3 max-w-2xl text-sm leading-7 text-muted">{t("bs.copy")}</p>
       <div className="mt-6 overflow-hidden rounded-2xl">
-        <SafeImage
-          src={p.image}
-          alt={pujaTitle}
-          className="h-44 w-full object-cover"
-        />
+        <SafeImage src={p.image} alt={pujaTitle} className="h-44 w-full object-cover" />
       </div>
       <div className="mt-8 grid gap-8 lg:grid-cols-[1.15fr_.85fr] items-start">
         <div>

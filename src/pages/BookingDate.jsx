@@ -4,7 +4,8 @@ import BookingFrame from "../components/common/BookingFrame";
 import SafeImage from "../components/common/SafeImage";
 import { CalendarBlank, Clock, CheckCircle } from "../components/common/Icons";
 import { useBooking } from "../lib/booking";
-import { pujas } from "../lib/data";
+import { pujas as defaultPujas } from "../lib/data";
+import { useLivePujas } from "../lib/cms";
 import {
   pujaEventDate,
   bookingDays,
@@ -17,7 +18,16 @@ export default function BookingDate() {
   const { booking, update } = useBooking();
   const { id } = useParams();
   const { t, lang } = useLanguage();
-  const p = pujas.find((x) => x.id === (id || booking.pujaId)) || pujas[0];
+  // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
+  // in the background when published overrides arrive.
+  const { items: livePujas } = useLivePujas();
+  const p = useMemo(
+    () =>
+      livePujas.find((x) => x.id === (id || booking.pujaId)) ||
+      defaultPujas.find((x) => x.id === (id || booking.pujaId)) ||
+      defaultPujas[0],
+    [livePujas, id, booking.pujaId]
+  );
   // Event day + the following 7 days, derived from the puja's own date
   // (e.g. event 15/9/2026 -> 15/9, 16/9, 17/9, 18/9 ...). Falls back to
   // today for season-long labels like "Pitru Paksha".
@@ -44,9 +54,7 @@ export default function BookingDate() {
       </div>
       <div className="mt-7 grid gap-7 lg:grid-cols-2">
         <div>
-          <label className="text-xs font-bold text-muted">
-            {formatMonthYear(days[0], lang)}
-          </label>
+          <label className="text-xs font-bold text-muted">{formatMonthYear(days[0], lang)}</label>
           <div className="mt-3 grid grid-cols-2 gap-2">
             {days.map((d, i) => {
               const label = formatDayShort(d, lang);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   ArrowRight,
@@ -10,7 +10,8 @@ import {
   VideoCamera,
   CheckCircle,
 } from "@phosphor-icons/react";
-import { pujas, stories } from "../lib/data";
+import { pujas as defaultPujas, stories } from "../lib/data";
+import { useLivePujas } from "../lib/cms";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionHeading from "../components/common/SectionHeading";
 import SectionCurve from "../components/common/SectionCurve";
@@ -36,7 +37,16 @@ export default function PujaDetail() {
   const { id } = useParams();
   const { t, lang } = useLanguage();
   const { user } = useAuth();
-  const p = pujas.find((x) => x.id === id) || pujas[0];
+  // Cache-first: render hardcoded puja instantly, then refresh from Firestore
+  // in the background when the published override arrives.
+  const { items: livePujas } = useLivePujas();
+  const p = useMemo(
+    () =>
+      livePujas.find((x) => x.id === id) ||
+      defaultPujas.find((x) => x.id === id) ||
+      defaultPujas[0],
+    [livePujas, id]
+  );
   const toast = useToast();
   const title = lang === "hi" && p.titleHi ? p.titleHi : p.title;
   const desc = lang === "hi" && p.descHi ? p.descHi : p.desc;
@@ -97,11 +107,14 @@ export default function PujaDetail() {
                     { source: "puja-page" }
                   );
                   // Analytics: track inquiry as a UX event.
-                  try { ux.inquiry({ puja_id: p.id, source: "puja-page" }); } catch { /* ignore */ }
+                  try {
+                    ux.inquiry({ puja_id: p.id, source: "puja-page" });
+                  } catch {
+                    /* ignore */
+                  }
                 }}
               >
-                {lang === "hi" ? "WhatsApp पर पूछें" : "Ask on WhatsApp"}{" "}
-                <ArrowUpRight size={14} />
+                {lang === "hi" ? "WhatsApp पर पूछें" : "Ask on WhatsApp"} <ArrowUpRight size={14} />
               </a>
               <FavToggle
                 id={p.id}

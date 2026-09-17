@@ -11,6 +11,39 @@ const DEMO_MODEL = "qwen3.5-plus";
 const DEMO_BASE_URL = "https://page-ag-testing-ohftxirgbn.cn-shanghai.fcapp.run";
 const DEMO_API_KEY = "NA";
 
+// Visibility kill-switch (per browser, localStorage). Set from the bot popup
+// on admin pages or from Admin → Settings. Hiding also disposes the bot.
+const HIDE_KEY = "dt-pageagent-hidden";
+export const PAGEAGENT_VISIBILITY_EVENT = "dt:pageagent-visibility";
+
+export function isPageAgentHidden() {
+  try {
+    return localStorage.getItem(HIDE_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function emitVisibility() {
+  try {
+    window.dispatchEvent(new Event(PAGEAGENT_VISIBILITY_EVENT));
+  } catch { /* ignore */ }
+}
+
+export function setPageAgentHidden(hidden) {
+  try {
+    if (hidden) localStorage.setItem(HIDE_KEY, "1");
+    else localStorage.removeItem(HIDE_KEY);
+  } catch { /* ignore */ }
+  emitVisibility();
+}
+
+/** Hide + tear down the bot everywhere. */
+export function hidePageAgentCompletely() {
+  stopPageAgent();
+  setPageAgentHidden(true);
+}
+
 export function pageAgentLanguage(siteLang) {
   // PageAgent only understands en-US / zh-CN — everything else falls back
   // to English, which is also this site's default language.

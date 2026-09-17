@@ -4,7 +4,7 @@ import { ArrowUpRight } from "@phosphor-icons/react";
 import { Reveal } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
 import { SectionDecor } from "../components/common/decor";
-import { pujas, acharyas } from "../lib/data";
+import { useLivePujas, useLiveAcharyas } from "../lib/cms";
 import { WHATSAPP_NUMBER } from "../lib/site";
 import { useLanguage } from "../components/common/LanguageToggle";
 
@@ -12,9 +12,7 @@ function Block({ id, index, title, children }) {
   return (
     <Reveal>
       <section id={id} className="panel-dt p-6 sm:p-8 review-block-dt">
-        <div className="eyebrow">
-          {String(index).padStart(2, "0")}
-        </div>
+        <div className="eyebrow">{String(index).padStart(2, "0")}</div>
         <h2 className="display-dt mt-2 text-4xl sm:text-5xl">{title}</h2>
         <div className="mt-5 grid gap-3 text-sm leading-7 text-muted-dt">{children}</div>
       </section>
@@ -26,6 +24,10 @@ export default function Review() {
   const { lang } = useLanguage();
   const hi = lang === "hi";
   const waLink = `https://wa.me/${WHATSAPP_NUMBER}`;
+  // Cache-first: render hardcoded pujas + acharyas instantly, then refresh
+  // from Firestore in the background when published overrides arrive.
+  const { items: pujas } = useLivePujas();
+  const { items: acharyas } = useLiveAcharyas();
 
   const points = [
     "check all pages and section thoroughly suggest changes and sectons to keep and remove etc,",
@@ -36,7 +38,10 @@ export default function Review() {
   ];
 
   const homeSections = [
-    ["Hero banner + trust strip", "Keep. Approve real hero photography (current images are placeholders)."],
+    [
+      "Hero banner + trust strip",
+      "Keep. Approve real hero photography (current images are placeholders).",
+    ],
     ["Assurance strip (dates, video, booking, family)", "Keep."],
     ["Festival countdown", "Keep if the countdown date is maintained."],
     ["The dates people are booking (Shraadh first)", "Keep."],
@@ -45,7 +50,10 @@ export default function Review() {
     ["The people who carry the tradition (acharyas)", "Keep."],
     ["What are you here to mark? (intentions)", "Keep once Hindi lines are provided."],
     ["Ritual journey (Choose → Submit → Receive)", "Keep."],
-    ["Trust band (stats 50+ / 200+ / 4.9)", "Change — stats are sample data; send real numbers + testimonial."],
+    [
+      "Trust band (stats 50+ / 200+ / 4.9)",
+      "Change — stats are sample data; send real numbers + testimonial.",
+    ],
     ["Stories preview", "Keep — confirm the featured stories."],
     ["Wider social feed (links to “#”)", "Remove until real social channels exist."],
     ["Year-long recurring (Phase 3 copy)", "Remove for launch."],
@@ -68,17 +76,29 @@ export default function Review() {
   ];
 
   const waRows = [
-    ["Puja booking (payment step)", "Full booking summary: code, names (EN+HI), deity, temple, date, package, devotee details, total"],
-    ["Per-puja inquiry (Ask on WhatsApp)", "Short message naming that exact puja with code + temple"],
+    [
+      "Puja booking (payment step)",
+      "Full booking summary: code, names (EN+HI), deity, temple, date, package, devotee details, total",
+    ],
+    [
+      "Per-puja inquiry (Ask on WhatsApp)",
+      "Short message naming that exact puja with code + temple",
+    ],
     ["Shraadh → Speak to a Vedacharya", "Shraadh-specific inquiry (PUJA-009)"],
     ["Shraadh → Gaya Ji experience", "Dedicated Gaya Ji message (Tithi/Vidhi guidance)"],
     ["Floating bubble + footer", "General help message / plain chat open"],
   ];
 
   const otherPages = [
-    ["Stories (/stories)", "Keep. Category chips are English-only — send Hindi categories. Article bodies need real text."],
+    [
+      "Stories (/stories)",
+      "Keep. Category chips are English-only — send Hindi categories. Article bodies need real text.",
+    ],
     ["About (/about)", "Keep. Replace sample stats 50+ / 200+ / 4.9."],
-    ["Booking flow (/booking/…)", "Keep. Confirm packages: Individual ₹1,100 / Couple ₹1,650 / Family ₹2,100."],
+    [
+      "Booking flow (/booking/…)",
+      "Keep. Confirm packages: Individual ₹1,100 / Couple ₹1,650 / Family ₹2,100.",
+    ],
     ["Tracking + My bookings", "Demo data — needs real backend or a “demo” label."],
     ["Login / Terms / Privacy", "Placeholders — confirm scope + legal text."],
   ];
@@ -93,7 +113,9 @@ export default function Review() {
               {hi ? "ग्राहक समीक्षा" : "Client feedback"}
             </div>
             <h1 className="display-dt mt-3 max-w-4xl text-6xl sm:text-7xl">
-              {hi ? "समीक्षा करें — क्या रखें, क्या हटाएँ।" : "Review — what to keep, what to change."}
+              {hi
+                ? "समीक्षा करें — क्या रखें, क्या हटाएँ।"
+                : "Review — what to keep, what to change."}
             </h1>
             <p className="mt-6 max-w-2xl text-[15px] leading-8 text-white/65">
               {hi
@@ -109,7 +131,12 @@ export default function Review() {
               >
                 {hi ? "लाइव साइट खोलें" : "Open live site"} <ArrowUpRight size={14} />
               </a>
-              <a className="btn-ghost-dt !border-white/15 !bg-white/[.05] !text-white" href={waLink} target="_blank" rel="noreferrer">
+              <a
+                className="btn-ghost-dt !border-white/15 !bg-white/[.05] !text-white"
+                href={waLink}
+                target="_blank"
+                rel="noreferrer"
+              >
                 WhatsApp: {WHATSAPP_NUMBER} <ArrowUpRight size={14} />
               </a>
             </div>
@@ -134,13 +161,21 @@ export default function Review() {
               {hi
                 ? "बुकिंग और पूछताछ — दोनों के लिए एक ही नंबर है।"
                 : "One centralized number for both booking and inquiry:"}{" "}
-              <a className="font-bold text-gold-600 hover:underline" href={waLink} target="_blank" rel="noreferrer">
+              <a
+                className="font-bold text-gold-600 hover:underline"
+                href={waLink}
+                target="_blank"
+                rel="noreferrer"
+              >
                 {WHATSAPP_NUMBER}
               </a>
             </p>
             <div className="grid gap-2">
               {waRows.map(([a, b]) => (
-                <div key={a} className="flex flex-col sm:flex-row gap-1 sm:gap-4 border-b border-dt pb-2">
+                <div
+                  key={a}
+                  className="flex flex-col sm:flex-row gap-1 sm:gap-4 border-b border-dt pb-2"
+                >
                   <span className="font-semibold text-ink sm:min-w-[280px]">{a}</span>
                   <span>{b}</span>
                 </div>
@@ -156,7 +191,10 @@ export default function Review() {
           <Block index={3} title={hi ? "होम पेज — अनुभाग" : "Home page — sections"}>
             <div className="grid gap-2">
               {homeSections.map(([a, b]) => (
-                <div key={a} className="flex flex-col sm:flex-row gap-1 sm:gap-4 border-b border-dt pb-2">
+                <div
+                  key={a}
+                  className="flex flex-col sm:flex-row gap-1 sm:gap-4 border-b border-dt pb-2"
+                >
                   <span className="font-semibold text-ink sm:min-w-[280px]">{a}</span>
                   <span>{b}</span>
                 </div>
@@ -167,7 +205,10 @@ export default function Review() {
           <Block index={4} title={hi ? "पूजा सूची और विवरण" : "Pujas & their details"}>
             <div className="grid gap-2">
               {pujas.map((p) => (
-                <div key={p.id} className="flex flex-col sm:flex-row gap-1 sm:gap-4 border-b border-dt pb-2">
+                <div
+                  key={p.id}
+                  className="flex flex-col sm:flex-row gap-1 sm:gap-4 border-b border-dt pb-2"
+                >
                   <span className="font-semibold text-ink sm:min-w-[280px]">
                     {hi && p.titleHi ? p.titleHi : p.title}{" "}
                     <span className="font-normal text-xs">({p.code})</span>
@@ -194,7 +235,10 @@ export default function Review() {
           <Block index={5} title={hi ? "आचार्य" : "Acharyas"}>
             <div className="grid gap-2">
               {acharyas.map((a) => (
-                <div key={a.id} className="flex flex-col sm:flex-row gap-1 sm:gap-4 border-b border-dt pb-2">
+                <div
+                  key={a.id}
+                  className="flex flex-col sm:flex-row gap-1 sm:gap-4 border-b border-dt pb-2"
+                >
                   <span className="font-semibold text-ink sm:min-w-[200px]">{a.name}</span>
                   <span>
                     {hi && a.traditionHi ? a.traditionHi : a.tradition}
@@ -203,13 +247,18 @@ export default function Review() {
                 </div>
               ))}
             </div>
-            <p className="text-xs">Confirm bios, publicly shown phone numbers, and photo consent.</p>
+            <p className="text-xs">
+              Confirm bios, publicly shown phone numbers, and photo consent.
+            </p>
           </Block>
 
           <Block index={6} title={hi ? "अन्य पृष्ठ" : "Other pages"}>
             <div className="grid gap-2">
               {otherPages.map(([a, b]) => (
-                <div key={a} className="flex flex-col sm:flex-row gap-1 sm:gap-4 border-b border-dt pb-2">
+                <div
+                  key={a}
+                  className="flex flex-col sm:flex-row gap-1 sm:gap-4 border-b border-dt pb-2"
+                >
                   <span className="font-semibold text-ink sm:min-w-[200px]">{a}</span>
                   <span>{b}</span>
                 </div>
@@ -217,10 +266,16 @@ export default function Review() {
             </div>
           </Block>
 
-          <Block index={7} title={hi ? "शीर्षक — अंग्रेज़ी / हिन्दी" : "Headings — English / Hindi"}>
+          <Block
+            index={7}
+            title={hi ? "शीर्षक — अंग्रेज़ी / हिन्दी" : "Headings — English / Hindi"}
+          >
             <div className="grid gap-2">
               {headings.map(([en, h]) => (
-                <div key={en} className="flex flex-col sm:flex-row gap-1 sm:gap-4 border-b border-dt pb-2">
+                <div
+                  key={en}
+                  className="flex flex-col sm:flex-row gap-1 sm:gap-4 border-b border-dt pb-2"
+                >
                   <span className="sm:min-w-[280px]">{en}</span>
                   <span className="font-semibold text-ink">{h}</span>
                 </div>

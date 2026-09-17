@@ -8,8 +8,9 @@ import {
   X,
   House,
 } from "@phosphor-icons/react";
-import { pujas, festivals, intentions, deities, deityHi } from "../lib/data";
+import { intentions, deities, deityHi } from "../lib/data";
 import { upcomingFestivals } from "../lib/dates";
+import { useLivePujas, useLiveFestivals } from "../lib/cms";
 import PujaCard from "../components/common/PujaCard";
 import SafeImage from "../components/common/SafeImage";
 import SectionHeading from "../components/common/SectionHeading";
@@ -33,6 +34,11 @@ export default function Catalog() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const tags = ["All", "Festival", "Evergreen", "Popular", "Remedy", "Limited slots", "Ancestral"];
 
+  // Cache-first: render hardcoded pujas instantly, then merge Firestore
+  // published overrides + new items in the background. Same for festivals.
+  const { items: livePujas } = useLivePujas();
+  const { items: liveFestivals } = useLiveFestivals();
+
   // Keep the URL in sync with the deity filter so links can pre-filter.
   useEffect(() => {
     const next = new URLSearchParams(searchParams);
@@ -53,7 +59,7 @@ export default function Catalog() {
   }, [searchParams]);
 
   const result = useMemo(() => {
-    const filtered = pujas.filter(
+    const filtered = livePujas.filter(
       (p) =>
         (tag === "All" || p.tag === tag) &&
         (deity === "All" || p.deity === deity) &&
@@ -67,7 +73,7 @@ export default function Catalog() {
     else if (sort === "price-desc") sorted.sort((a, b) => b.price - a.price);
     else if (sort === "upcoming") sorted.sort((a, b) => parseDate(a.date) - parseDate(b.date));
     return sorted;
-  }, [q, tag, deity, purpose, sort]);
+  }, [q, tag, deity, purpose, sort, livePujas]);
 
   const activeFilters = [
     tag !== "All" && { key: "tag", label: tag, clear: () => setTag("All") },
@@ -89,7 +95,7 @@ export default function Catalog() {
   }, [result]);
 
   // Seasonal shelves soonest-first: order flips automatically as dates pass.
-  const orderedFestivals = useMemo(() => upcomingFestivals(festivals), []);
+  const orderedFestivals = useMemo(() => upcomingFestivals(liveFestivals), [liveFestivals]);
 
   const SORTS = [
     { key: "popular", label: t("catalog.sortPopular") },
@@ -186,11 +192,7 @@ export default function Catalog() {
                         onClick={() => setDeity(d)}
                         className={`flex items-center justify-between border-b border-dt py-2 text-left text-sm transition-colors ${deity === d ? "text-gold-600" : "muted-dt hover:text-ink"}`}
                       >
-                        {d === "All"
-                          ? t("common.all")
-                          : lang === "hi"
-                            ? deityHi[d] || d
-                            : d}
+                        {d === "All" ? t("common.all") : lang === "hi" ? deityHi[d] || d : d}
                         {deity === d && <CheckCircle size={14} />}
                       </button>
                     ))}
@@ -293,7 +295,11 @@ export default function Catalog() {
                   <Reveal key={f.name} delay={i * 0.04}>
                     <div className="panel-dt overflow-hidden">
                       <div className="media-dt aspect-[4/3]">
-                        <SafeImage src={f.image} alt={name} className="h-full w-full object-cover" />
+                        <SafeImage
+                          src={f.image}
+                          alt={name}
+                          className="h-full w-full object-cover"
+                        />
                       </div>
                       <div className="p-5">
                         <div className="text-[10px] uppercase tracking-[.16em] text-gold-600">

@@ -1,16 +1,26 @@
-import React from "react";
+import React, { useMemo } from "react";
 import BookingFrame from "../components/common/BookingFrame";
 import SafeImage from "../components/common/SafeImage";
 import { CheckCircle, Plus, VideoCamera } from "../components/common/Icons";
 import { useBooking } from "../lib/booking";
-import { pujas } from "../lib/data";
+import { pujas as defaultPujas } from "../lib/data";
+import { useLivePujas } from "../lib/cms";
 import { useToast } from "../components/common/Toast";
 import { useLanguage } from "../components/common/LanguageToggle";
 export default function BookingPackage() {
   const { booking, update } = useBooking();
   const toast = useToast();
   const { t, lang } = useLanguage();
-  const currentPuja = pujas.find((x) => x.id === booking.pujaId) || pujas[0];
+  // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
+  // in the background when published overrides arrive.
+  const { items: livePujas } = useLivePujas();
+  const currentPuja = useMemo(
+    () =>
+      livePujas.find((x) => x.id === booking.pujaId) ||
+      defaultPujas.find((x) => x.id === booking.pujaId) ||
+      defaultPujas[0],
+    [livePujas, booking.pujaId]
+  );
   const packs =
     lang === "hi"
       ? [

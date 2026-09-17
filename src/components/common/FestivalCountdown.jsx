@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Sparkle, CalendarBlank, FlowerLotus } from "@phosphor-icons/react";
-import { festivals } from "../../lib/data";
+import { festivals as defaultFestivals } from "../../lib/data";
 import { festivalDate } from "../../lib/dates";
 
 /* ------------------------------------------------------------------ *
@@ -11,15 +11,23 @@ import { festivalDate } from "../../lib/dates";
  * Dates come from data.js festivals via lib/dates (single source).
  * ------------------------------------------------------------------ */
 
-export function getUpcomingFestivals(now, count = 2) {
-  const candidates = festivals
+/**
+ * Returns the next `count` upcoming festivals relative to `now`.
+ * @param {Date} now
+ * @param {number} count  How many to return.
+ * @param {Array}  list   Optional festivals list (defaults to hardcoded).
+ *   Pass the live (Firestore-merged) list so newly created festivals show up.
+ */
+export function getUpcomingFestivals(now, count = 2, list = null) {
+  const source = Array.isArray(list) && list.length ? list : defaultFestivals;
+  const candidates = source
     .map((f) => ({ name: f.name, note: f.note, date: festivalDate(f, now) }))
     .filter((f) => f.date);
   return candidates.sort((a, b) => a.date.getTime() - b.date.getTime()).slice(0, count);
 }
 
-function getNextFestival(now) {
-  return getUpcomingFestivals(now, 1)[0] || null;
+function getNextFestival(now, list = null) {
+  return getUpcomingFestivals(now, 1, list)[0] || null;
 }
 
 function splitDuration(ms) {
@@ -37,8 +45,14 @@ function pad(n) {
 }
 
 /* variant: "gold" (default) or "crimson" (alt color/style, same animation).
- * Pass `festival` to pin a specific upcoming festival; otherwise the next one. */
-export default function FestivalCountdown({ festival = null, variant = "gold", eyebrow = null }) {
+ * Pass `festival` to pin a specific upcoming festival; otherwise the next one.
+ * Pass `list` to use the live (Firestore-merged) festivals list. */
+export default function FestivalCountdown({
+  festival = null,
+  variant = "gold",
+  eyebrow = null,
+  list = null,
+}) {
   const reduce = useReducedMotion();
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
@@ -47,7 +61,7 @@ export default function FestivalCountdown({ festival = null, variant = "gold", e
     return () => clearInterval(t);
   }, [reduce]);
 
-  const next = festival || getNextFestival(new Date(now));
+  const next = festival || getNextFestival(new Date(now), list);
   if (!next) return null;
   const remaining = splitDuration(next.date.getTime() - now);
   const units = [

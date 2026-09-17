@@ -1,8 +1,9 @@
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight, ShareNetwork } from "@phosphor-icons/react";
 import { motion, useReducedMotion, useScroll, useSpring } from "motion/react";
-import { stories } from "../lib/data";
+import { stories as defaultStories } from "../lib/data";
+import { useLiveStories } from "../lib/cms";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
 import { LeafBranch, LotusLine, Peacock, Conch, SectionDecor } from "../components/common/decor";
@@ -10,7 +11,16 @@ import { useLanguage } from "../components/common/LanguageToggle";
 export default function StoryDetail() {
   const { id } = useParams();
   const { t, lang } = useLanguage();
-  const s = stories.find((x) => x.id === id) || stories[0];
+  // Cache-first: render hardcoded story instantly, then refresh from Firestore
+  // in the background when the published override arrives.
+  const { items: liveStories } = useLiveStories();
+  const s = useMemo(
+    () =>
+      liveStories.find((x) => x.id === id) ||
+      defaultStories.find((x) => x.id === id) ||
+      defaultStories[0],
+    [liveStories, id]
+  );
   const articleRef = useRef(null);
   const reduce = useReducedMotion();
   const title = lang === "hi" && s.titleHi ? s.titleHi : s.title;

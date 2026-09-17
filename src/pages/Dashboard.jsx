@@ -19,20 +19,23 @@ import { useFavorites } from "../lib/favorites";
 import { useAuth } from "../lib/auth";
 import { useBookings } from "../lib/orders";
 import { useAddresses } from "../lib/addresses";
-import { pujas } from "../lib/data";
+import { useLivePujas } from "../lib/cms";
 import { bookingStatusMeta } from "../lib/bookingStatus";
 
-function BookingRow({ b, lang }) {
+function BookingRow({ b, lang, pujas }) {
   const p = pujas.find((x) => x.id === b.pujaId);
-  const title = (lang === "hi" && p?.titleHi) ? p.titleHi : (p?.title || b.pujaId);
+  const title = lang === "hi" && p?.titleHi ? p.titleHi : p?.title || b.pujaId;
   const meta = bookingStatusMeta(b.status);
-  const dateStr = b.date || (b.createdAt?.toDate?.()?.toLocaleDateString?.() || "—");
+  const dateStr = b.date || b.createdAt?.toDate?.()?.toLocaleDateString?.() || "—";
   const timeStr = b.time || "";
   return (
     <div className="flex items-center gap-4 border-t border-dt py-4">
       <div className="min-w-0 flex-1">
         <div className="text-sm font-semibold truncate">{title}</div>
-        <div className="mt-1 text-xs muted-dt">{dateStr}{timeStr ? ` · ${timeStr}` : ""}</div>
+        <div className="mt-1 text-xs muted-dt">
+          {dateStr}
+          {timeStr ? ` · ${timeStr}` : ""}
+        </div>
       </div>
       <span
         className="rounded-full px-3 py-1.5 text-[10px] font-bold"
@@ -49,18 +52,26 @@ export default function Dashboard() {
   const { ids, count } = useFavorites();
   const { bookings, loading: bookingsLoading } = useBookings(user);
   const { addresses } = useAddresses(user);
+  // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
+  // in the background when published overrides arrive.
+  const { items: pujas } = useLivePujas();
   const saved = pujas.filter((p) => ids.includes(p.id));
 
   // Derive stats from real bookings
   const stats = React.useMemo(() => {
     const total = bookings?.length || 0;
-    const upcoming = bookings?.filter((b) => ["pending", "confirmed", "puja_slot_assigned"].includes(b.status)).length || 0;
-    const completed = bookings?.filter((b) => ["delivered", "archived"].includes(b.status)).length || 0;
+    const upcoming =
+      bookings?.filter((b) => ["pending", "confirmed", "puja_slot_assigned"].includes(b.status))
+        .length || 0;
+    const completed =
+      bookings?.filter((b) => ["delivered", "archived"].includes(b.status)).length || 0;
     return { total, upcoming, completed };
   }, [bookings]);
 
   const greetingName = user?.displayName || (user?.email ? user.email.split("@")[0] : "friend");
-  const nextBooking = bookings?.find((b) => ["pending", "confirmed", "puja_slot_assigned"].includes(b.status)) || null;
+  const nextBooking =
+    bookings?.find((b) => ["pending", "confirmed", "puja_slot_assigned"].includes(b.status)) ||
+    null;
   const nextPuja = nextBooking ? pujas.find((p) => p.id === nextBooking.pujaId) : null;
   const lang = "en"; // dashboard is always EN for simplicity
 
@@ -71,14 +82,20 @@ export default function Dashboard() {
       <section className="site-section">
         <div className="container-dt max-w-[640px] text-center" style={{ padding: "60px 20px" }}>
           <Heart size={36} className="mx-auto text-gold-600" />
-          <h1 className="display-dt mt-4" style={{ fontSize: 36 }}>Sign in to view your dashboard</h1>
+          <h1 className="display-dt mt-4" style={{ fontSize: 36 }}>
+            Sign in to view your dashboard
+          </h1>
           <p className="muted-dt mt-3 text-sm">
-            Your wishlist, bookings and saved addresses live here once you sign in.
-            Items you saved without signing in are kept locally and synced after you log in.
+            Your wishlist, bookings and saved addresses live here once you sign in. Items you saved
+            without signing in are kept locally and synced after you log in.
           </p>
           <div className="mt-6 flex gap-3 justify-center flex-wrap">
-            <Link to="/auth/login" className="btn-gold-dt">Sign in</Link>
-            <Link to="/auth/register" className="btn-ghost-dt">Create account</Link>
+            <Link to="/auth/login" className="btn-gold-dt">
+              Sign in
+            </Link>
+            <Link to="/auth/register" className="btn-ghost-dt">
+              Create account
+            </Link>
           </div>
         </div>
       </section>
@@ -113,7 +130,8 @@ export default function Dashboard() {
                   <div className="mt-4 text-xs text-white/45">Next puja</div>
                   <div className="display-dt mt-2 text-4xl">{nextPuja.title}</div>
                   <div className="mt-3 flex items-center gap-2 text-xs text-white/45">
-                    <CalendarBlank size={15} /> {nextBooking?.date || "—"}{nextBooking?.time ? ` · ${nextBooking.time}` : ""}
+                    <CalendarBlank size={15} /> {nextBooking?.date || "—"}
+                    {nextBooking?.time ? ` · ${nextBooking.time}` : ""}
                   </div>
                   <Link to="/booking/tracking" className="btn-gold-dt mt-6">
                     Track booking <ArrowRight size={14} />
@@ -146,7 +164,10 @@ export default function Dashboard() {
 
           {/* Quick links: addresses + bookings */}
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            <Link to="/addresses" className="panel-dt p-5 flex items-center gap-4 hover:border-gold-400/50 transition-colors">
+            <Link
+              to="/addresses"
+              className="panel-dt p-5 flex items-center gap-4 hover:border-gold-400/50 transition-colors"
+            >
               <MapPin size={22} className="text-gold-600 flex-none" />
               <div className="min-w-0">
                 <div className="text-sm font-semibold">Saved addresses</div>
@@ -156,7 +177,10 @@ export default function Dashboard() {
               </div>
               <ArrowUpRight size={16} className="muted-dt flex-none ml-auto" />
             </Link>
-            <Link to="/bookings" className="panel-dt p-5 flex items-center gap-4 hover:border-gold-400/50 transition-colors">
+            <Link
+              to="/bookings"
+              className="panel-dt p-5 flex items-center gap-4 hover:border-gold-400/50 transition-colors"
+            >
               <BookmarkSimple size={22} className="text-gold-600 flex-none" />
               <div className="min-w-0">
                 <div className="text-sm font-semibold">My bookings</div>
@@ -174,15 +198,17 @@ export default function Dashboard() {
                     <div className="eyebrow">Upcoming</div>
                     <h2 className="mt-2 display-dt text-4xl">Your bookings</h2>
                   </div>
-                  <Link className="btn-ghost-dt" to="/bookings">View all</Link>
+                  <Link className="btn-ghost-dt" to="/bookings">
+                    View all
+                  </Link>
                 </div>
                 <div className="mt-6 grid gap-1">
                   {bookingsLoading ? (
                     <p className="text-xs muted-dt">Loading…</p>
                   ) : bookings && bookings.length > 0 ? (
-                    bookings.slice(0, 5).map((b) => (
-                      <BookingRow key={b.id} b={b} lang={lang} />
-                    ))
+                    bookings
+                      .slice(0, 5)
+                      .map((b) => <BookingRow key={b.id} b={b} lang={lang} pujas={pujas} />)
                   ) : (
                     <p className="text-xs muted-dt">No bookings yet — pick a puja to begin.</p>
                   )}
@@ -211,9 +237,9 @@ export default function Dashboard() {
                         </div>
                       );
                     })}
-                  {(!bookings || bookings.filter((b) => ["delivered", "archived"].includes(b.status)).length === 0) && (
-                    <p className="text-xs muted-dt">No completed rituals yet.</p>
-                  )}
+                  {(!bookings ||
+                    bookings.filter((b) => ["delivered", "archived"].includes(b.status)).length ===
+                      0) && <p className="text-xs muted-dt">No completed rituals yet.</p>}
                 </div>
               </div>
             </Reveal>
@@ -307,7 +333,7 @@ export default function Dashboard() {
                     <Clock size={18} className="text-gold-600" />
                     <div className="mt-4 text-2xl display-dt">Next reminder</div>
                     <div className="mt-1 text-xs muted-dt">
-                      {nextBooking ? (nextBooking.date || "Soon") : "No upcoming rituals"}
+                      {nextBooking ? nextBooking.date || "Soon" : "No upcoming rituals"}
                     </div>
                   </div>
                   <div className="panel-dt p-5">

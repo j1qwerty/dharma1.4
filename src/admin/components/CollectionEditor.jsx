@@ -4,15 +4,28 @@
 // and a sticky save bar at the bottom.
 import { useEffect, useMemo, useState } from "react";
 import {
-  createContent, getVersions, saveContent, softDeleteContent,
+  createContent,
+  getVersions,
+  saveContent,
+  softDeleteContent,
   useAdminCollection,
 } from "../../lib/cmsAdmin";
 import { useAuth } from "../../lib/auth";
 import ImageField from "./ImageField";
 import VersionPanel from "./VersionPanel";
 import {
-  ColorInput, DateTimeInput, Field, FormRow, NumberInput, Select, StatusBadge,
-  TextArea, TextInput, Toggle, fromDateTimeLocal, toDateTimeLocal,
+  ColorInput,
+  DateTimeInput,
+  Field,
+  FormRow,
+  NumberInput,
+  Select,
+  StatusBadge,
+  TextArea,
+  TextInput,
+  Toggle,
+  fromDateTimeLocal,
+  toDateTimeLocal,
 } from "./ui";
 
 function emptyFromFields(fields) {
@@ -30,7 +43,7 @@ function docToForm(doc, fields) {
   for (const f of fields) {
     let v = doc?.[f.key];
     if (f.type === "datetime") o[f.key] = toDateTimeLocal(v);
-    else if (f.type === "list") o[f.key] = Array.isArray(v) ? v.join(", ") : (v || "");
+    else if (f.type === "list") o[f.key] = Array.isArray(v) ? v.join(", ") : v || "";
     else if (f.type === "checkbox") o[f.key] = Boolean(v);
     else if (v == null) o[f.key] = "";
     else o[f.key] = v;
@@ -46,7 +59,11 @@ function formToDoc(form, fields) {
     let v = form[f.key];
     if (f.type === "number") o[f.key] = v === "" ? null : Number(v);
     else if (f.type === "datetime") o[f.key] = fromDateTimeLocal(v);
-    else if (f.type === "list") o[f.key] = String(v || "").split(",").map((s) => s.trim()).filter(Boolean);
+    else if (f.type === "list")
+      o[f.key] = String(v || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
     else if (f.type === "checkbox") o[f.key] = Boolean(v);
     else o[f.key] = v === "" ? null : v;
   }
@@ -66,7 +83,35 @@ function buildTabs(fields) {
     if (f.type === "image") tabs[3].fields.push(f);
     else if (f.type === "datetime") tabs[2].fields.push(f);
     else if (f.type === "textarea") tabs[1].fields.push(f);
-    else if (["title", "titleHi", "name", "nameHi", "code", "deity", "tag", "type", "category", "read", "date", "eventDate", "countdownTo", "linkedPujaIds", "homepageTakeover", "key", "enabled", "place", "placeHi", "phone", "email", "price", "temple", "purpose"].includes(f.key)) tabs[0].fields.push(f);
+    else if (
+      [
+        "title",
+        "titleHi",
+        "name",
+        "nameHi",
+        "code",
+        "deity",
+        "tag",
+        "type",
+        "category",
+        "read",
+        "date",
+        "eventDate",
+        "countdownTo",
+        "linkedPujaIds",
+        "homepageTakeover",
+        "key",
+        "enabled",
+        "place",
+        "placeHi",
+        "phone",
+        "email",
+        "price",
+        "temple",
+        "purpose",
+      ].includes(f.key)
+    )
+      tabs[0].fields.push(f);
     else tabs[4].fields.push(f);
   }
   // Remove empty tabs.
@@ -74,9 +119,15 @@ function buildTabs(fields) {
 }
 
 export default function CollectionEditor({
-  collection, title, subtitle, sharedNote,
-  fields, orderField, fullHistory = false,
-  fallbackRows = [], idField = "id",
+  collection,
+  title,
+  subtitle,
+  sharedNote,
+  fields,
+  orderField,
+  fullHistory = false,
+  fallbackRows = [],
+  idField = "id",
   // Optional: when fields vary per item (e.g. homepage sections), pass a
   // function that returns the field list for a given item. Overrides `fields`.
   fieldsFor = null,
@@ -84,11 +135,15 @@ export default function CollectionEditor({
   commonFields = [],
 }) {
   const { user } = useAuth();
-  const { rows, loading, remote } = useAdminCollection(collection);
+  const { rows, loading, remote, refresh } = useAdminCollection(collection);
   const [selectedId, setSelectedId] = useState(null);
   const [isNew, setIsNew] = useState(false);
   const [newId, setNewId] = useState("");
-  const [form, setForm] = useState(() => ({ ...emptyFromFields(fields), _status: "draft", _order: "" }));
+  const [form, setForm] = useState(() => ({
+    ...emptyFromFields(fields),
+    _status: "draft",
+    _order: "",
+  }));
   const [versions, setVersions] = useState([]);
   const [msg, setMsg] = useState(null);
   const [msgKind, setMsgKind] = useState("info");
@@ -97,18 +152,38 @@ export default function CollectionEditor({
   const [search, setSearch] = useState("");
 
   const list = useMemo(() => {
-    const live = remote ? (rows || []) : fallbackRows;
-    let sorted = [...live];
+    // When Firestore is configured, MERGE published/draft Firestore rows
+    // WITH the hardcoded fallback rows so the admin still sees existing
+    // content (e.g. the homepage section list) even before it has been
+    // saved to Firestore. When a fallback row's id/key matches a Firestore
+    // row, the Firestore version wins (it has the live override).
+    let merged;
+    if (remote) {
+      const remoteRows = rows || [];
+      const remoteIds = new Set(remoteRows.map((r) => String(r[idField] || r.id)));
+      const missingFromRemote = (fallbackRows || []).filter(
+        (f) => !remoteIds.has(String(f[idField] || f.id))
+      );
+      merged = [...remoteRows, ...missingFromRemote];
+    } else {
+      merged = fallbackRows || [];
+    }
+    let sorted = [...merged];
     if (orderField) sorted.sort((a, b) => (a[orderField] ?? 999) - (b[orderField] ?? 999));
     if (search.trim()) {
       const q = search.trim().toLowerCase();
-      sorted = sorted.filter((d) =>
-        String(d.title || d.name || d.key || d.id || "").toLowerCase().includes(q) ||
-        String(d.id || "").toLowerCase().includes(q)
+      sorted = sorted.filter(
+        (d) =>
+          String(d.title || d.name || d.key || d.id || "")
+            .toLowerCase()
+            .includes(q) ||
+          String(d.id || "")
+            .toLowerCase()
+            .includes(q)
       );
     }
     return sorted;
-  }, [rows, remote, fallbackRows, orderField, search]);
+  }, [rows, remote, fallbackRows, orderField, search, idField]);
 
   const selected = useMemo(
     () => list.find((d) => (d[idField] || d.id) === selectedId) || null,
@@ -133,7 +208,9 @@ export default function CollectionEditor({
       setForm(docToForm(selected, activeFields));
       setIsNew(false);
       setMsg(null);
-      getVersions(collection, selected.id).then(setVersions).catch(() => setVersions([]));
+      getVersions(collection, selected.id)
+        .then(setVersions)
+        .catch(() => setVersions([]));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId, activeFields]);
@@ -163,16 +240,40 @@ export default function CollectionEditor({
       if (orderField) data[orderField] = form._order === "" ? null : Number(form._order);
       if (isNew) {
         const id = (newId || data.title || data.name || data.key || "").trim();
-        const created = await createContent(collection, { ...data, ...(id ? { id } : {}) }, user, { status: form._status });
+        const created = await createContent(collection, { ...data, ...(id ? { id } : {}) }, user, {
+          status: form._status,
+        });
         setMsg(`Created "${created}" as ${form._status}.`);
         setMsgKind("success");
         setSelectedId(created);
         setIsNew(false);
+        if (typeof refresh === "function") refresh();
       } else {
-        await saveContent(collection, selected.id, data, user, { status: form._status });
-        setMsg(`Saved "${selected.id}" (${form._status}). Previous state kept in versions.`);
-        setMsgKind("success");
-        getVersions(collection, selected.id).then(setVersions).catch(() => {});
+        // The selected row may be a FALLBACK item that hasn't been written
+        // to Firestore yet (no doc at collection/{id}). Try saveContent
+        // first; on "Not found", fall back to createContent so the admin
+        // can edit hardcoded items and persist them as overrides.
+        const idToSave = selected[idField] || selected.id;
+        try {
+          await saveContent(collection, idToSave, data, user, { status: form._status });
+          setMsg(`Saved "${idToSave}" (${form._status}). Previous state kept in versions.`);
+          setMsgKind("success");
+        } catch (e) {
+          if (/not found/i.test(e.message) || /missing/i.test(e.message)) {
+            // Fall back to create for fallback rows that don't exist yet.
+            await createContent(collection, { ...data, id: idToSave }, user, {
+              status: form._status,
+            });
+            setMsg(`Created "${idToSave}" as ${form._status} (was a local default).`);
+            setMsgKind("success");
+          } else {
+            throw e;
+          }
+        }
+        getVersions(collection, idToSave)
+          .then(setVersions)
+          .catch(() => {});
+        if (typeof refresh === "function") refresh();
       }
     } catch (e) {
       setMsg(`Save failed: ${e.message}`);
@@ -182,12 +283,14 @@ export default function CollectionEditor({
   };
 
   const onDelete = async () => {
-    if (!selected || !window.confirm(`Soft-delete "${selected.id}"? Kept in Trash for 30 days.`)) return;
+    if (!selected || !window.confirm(`Soft-delete "${selected.id}"? Kept in Trash for 30 days.`))
+      return;
     try {
       await softDeleteContent(collection, selected.id, user);
       setMsg(`"${selected.id}" moved to Trash (30 days).`);
       setMsgKind("warn");
       setSelectedId(null);
+      if (typeof refresh === "function") refresh();
     } catch (e) {
       setMsg(`Delete failed: ${e.message}`);
       setMsgKind("error");
@@ -202,27 +305,64 @@ export default function CollectionEditor({
 
   const renderInput = (f) => {
     const v = form[f.key] ?? "";
-    if (f.type === "textarea") return <TextArea value={v} onChange={(e) => set(f.key, e.target.value)} placeholder={f.hint} />;
-    if (f.type === "number") return <NumberInput value={v} onChange={(e) => set(f.key, e.target.value)} placeholder={f.hint} />;
-    if (f.type === "datetime") return <DateTimeInput value={v} onChange={(e) => set(f.key, e.target.value)} />;
-    if (f.type === "color") return <ColorInput value={v} onChange={(val) => set(f.key, val)} aria-label={f.label} />;
-    if (f.type === "checkbox") return <Toggle label={f.label} desc={f.hint} value={v} onChange={(val) => set(f.key, val)} />;
-    if (f.type === "select") return (
-      <Select value={v || ""} onChange={(e) => set(f.key, e.target.value)}>
-        <option value="">—</option>
-        {(f.options || []).map((o) => <option key={o} value={o}>{o}</option>)}
-      </Select>
+    if (f.type === "textarea")
+      return (
+        <TextArea value={v} onChange={(e) => set(f.key, e.target.value)} placeholder={f.hint} />
+      );
+    if (f.type === "number")
+      return (
+        <NumberInput value={v} onChange={(e) => set(f.key, e.target.value)} placeholder={f.hint} />
+      );
+    if (f.type === "datetime")
+      return <DateTimeInput value={v} onChange={(e) => set(f.key, e.target.value)} />;
+    if (f.type === "color")
+      return <ColorInput value={v} onChange={(val) => set(f.key, val)} aria-label={f.label} />;
+    if (f.type === "checkbox")
+      return <Toggle label={f.label} desc={f.hint} value={v} onChange={(val) => set(f.key, val)} />;
+    if (f.type === "select")
+      return (
+        <Select value={v || ""} onChange={(e) => set(f.key, e.target.value)}>
+          <option value="">—</option>
+          {(f.options || []).map((o) => (
+            <option key={o} value={o}>
+              {o}
+            </option>
+          ))}
+        </Select>
+      );
+    if (f.type === "image")
+      return (
+        <ImageField
+          label={f.label}
+          collection={collection}
+          value={v}
+          onChange={(val) => set(f.key, val)}
+        />
+      );
+    return (
+      <TextInput value={v} onChange={(e) => set(f.key, e.target.value)} placeholder={f.hint} />
     );
-    if (f.type === "image") return <ImageField label={f.label} collection={collection} value={v} onChange={(val) => set(f.key, val)} />;
-    return <TextInput value={v} onChange={(e) => set(f.key, e.target.value)} placeholder={f.hint} />;
   };
 
-  const msgCls = msgKind === "success" ? "ad-msg-success"
-    : msgKind === "error" ? "ad-msg-error"
-    : msgKind === "warn" ? "ad-msg-warn" : "ad-msg-info";
+  const msgCls =
+    msgKind === "success"
+      ? "ad-msg-success"
+      : msgKind === "error"
+        ? "ad-msg-error"
+        : msgKind === "warn"
+          ? "ad-msg-warn"
+          : "ad-msg-info";
 
-  const headTitle = isNew ? "New item" : (selected?.title || selected?.name || selected?.key || selected?.id || "Select an item");
-  const headMeta = isNew ? (newId ? `id · ${newId}` : "id · auto from title") : (selected ? `id · ${selected.id}` : "");
+  const headTitle = isNew
+    ? "New item"
+    : selected?.title || selected?.name || selected?.key || selected?.id || "Select an item";
+  const headMeta = isNew
+    ? newId
+      ? `id · ${newId}`
+      : "id · auto from title"
+    : selected
+      ? `id · ${selected.id}`
+      : "";
 
   return (
     <div className="admin-root">
@@ -244,7 +384,16 @@ export default function CollectionEditor({
         </div>
         <div className="ad-page-actions">
           <button className="ad-btn ad-btn-gold ad-btn-sm" onClick={startNew} disabled={!remote}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
@@ -279,9 +428,7 @@ export default function CollectionEditor({
                     className={`ad-item ${active ? "active" : ""}`}
                     title={d.title || d.name || d.key || id}
                   >
-                    <span className="ad-item-title">
-                      {d.title || d.name || d.key || id}
-                    </span>
+                    <span className="ad-item-title">{d.title || d.name || d.key || id}</span>
                     <span className="ad-item-meta">
                       <span className="ad-item-id">{id}</span>
                       <StatusBadge status={d.status} />
@@ -291,7 +438,13 @@ export default function CollectionEditor({
               })}
               {!loading && list.length === 0 && (
                 <p className="ad-stat-foot">
-                  {search ? "No matches." : <>Empty — run <code className="ad-code">node scripts/seedFirestore.mjs</code>.</>}
+                  {search ? (
+                    "No matches."
+                  ) : (
+                    <>
+                      Empty — run <code className="ad-code">node scripts/seedFirestore.mjs</code>.
+                    </>
+                  )}
                 </p>
               )}
             </div>
@@ -311,14 +464,24 @@ export default function CollectionEditor({
           {!selected && !isNew && (
             <div className="ad-ed-empty">
               <div className="ad-ed-empty-icon" aria-hidden="true">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                   <polyline points="14 2 14 8 20 8" />
                   <line x1="9" y1="15" x2="15" y2="15" />
                 </svg>
               </div>
               <p className="ad-ed-empty-text">
-                Select an item from the list to edit its values, or use <strong>New item</strong> in the top right to create one.
+                Select an item from the list to edit its values, or use <strong>New item</strong> in
+                the top right to create one.
               </p>
             </div>
           )}
@@ -345,8 +508,15 @@ export default function CollectionEditor({
                 {isNew && (
                   <div className="ad-tab-panel-section">
                     <div className="ad-tab-panel-section-title">Identity</div>
-                    <Field label="Document ID" hint="Lowercase slug, e.g. maha-rudra-special. Auto from title if empty.">
-                      <TextInput value={newId} onChange={(e) => setNewId(e.target.value)} placeholder="auto-from-title" />
+                    <Field
+                      label="Document ID"
+                      hint="Lowercase slug, e.g. maha-rudra-special. Auto from title if empty."
+                    >
+                      <TextInput
+                        value={newId}
+                        onChange={(e) => setNewId(e.target.value)}
+                        placeholder="auto-from-title"
+                      />
                     </Field>
                   </div>
                 )}
@@ -356,39 +526,58 @@ export default function CollectionEditor({
                   <div className="ad-tab-panel-section-title">Status & ordering</div>
                   <FormRow>
                     <Field label="Status">
-                      <Select value={form._status} onChange={(e) => set("._status", e.target.value)}>
+                      <Select value={form._status} onChange={(e) => set("_status", e.target.value)}>
                         <option value="published">published (live)</option>
                         <option value="draft">draft (hidden)</option>
                       </Select>
                     </Field>
                     {orderField && (
-                      <Field label={orderField === "priority" ? "Priority (order)" : "Order"} hint="Lower shows first on site.">
-                        <NumberInput value={form._order} onChange={(e) => set("._order", e.target.value)} />
+                      <Field
+                        label={orderField === "priority" ? "Priority (order)" : "Order"}
+                        hint="Lower shows first on site."
+                      >
+                        <NumberInput
+                          value={form._order}
+                          onChange={(e) => set("_order", e.target.value)}
+                        />
                       </Field>
                     )}
                   </FormRow>
                 </div>
 
                 {/* Active tab fields */}
-                {tabs.filter((t) => t.key === activeTab).map((t) => (
-                  <div key={t.key} className="ad-tab-panel-section">
-                    <div className="ad-tab-panel-section-title">{t.label}</div>
-                    <div style={{ display: "grid", gap: 14 }}>
-                      {t.fields.map((f) => (
-                        f.type === "checkbox"
-                          ? <div key={f.key}>{renderInput(f)}</div>
-                          : <Field key={f.key} label={f.label} hint={f.type === "list" ? "Comma-separated" : undefined}>{renderInput(f)}</Field>
-                      ))}
+                {tabs
+                  .filter((t) => t.key === activeTab)
+                  .map((t) => (
+                    <div key={t.key} className="ad-tab-panel-section">
+                      <div className="ad-tab-panel-section-title">{t.label}</div>
+                      <div style={{ display: "grid", gap: 14 }}>
+                        {t.fields.map((f) =>
+                          f.type === "checkbox" ? (
+                            <div key={f.key}>{renderInput(f)}</div>
+                          ) : (
+                            <Field
+                              key={f.key}
+                              label={f.label}
+                              hint={f.type === "list" ? "Comma-separated" : undefined}
+                            >
+                              {renderInput(f)}
+                            </Field>
+                          )
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
 
               {/* Sticky save bar */}
               <div className="ad-ed-foot">
                 <div className="ad-ed-foot-msg">
                   {msg ? (
-                    <span className={`ad-msg ${msgCls}`} style={{ display: "inline-block", padding: "6px 10px" }}>
+                    <span
+                      className={`ad-msg ${msgCls}`}
+                      style={{ display: "inline-block", padding: "6px 10px" }}
+                    >
                       {msg}
                     </span>
                   ) : (
@@ -397,15 +586,41 @@ export default function CollectionEditor({
                 </div>
                 <div className="ad-ed-foot-actions">
                   {!isNew && (
-                    <button className="ad-btn ad-btn-danger ad-btn-sm" onClick={onDelete} disabled={!remote}>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <button
+                      className="ad-btn ad-btn-danger ad-btn-sm"
+                      onClick={onDelete}
+                      disabled={!remote}
+                    >
+                      <svg
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
                         <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M5 6l1 14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-14" />
                       </svg>
                       Soft-delete
                     </button>
                   )}
-                  <button className="ad-btn ad-btn-primary" onClick={onSave} disabled={saving || !remote}>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <button
+                    className="ad-btn ad-btn-primary"
+                    onClick={onSave}
+                    disabled={saving || !remote}
+                  >
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
                       <polyline points="17 21 17 13 7 13 7 21" />
                       <polyline points="7 3 7 8 15 8" />

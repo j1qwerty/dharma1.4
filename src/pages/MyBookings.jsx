@@ -4,10 +4,11 @@ import { ArrowRight, MagnifyingGlass } from "@phosphor-icons/react";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
 import { LeafBranch, LotusLine, Kalash, Trishul, SectionDecor } from "../components/common/decor";
-import { pujas } from "../lib/data";
+import { useLivePujas } from "../lib/cms";
 import { useAuth } from "../lib/auth";
 import { useBookings } from "../lib/orders";
-const demoBookings = [  ["Maha Rudrabhishek", "Sep 09, 2026", "Confirmed"],
+const demoBookings = [
+  ["Maha Rudrabhishek", "Sep 09, 2026", "Confirmed"],
   ["Ganesh Vighnaharta Puja", "Sep 10, 2026", "Confirmed"],
   ["Mahalakshmi Dhan Akarshan", "Oct 20, 2026", "Upcoming"],
   ["Satyanarayan Katha", "Aug 22, 2026", "Completed"],
@@ -26,6 +27,9 @@ export default function MyBookings() {
   const tabs = ["All", "Upcoming", "Completed"];
   const { user } = useAuth();
   const { bookings: cloudBookings, loading } = useBookings(user);
+  // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
+  // in the background when published overrides arrive.
+  const { items: pujas } = useLivePujas();
   // Signed-in users see their Firestore order history (synced in the
   // background from BookingConfirmation); everyone else sees demo content.
   const bookings = cloudBookings?.length
@@ -54,9 +58,9 @@ export default function MyBookings() {
               {loading
                 ? "Syncing your bookings…"
                 : user
-                  ? (cloudBookings?.length
-                      ? `Synced from your account (${user.email || "signed in"}).`
-                      : "Signed in — confirmed bookings will appear here automatically.")
+                  ? cloudBookings?.length
+                    ? `Synced from your account (${user.email || "signed in"}).`
+                    : "Signed in — confirmed bookings will appear here automatically."
                   : "Sample bookings shown. Sign in to sync your own orders across devices."}
             </p>
           </Reveal>

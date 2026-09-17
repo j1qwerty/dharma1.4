@@ -1,9 +1,8 @@
-// Admin shell v2: dark sidebar with icons + top bar with breadcrumb.
+// Admin shell v2: dark sidebar; public header kept via Layout, admin topbar removed.
 // Order comes from ADMIN_NAV (src/lib/content.js).
-import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { ADMIN_NAV } from "../../lib/content";
-import { maskEmail } from "../../lib/privacy";
-import { useAuth } from "../../lib/auth";
+import PageAgentBot from "../../components/common/PageAgentBot";
 
 // Phosphor-style inline icons (no extra dep). 16x16, currentColor stroke.
 const ICONS = {
@@ -96,24 +95,8 @@ function groupOf(item) {
   return "Content";
 }
 
-function crumbFor(pathname) {
-  const item = ADMIN_NAV.find((i) =>
-    i.path === "/admin" ? pathname === "/admin" : pathname.startsWith(i.path)
-  );
-  if (!item) return "Admin";
-  if (item.path === "/admin") return "Dashboard";
-  return item.label;
-}
-
 export default function AdminLayout() {
-  const { user, logout, adminRole } = useAuth();
   const loc = useLocation();
-  const nav = useNavigate();
-
-  const onLogout = async () => {
-    await logout();
-    nav("/admin/login", { replace: true });
-  };
 
   // Group nav items.
   const groups = [];
@@ -124,20 +107,9 @@ export default function AdminLayout() {
     groups[groups.length - 1].items.push(item);
   }
 
-  const initial = (user?.email || "A").trim().charAt(0).toUpperCase();
-  const crumb = crumbFor(loc.pathname);
-
   return (
     <div className="admin-root admin-shell">
       <aside>
-        <div className="ad-side-brand">
-          <div className="ad-side-mark" aria-hidden="true">ध</div>
-          <div className="ad-side-brand-text">
-            <span className="ad-side-brand-name">Dharma</span>
-            <span className="ad-side-brand-sub">CMS Console</span>
-          </div>
-        </div>
-
         <nav className="ad-side-nav">
           {groups.map((grp) => (
             <div key={grp.name}>
@@ -163,60 +135,14 @@ export default function AdminLayout() {
             </div>
           ))}
         </nav>
-
-        <div className="ad-side-foot">
-          <div className="ad-user-chip">
-            <div className="ad-user-avatar" aria-hidden="true">{initial}</div>
-            <div className="ad-user-meta">
-              <div className="ad-user-email" title={user?.email || ""}>
-                {maskEmail(user?.email, "admin") || "admin"}
-              </div>
-              <div className="ad-user-role">
-                {adminRole ? `role · ${adminRole}` : "signed in"}
-              </div>
-            </div>
-          </div>
-          <button className="ad-side-action" onClick={onLogout} type="button">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-            Sign out
-          </button>
-          <NavLink to="/" className="ad-side-action">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-              <polyline points="15 3 21 3 21 9" />
-              <line x1="10" y1="14" x2="21" y2="3" />
-            </svg>
-            View live site
-          </NavLink>
-        </div>
       </aside>
 
       <main>
-        <div className="ad-topbar">
-          <div className="ad-crumb">
-            <a href="/admin">Admin</a>
-            <span className="ad-crumb-sep">/</span>
-            <span className="ad-crumb-current">{crumb}</span>
-          </div>
-          <div className="ad-topbar-actions">
-            <a href="/" className="ad-btn ad-btn-ghost ad-btn-sm" target="_blank" rel="noreferrer">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
-              View site
-            </a>
-          </div>
-        </div>
         <div className="ad-main">
           <Outlet />
         </div>
       </main>
+      <PageAgentBot />
     </div>
   );
 }

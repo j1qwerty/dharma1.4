@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -12,7 +12,8 @@ import { useBooking, buildBookingWhatsAppHref } from "../lib/booking";
 import { useAuth } from "../lib/auth";
 import { saveBooking } from "../lib/orders";
 import { logBooking } from "../lib/cmsAdmin";
-import { pujas } from "../lib/data";
+import { pujas as defaultPujas } from "../lib/data";
+import { useLivePujas } from "../lib/cms";
 import { Reveal } from "../components/common/Motion";
 import SafeImage from "../components/common/SafeImage";
 import {
@@ -32,6 +33,10 @@ export default function BookingConfirmation() {
   const [bookingId, setBookingId] = useState(null);
   const [logged, setLogged] = useState(false);
 
+  // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
+  // in the background when published overrides arrive.
+  const { items: livePujas } = useLivePujas();
+
   // Persist every confirmation to Firestore (signed-in upsert + universal log),
   // so bookings exist in admin even for guests / WhatsApp continuations.
   // Idempotent: sessionStorage guards against re-renders.
@@ -40,14 +45,24 @@ export default function BookingConfirmation() {
     const key = `dt-logged-${booking?.pujaId}-${booking?.date}-${booking?.time}`;
     if (!sessionStorage.getItem(key)) {
       sessionStorage.setItem(key, "1");
-      logBooking({ ...booking, lang }, user, { source: "web-confirmation", status: "pending" })
-        .then((id) => { if (id) setBookingId(id); });
+      logBooking({ ...booking, lang }, user, {
+        source: "web-confirmation",
+        status: "pending",
+      }).then((id) => {
+        if (id) setBookingId(id);
+      });
       ux.bookingCompleted({ puja_id: booking?.pujaId, has_user: Boolean(user?.uid) });
     }
     setLogged(true);
   }, [user?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const p = pujas.find((x) => x.id === booking.pujaId) || pujas[0];
+  const p = useMemo(
+    () =>
+      livePujas.find((x) => x.id === booking.pujaId) ||
+      defaultPujas.find((x) => x.id === booking.pujaId) ||
+      defaultPujas[0],
+    [livePujas, booking.pujaId]
+  );
   const waHref = buildBookingWhatsAppHref(booking, lang);
   const title = lang === "hi" && p.titleHi ? p.titleHi : p.title;
 
@@ -72,11 +87,7 @@ export default function BookingConfirmation() {
                 <h1 className="display-dt mt-3 text-6xl">{t("bc.title")}</h1>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-white/55">{t("bc.copy")}</p>
                 <div className="mt-7 overflow-hidden rounded-2xl">
-                  <SafeImage
-                    src={p.image}
-                    alt={title}
-                    className="h-56 w-full object-cover"
-                  />
+                  <SafeImage src={p.image} alt={title} className="h-56 w-full object-cover" />
                 </div>
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Link className="btn-gold-dt" to="/booking/tracking">
@@ -115,7 +126,12 @@ export default function BookingConfirmation() {
                 </div>
                 <div className="mt-4 text-xs muted-dt">{t("bc.bookingId")}</div>
                 <div className="mt-2 font-mono text-sm">
-                  {bookingId ? bookingId.slice(0, 18) : "DT-" + Math.abs(hashCode(booking?.pujaId + booking?.date + booking?.time)).toString(36).toUpperCase()}
+                  {bookingId
+                    ? bookingId.slice(0, 18)
+                    : "DT-" +
+                      Math.abs(hashCode(booking?.pujaId + booking?.date + booking?.time))
+                        .toString(36)
+                        .toUpperCase()}
                 </div>
                 <div className="mt-6 grid gap-3 text-sm">
                   <div className="flex justify-between">
@@ -167,7 +183,7 @@ export default function BookingConfirmation() {
 function hashCode(s) {
   let h = 0;
   for (let i = 0; i < (s || "").length; i++) {
-    h = ((h << 5) - h) + s.charCodeAt(i);
+    h = (h << 5) - h + s.charCodeAt(i);
     h |= 0;
   }
   return h;

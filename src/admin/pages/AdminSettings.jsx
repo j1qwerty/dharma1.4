@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db, firebaseConfigured } from "../../lib/firebase";
 import { useSiteSettings } from "../../lib/settings";
+import { isPageAgentHidden, setPageAgentHidden } from "../../lib/pageAgent";
 import { Field, TextArea, TextInput, Toggle } from "../components/ui";
 
 /* Site-wide settings (site_settings/global) — admin-writable, publicly readable. */
@@ -34,6 +35,7 @@ export default function AdminSettings() {
   const [annText, setAnnText] = useState("");
   const [annTextHi, setAnnTextHi] = useState("");
   const [archiveDays, setArchiveDays] = useState("");
+  const [showBot, setShowBot] = useState(() => !isPageAgentHidden());
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(null);
   const [savedKind, setSavedKind] = useState("info");
@@ -105,7 +107,7 @@ export default function AdminSettings() {
       {loading && <p className="ad-stat-foot">Loading current values…</p>}
 
       {!loading && (
-        <div style={{ display: "grid", gap: 16 }}>
+        <div className="ad-settings-grid">
           <SectionCard
             title="Phone (OTP) login"
             desc="Show or hide the mobile OTP sign-in option. Each OTP costs ~$0.01 SMS (Blaze billing)."
@@ -206,7 +208,28 @@ export default function AdminSettings() {
             </Field>
           </SectionCard>
 
-          {saved && <p className={`ad-msg ${msgCls}`}>{saved}</p>}
+          <SectionCard
+            title="Assistant bot"
+            desc="Floating AI helper. Public pages always show it; this switch hides it on admin pages only. Per-browser, applies instantly (no Save needed)."
+            icon={
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="4" y="9" width="16" height="11" rx="5" />
+                <circle cx="9.3" cy="13.4" r="1" fill="currentColor" />
+                <circle cx="14.7" cy="13.4" r="1" fill="currentColor" />
+                <path d="M12 9V5M12 5h0" />
+                <circle cx="12" cy="4" r="1" />
+              </svg>
+            }
+          >
+            <Toggle
+              label="Show floating assistant bot on admin pages"
+              desc="Off hides the launcher while you work in the console. Public pages are unaffected."
+              value={showBot}
+              onChange={(v) => { setShowBot(v); setPageAgentHidden(!v); }}
+            />
+          </SectionCard>
+
+          {saved && <p className={`ad-msg ${msgCls}`} style={{ gridColumn: "1 / -1", margin: 0 }}>{saved}</p>}
         </div>
       )}
     </div>

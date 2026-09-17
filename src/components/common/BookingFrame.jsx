@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -8,7 +8,8 @@ import {
   UserCircle,
   Receipt,
 } from "@phosphor-icons/react";
-import { pujas } from "../../lib/data";
+import { pujas as defaultPujas } from "../../lib/data";
+import { useLivePujas } from "../../lib/cms";
 import { useBooking, buildBookingWhatsAppHref } from "../../lib/booking";
 import { SectionDecor } from "./decor";
 import SafeImage from "./SafeImage";
@@ -24,7 +25,14 @@ export default function BookingFrame({ active, children, summary = true }) {
   const { id } = useParams();
   const { booking, update } = useBooking();
   const { t, lang } = useLanguage();
-  const p = pujas.find((x) => x.id === id) || pujas[0];
+  // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
+  // in the background when published overrides arrive.
+  const { items: pujas } = useLivePujas();
+  const p = useMemo(
+    () =>
+      pujas.find((x) => x.id === id) || defaultPujas.find((x) => x.id === id) || defaultPujas[0],
+    [pujas, id]
+  );
   // Keep stored booking in sync with the URL puja so the WhatsApp message
   // always reflects the puja the user actually selected (not stale storage).
   useEffect(() => {
@@ -109,11 +117,7 @@ export default function BookingFrame({ active, children, summary = true }) {
                 />
               </div>
               <div className="mt-4 flex gap-3">
-                <SafeImage
-                  src={p.image}
-                  alt=""
-                  className="h-20 w-24 rounded-xl object-cover"
-                />
+                <SafeImage src={p.image} alt="" className="h-20 w-24 rounded-xl object-cover" />
                 <div>
                   <h3 className="display-dt text-2xl">
                     {lang === "hi" && p.titleHi ? p.titleHi : p.title}

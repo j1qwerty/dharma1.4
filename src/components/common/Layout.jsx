@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import WhatsApp from "./WhatsApp";
@@ -10,6 +10,20 @@ import PreviewBanner from "./PreviewBanner";
 import { ScrollProgress } from "./Motion";
 import PageTransition from "./PageTransition";
 export default function Layout() {
+  const loc = useLocation();
+  const isAdmin = loc.pathname.startsWith("/admin");
+  if (isAdmin) {
+    return (
+      <>
+        <ScrollProgress />
+        <PageTransition />
+        <PreviewBanner />
+        <AnnouncementBar />
+        <Header />
+        <Outlet />
+      </>
+    );
+  }
   return (
     <>
       <ScrollProgress />
