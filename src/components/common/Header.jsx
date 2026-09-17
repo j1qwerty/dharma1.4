@@ -468,6 +468,13 @@ export default function Header() {
             <div className="fav-wrap-dt">
               <button
                 onClick={() => {
+                  // Auth gate: if not signed in, route to login (next=dashboard).
+                  // Items saved without an account stay in localStorage and
+                  // get merged into the cloud wishlist after login.
+                  if (!user) {
+                    navigate("/auth/login", { state: { from: "/dashboard" } });
+                    return;
+                  }
                   setFavOpen((v) => !v);
                   setSearchOpen(false);
                 }}

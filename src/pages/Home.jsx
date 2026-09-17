@@ -39,6 +39,7 @@ import FestivalCountdown, { getUpcomingFestivals } from "../components/common/Fe
 import AcharyaCard from "../components/common/AcharyaCard";
 import { pujas, festivals, intentions, stories, social, acharyas } from "../lib/data";
 import { upcomingFestivals } from "../lib/dates";
+import { useHomepageOverrides } from "../lib/cms";
 import { useLanguage } from "../components/common/LanguageToggle";
 
 const TRUST_ITEMS = ({ t }) => [
@@ -64,17 +65,22 @@ export default function Home() {
   const { t, lang } = useLanguage();
   // Festivals soonest-first: order flips automatically as dates pass.
   const orderedFestivals = useMemo(() => upcomingFestivals(festivals), []);
+  // Homepage overrides — loaded in the background from Firestore. The site
+  // renders hardcoded defaults immediately, then merges any admin overrides
+  // when they arrive (no flicker for visitors).
+  const { overrides } = useHomepageOverrides();
+  const heroOverride = overrides?.hero || null;
   const heroSlides = [
     {
-      title: t("home.heroSlide1Title"),
-      copy: t("home.heroSlide1Copy"),
-      image: "https://picsum.photos/seed/dharma-varanasi-sunset/2000/1250",
+      title: heroOverride?.title || t("home.heroSlide1Title"),
+      copy: heroOverride?.copy || t("home.heroSlide1Copy"),
+      image: heroOverride?.image || "https://picsum.photos/seed/dharma-varanasi-sunset/2000/1250",
       date: t("home.heroDate1"),
     },
     {
-      title: t("home.heroSlide2Title"),
-      copy: t("home.heroSlide2Copy"),
-      image: "https://picsum.photos/seed/dharma-temple-diya/2000/1250",
+      title: heroOverride?.title2 || t("home.heroSlide2Title"),
+      copy: heroOverride?.copy2 || t("home.heroSlide2Copy"),
+      image: heroOverride?.image2 || "https://picsum.photos/seed/dharma-temple-diya/2000/1250",
       date: t("home.heroDate2"),
     },
   ];

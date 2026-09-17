@@ -11,7 +11,7 @@ import { useAuth } from "../../lib/auth";
 import ImageField from "./ImageField";
 import VersionPanel from "./VersionPanel";
 import {
-  DateTimeInput, Field, FormRow, NumberInput, Select, StatusBadge,
+  ColorInput, DateTimeInput, Field, FormRow, NumberInput, Select, StatusBadge,
   TextArea, TextInput, Toggle, fromDateTimeLocal, toDateTimeLocal,
 } from "./ui";
 
@@ -77,6 +77,11 @@ export default function CollectionEditor({
   collection, title, subtitle, sharedNote,
   fields, orderField, fullHistory = false,
   fallbackRows = [], idField = "id",
+  // Optional: when fields vary per item (e.g. homepage sections), pass a
+  // function that returns the field list for a given item. Overrides `fields`.
+  fieldsFor = null,
+  // Optional: common fields appended to every item (e.g. scheduling).
+  commonFields = [],
 }) {
   const { user } = useAuth();
   const { rows, loading, remote } = useAdminCollection(collection);
@@ -90,8 +95,6 @@ export default function CollectionEditor({
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
   const [search, setSearch] = useState("");
-
-  const tabs = useMemo(() => buildTabs(fields), [fields]);
 
   const list = useMemo(() => {
     const live = remote ? (rows || []) : fallbackRows;
@@ -112,15 +115,28 @@ export default function CollectionEditor({
     [list, selectedId, idField]
   );
 
+  // Resolve the field list for the currently-selected item (or a fresh form
+  // when creating new). Falls back to the static `fields` prop.
+  const activeFields = useMemo(() => {
+    if (fieldsFor) {
+      const sectionKey = selected?.[idField] || selected?.key || selected?.id;
+      const base = fieldsFor(sectionKey) || [];
+      return [...base, ...commonFields];
+    }
+    return fields;
+  }, [fieldsFor, commonFields, fields, selected, idField]);
+
+  const tabs = useMemo(() => buildTabs(activeFields), [activeFields]);
+
   useEffect(() => {
     if (selected) {
-      setForm(docToForm(selected, fields));
+      setForm(docToForm(selected, activeFields));
       setIsNew(false);
       setMsg(null);
       getVersions(collection, selected.id).then(setVersions).catch(() => setVersions([]));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedId]);
+  }, [selectedId, activeFields]);
 
   // Reset to first tab when selection changes.
   useEffect(() => {
@@ -133,7 +149,7 @@ export default function CollectionEditor({
     setIsNew(true);
     setSelectedId(null);
     setNewId("");
-    setForm({ ...emptyFromFields(fields), _status: "draft", _order: list.length });
+    setForm({ ...emptyFromFields(activeFields), _status: "draft", _order: list.length });
     setVersions([]);
     setMsg(null);
     if (tabs[0]) setActiveTab(tabs[0].key);
@@ -143,7 +159,7 @@ export default function CollectionEditor({
     setSaving(true);
     setMsg(null);
     try {
-      const data = formToDoc(form, fields);
+      const data = formToDoc(form, activeFields);
       if (orderField) data[orderField] = form._order === "" ? null : Number(form._order);
       if (isNew) {
         const id = (newId || data.title || data.name || data.key || "").trim();
@@ -179,7 +195,7 @@ export default function CollectionEditor({
   };
 
   const onRestoreVersion = (data) => {
-    setForm(docToForm({ ...selected, ...data }, fields));
+    setForm(docToForm({ ...selected, ...data }, activeFields));
     setMsg("Version loaded into the form — press Save to apply (restore is versioned).");
     setMsgKind("info");
   };
@@ -189,6 +205,7 @@ export default function CollectionEditor({
     if (f.type === "textarea") return <TextArea value={v} onChange={(e) => set(f.key, e.target.value)} placeholder={f.hint} />;
     if (f.type === "number") return <NumberInput value={v} onChange={(e) => set(f.key, e.target.value)} placeholder={f.hint} />;
     if (f.type === "datetime") return <DateTimeInput value={v} onChange={(e) => set(f.key, e.target.value)} />;
+    if (f.type === "color") return <ColorInput value={v} onChange={(val) => set(f.key, val)} aria-label={f.label} />;
     if (f.type === "checkbox") return <Toggle label={f.label} desc={f.hint} value={v} onChange={(val) => set(f.key, val)} />;
     if (f.type === "select") return (
       <Select value={v || ""} onChange={(e) => set(f.key, e.target.value)}>

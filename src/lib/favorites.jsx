@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useR
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db, firebaseConfigured } from "./firebase";
 import { useAuth } from "./auth";
+import { ux } from "./analytics";
 
 /* ------------------------------------------------------------------ *
  * FavoritesProvider - wishlist of puja ids.
@@ -90,8 +91,12 @@ export function FavoritesProvider({ children }) {
 
   const has = useCallback((id) => ids.includes(id), [ids]);
   const toggle = useCallback(
-    (id) => setIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id])),
-    []
+    (id) => {
+      const willAdd = !ids.includes(id);
+      setIds((prev) => (willAdd ? [...prev, id] : prev.filter((x) => x !== id)));
+      if (willAdd) ux.wishlistAdd(id); else ux.wishlistRemove(id);
+    },
+    [ids]
   );
   const clear = useCallback(() => setIds([]), []);
 

@@ -24,6 +24,35 @@ export function DateTimeInput(props) {
   return <input type="datetime-local" {...rest} className={`ad-input ${className}`} />;
 }
 
+export function ColorInput(props) {
+  const { className = "", ...rest } = props;
+  // Native color picker + text input combo so admins can paste any CSS color.
+  return (
+    <span style={{ display: "flex", gap: 8, alignItems: "center" }}>
+      <input
+        type="color"
+        value={isHexColor(props.value) ? props.value : "#e7b631"}
+        onChange={(e) => props.onChange?.(e.target.value)}
+        aria-label={`${props["aria-label"] || "Color"} picker`}
+        style={{
+          width: 40, height: 36, padding: 0, border: "1px solid var(--adm-line-strong)",
+          borderRadius: "var(--adm-radius-sm)", background: "transparent", cursor: "pointer",
+        }}
+      />
+      <input
+        type="text"
+        {...rest}
+        className={`ad-input ${className}`}
+        placeholder="#e7b631 or var(--gold)"
+      />
+    </span>
+  );
+}
+
+function isHexColor(v) {
+  return typeof v === "string" && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v);
+}
+
 export function TextArea({ rows = 3, ...props }) {
   const { className = "", ...rest } = props;
   return <textarea rows={rows} {...rest} className={`ad-textarea ${className}`} />;

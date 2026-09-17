@@ -214,13 +214,16 @@ function bookingSlug(b) {
   return String(b?.pujaId || b?.puja || "puja").toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40);
 }
 
-export async function logBooking(booking, user, { source = "web", status = "new" } = {}) {
+export async function logBooking(booking, user, { source = "web", status = "pending" } = {}) {
   if (!canWrite()) return null;
   try {
     const ref = await addDoc(collection(db, "bookings"), {
       ...booking,
       userId: user?.uid || null, userEmail: user?.email || booking?.email || null,
-      source, status,
+      source,
+      status, // pending by default — admin advances the workflow.
+      deliveredAt: null,
+      archivedAt: null,
       createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
     });
     return ref.id;
@@ -233,7 +236,8 @@ export async function logInquiry({ pujaId, pujaCode, name, phone, message, lang 
     const ref = await addDoc(collection(db, "inquiries"), {
       pujaId: pujaId || null, pujaCode: pujaCode || null,
       name: name || null, phone: phone || null, message: message || null, lang,
-      userId: user?.uid || null, source, status: "new",
+      userId: user?.uid || null, userEmail: user?.email || null,
+      source, status: "new",
       createdAt: serverTimestamp(),
     });
     return ref.id;
@@ -285,4 +289,18 @@ export function useTrashCollection(collectionName) {
     return () => { cancelled = true; };
   }, [collectionName]);
   return { rows, loading };
+}
+
+/**
+ * Admin: fetch a single user's addresses (subcollection users/{uid}/addresses).
+ * Used by the bookings admin page to display the delivery address.
+ */
+export async function fetchUserAddresses(userId) {
+  if (!canWrite() || !userId) return [];
+  try {
+    const snap = await getDocs(collection(db, "users", userId, "addresses"));
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  } catch {
+    return [];
+  }
 }

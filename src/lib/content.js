@@ -23,24 +23,174 @@ export const ADMIN_NAV = [
 // Homepage section order — MUST match Home.jsx render order top→bottom.
 // Homepage never duplicates puja/festival/story text: previews reference
 // live docs by id (config.pujaIds / config.festivalId) + local limit/mode.
+//
+// Per-section field schema: each section declares its own editable fields
+// so the admin form shows only relevant inputs (no more "same fields for
+// every section"). When the public Home page loads, defaults are hardcoded
+// in Home.jsx; the admin can override any field via the homepage_sections
+// collection — Home reads the overrides in the background and applies them.
 export const HOMEPAGE_SECTIONS = [
-  { key: "announcementBar", label: "Announcement bar", desc: "Thin top strip above hero." },
-  { key: "hero", label: "Hero carousel", desc: "2 slides, full-bleed 2000×1250. Titles via i18n + per-slide image." },
-  { key: "assurance", label: "Assurance strip (01–04)", desc: "4 icons, no images." },
-  { key: "countdown", label: "Festival countdown", desc: "Auto from festivals collection (soonest 2)." },
-  { key: "acharyasPreview", label: "Acharyas preview", desc: "Live preview of acharyas (3 cards)." },
-  { key: "upcomingPujas", label: "Dates people are booking", desc: "pujas.slice(0,6) via PujaCard." },
-  { key: "festivalStrip", label: "Marquee band", desc: "Festival names ticker, text only." },
-  { key: "festivalCalendar", label: "Calendar keeps moving", desc: "4 festivals, images h-[220px]/sm:h-[320px]." },
-  { key: "intentions", label: "Start with intention", desc: "Intentions list → /pujas filter." },
-  { key: "howItWorks", label: "Ritual journey 01–04", desc: "Reuses hero visual, steps via i18n." },
-  { key: "trustBand", label: "Trust band", desc: "Stats 50+/200+/4.9 + devotee quote." },
-  { key: "storiesPreview", label: "Stories preview", desc: "stories.slice(0,6), images min-h-[210px]." },
-  { key: "socialFeed", label: "Wider feed", desc: "/more/*.png, first tile col-span-7." },
-  { key: "recurringSeva", label: "Year-long recurring", desc: "Static i18n strings." },
-  { key: "templeNetwork", label: "Temple network", desc: "/temples/*, h-44/md:h-72." },
-  { key: "newsletter", label: "Newsletter", desc: "Email input only." },
+  {
+    key: "announcementBar", label: "Announcement bar",
+    desc: "Thin top strip above hero.",
+    fields: [
+      { key: "text", label: "Text (EN)", type: "textarea" },
+      { key: "textHi", label: "Text (HI)", type: "textarea" },
+      { key: "bgColor", label: "Background colour", type: "color", hint: "Default: var(--gold). Use any CSS colour." },
+      { key: "textColor", label: "Text colour", type: "color" },
+    ],
+  },
+  {
+    key: "hero", label: "Hero carousel",
+    desc: "2 slides, full-bleed 2000×1250. Titles via i18n + per-slide image.",
+    fields: [
+      { key: "title", label: "Slide 1 title (EN)" },
+      { key: "titleHi", label: "Slide 1 title (HI)" },
+      { key: "copy", label: "Slide 1 copy (EN)", type: "textarea" },
+      { key: "copyHi", label: "Slide 1 copy (HI)", type: "textarea" },
+      { key: "image", label: "Slide 1 image", type: "image" },
+      { key: "title2", label: "Slide 2 title (EN)" },
+      { key: "title2Hi", label: "Slide 2 title (HI)" },
+      { key: "copy2", label: "Slide 2 copy (EN)", type: "textarea" },
+      { key: "image2", label: "Slide 2 image", type: "image" },
+    ],
+  },
+  {
+    key: "assurance", label: "Assurance strip (01–04)",
+    desc: "4 icons, no images.",
+    fields: [
+      { key: "title", label: "Section title (EN)" },
+      { key: "titleHi", label: "Section title (HI)" },
+      { key: "copy", label: "Copy (EN)", type: "textarea" },
+    ],
+  },
+  {
+    key: "countdown", label: "Festival countdown",
+    desc: "Auto from festivals collection (soonest 2).",
+    fields: [
+      { key: "title", label: "Heading (EN)" },
+      { key: "titleHi", label: "Heading (HI)" },
+    ],
+  },
+  {
+    key: "acharyasPreview", label: "Acharyas preview",
+    desc: "Live preview of acharyas (3 cards).",
+    fields: [
+      { key: "title", label: "Heading (EN)" },
+      { key: "titleHi", label: "Heading (HI)" },
+      { key: "copy", label: "Copy (EN)", type: "textarea" },
+    ],
+  },
+  {
+    key: "upcomingPujas", label: "Dates people are booking",
+    desc: "pujas.slice(0,6) via PujaCard.",
+    fields: [
+      { key: "title", label: "Heading (EN)" },
+      { key: "titleHi", label: "Heading (HI)" },
+      { key: "copy", label: "Copy (EN)", type: "textarea" },
+    ],
+  },
+  {
+    key: "festivalStrip", label: "Marquee band",
+    desc: "Festival names ticker, text only.",
+    fields: [
+      { key: "title", label: "Heading (EN)" },
+      { key: "titleHi", label: "Heading (HI)" },
+      { key: "bgColor", label: "Background colour", type: "color" },
+      { key: "textColor", label: "Text colour", type: "color" },
+    ],
+  },
+  {
+    key: "festivalCalendar", label: "Calendar keeps moving",
+    desc: "4 festivals, images h-[220px]/sm:h-[320px].",
+    fields: [
+      { key: "title", label: "Heading (EN)" },
+      { key: "titleHi", label: "Heading (HI)" },
+      { key: "copy", label: "Copy (EN)", type: "textarea" },
+    ],
+  },
+  {
+    key: "intentions", label: "Start with intention",
+    desc: "Intentions list → /pujas filter.",
+    fields: [
+      { key: "title", label: "Heading (EN)" },
+      { key: "titleHi", label: "Heading (HI)" },
+      { key: "copy", label: "Copy (EN)", type: "textarea" },
+      { key: "items", label: "Intentions (comma-separated)", type: "list" },
+    ],
+  },
+  {
+    key: "howItWorks", label: "Ritual journey 01–04",
+    desc: "Reuses hero visual, steps via i18n.",
+    fields: [
+      { key: "title", label: "Heading (EN)" },
+      { key: "titleHi", label: "Heading (HI)" },
+      { key: "copy", label: "Copy (EN)", type: "textarea" },
+    ],
+  },
+  {
+    key: "trustBand", label: "Trust band",
+    desc: "Stats 50+/200+/4.9 + devotee quote.",
+    fields: [
+      { key: "title", label: "Heading (EN)" },
+      { key: "titleHi", label: "Heading (HI)" },
+      { key: "copy", label: "Copy (EN)", type: "textarea" },
+      { key: "image", label: "Background image (optional)", type: "image" },
+      { key: "bgColor", label: "Background colour", type: "color" },
+    ],
+  },
+  {
+    key: "storiesPreview", label: "Stories preview",
+    desc: "stories.slice(0,6), images min-h-[210px].",
+    fields: [
+      { key: "title", label: "Heading (EN)" },
+      { key: "titleHi", label: "Heading (HI)" },
+      { key: "copy", label: "Copy (EN)", type: "textarea" },
+    ],
+  },
+  {
+    key: "socialFeed", label: "Wider feed",
+    desc: "/more/*.png, first tile col-span-7.",
+    fields: [
+      { key: "title", label: "Heading (EN)" },
+      { key: "titleHi", label: "Heading (HI)" },
+      { key: "image", label: "Featured image (optional)", type: "image" },
+    ],
+  },
+  {
+    key: "recurringSeva", label: "Year-long recurring",
+    desc: "Static i18n strings.",
+    fields: [
+      { key: "title", label: "Heading (EN)" },
+      { key: "titleHi", label: "Heading (HI)" },
+      { key: "copy", label: "Copy (EN)", type: "textarea" },
+    ],
+  },
+  {
+    key: "templeNetwork", label: "Temple network",
+    desc: "/temples/*, h-44/md:h-72.",
+    fields: [
+      { key: "title", label: "Heading (EN)" },
+      { key: "titleHi", label: "Heading (HI)" },
+      { key: "copy", label: "Copy (EN)", type: "textarea" },
+    ],
+  },
+  {
+    key: "newsletter", label: "Newsletter",
+    desc: "Email input only.",
+    fields: [
+      { key: "title", label: "Heading (EN)" },
+      { key: "titleHi", label: "Heading (HI)" },
+      { key: "copy", label: "Copy (EN)", type: "textarea" },
+      { key: "bgColor", label: "Background colour", type: "color" },
+    ],
+  },
 ];
+
+/** Look up the field schema for a single homepage section by its key. */
+export function homepageSectionSchema(key) {
+  return HOMEPAGE_SECTIONS.find((s) => s.key === key) || null;
+}
 
 // Recommended image rules, measured from current render sizes + public/ assets.
 // Admin ImageField shows these as "Recommended" + enforces soft limits + crop hint.

@@ -49,3 +49,60 @@ export function useDoc(path, id) {
   }, [path, id]);
   return { data, loading };
 }
+
+/**
+ * Homepage overrides — reads `homepage_sections` collection in the background
+ * and returns a map of { sectionKey: { ...fields } }.
+ *
+ * Per the spec: "by default when page loads always loads the default hardcoded
+ * ones but in bg checks if there is update then loads that on site in bg".
+ *
+ * So callers render their hardcoded defaults immediately, then this hook
+ * merges any overrides once they arrive (background re-render, no flicker).
+ *
+ * Returns { overrides, loading } where overrides is keyed by section.key.
+ */
+export function useHomepageOverrides() {
+  const [overrides, setOverrides] = useState({});
+  const [loading, setLoading] = useState(firebaseConfigured);
+
+  useEffect(() => {
+    if (!firebaseConfigured || !db) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const snap = await getDocs(query(collection(db, "homepage_sections"), limit(100)));
+        if (cancelled) return;
+        const map = {};
+        for (const d of snap.docs) {
+          const data = d.data();
+          // Only apply published + enabled overrides.
+          if (data.status === "deleted" || data.enabled === false) continue;
+          const key = data.key || d.id;
+          // Strip admin-only fields the public site doesn't need.
+          const { versions, version, updatedBy, deletedAt, deleteAt, status, order, ...rest } = data;
+          map[key] = rest;
+        }
+        setOverrides(map);
+      } catch { /* silent — fall back to hardcoded defaults */ }
+      if (!cancelled) setLoading(false);
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  return { overrides, loading };
+}
+
+/**
+ * Helper: merge a hardcoded default with a Firestore override. Override wins
+ * only for non-null / non-empty fields, so partial overrides (e.g. only
+ * changing the title) don't blank out the rest of the default.
+ */
+export function mergeOverride(defaults, override) {
+  if (!override) return defaults;
+  const out = { ...defaults };
+  for (const [k, v] of Object.entries(override)) {
+    if (v != null && v !== "") out[k] = v;
+  }
+  return out;
+}

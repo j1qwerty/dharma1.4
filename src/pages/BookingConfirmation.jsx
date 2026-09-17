@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -23,29 +23,40 @@ import {
   SectionDecor,
 } from "../components/common/decor";
 import { useLanguage } from "../components/common/LanguageToggle";
+import { ux } from "../lib/analytics";
 
 export default function BookingConfirmation() {
   const { booking } = useBooking();
   const { user } = useAuth();
   const { t, lang } = useLanguage();
+  const [bookingId, setBookingId] = useState(null);
+  const [logged, setLogged] = useState(false);
+
   // Persist every confirmation to Firestore (signed-in upsert + universal log),
   // so bookings exist in admin even for guests / WhatsApp continuations.
-  // Idempotent saveBooking + one-shot logBooking guard against re-renders.
-  React.useEffect(() => {
+  // Idempotent: sessionStorage guards against re-renders.
+  useEffect(() => {
     if (user?.uid) saveBooking(user.uid, booking);
-    try {
-      const key = `dt-logged-${booking?.pujaId}-${booking?.date}-${booking?.time}`;
-      if (!sessionStorage.getItem(key)) {
-        sessionStorage.setItem(key, "1");
-        logBooking({ ...booking, lang }, user, { source: "web-confirmation", status: "confirmed" });
-      }
-    } catch {
-      logBooking({ ...booking, lang }, user, { source: "web-confirmation", status: "confirmed" });
+    const key = `dt-logged-${booking?.pujaId}-${booking?.date}-${booking?.time}`;
+    if (!sessionStorage.getItem(key)) {
+      sessionStorage.setItem(key, "1");
+      logBooking({ ...booking, lang }, user, { source: "web-confirmation", status: "pending" })
+        .then((id) => { if (id) setBookingId(id); });
+      ux.bookingCompleted({ puja_id: booking?.pujaId, has_user: Boolean(user?.uid) });
     }
+    setLogged(true);
   }, [user?.uid]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const p = pujas.find((x) => x.id === booking.pujaId) || pujas[0];
   const waHref = buildBookingWhatsAppHref(booking, lang);
   const title = lang === "hi" && p.titleHi ? p.titleHi : p.title;
+
+  // When user clicks "Send on WhatsApp", fire an analytics event BEFORE the
+  // browser navigates away — the booking itself is already saved above.
+  const onWhatsAppClick = () => {
+    ux.bookingWhatsappOpened({ puja_id: booking?.pujaId, booking_id: bookingId });
+  };
+
   return (
     <section className="site-section has-decor-dt">
       <SectionDecor />
@@ -76,6 +87,7 @@ export default function BookingConfirmation() {
                     href={waHref}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={onWhatsAppClick}
                   >
                     <WhatsappLogo size={14} weight="fill" />{" "}
                     {lang === "hi" ? "WhatsApp पर भेजें" : "Send on WhatsApp"}
@@ -87,6 +99,13 @@ export default function BookingConfirmation() {
                     {t("bc.myAccount")}
                   </Link>
                 </div>
+                {logged && (
+                  <p className="mt-4 text-[11px] text-white/40">
+                    {lang === "hi"
+                      ? "बुकिंग सुरक्षित कर ली गई है। स्थिति: लंबित।"
+                      : "Booking saved. Status: pending."}
+                  </p>
+                )}
               </div>
             </div>
             <div className="grid gap-5 p-7 sm:p-9 md:grid-cols-2">
@@ -95,7 +114,9 @@ export default function BookingConfirmation() {
                   <SafeImage src={p.image} alt={title} className="h-32 w-full object-cover" />
                 </div>
                 <div className="mt-4 text-xs muted-dt">{t("bc.bookingId")}</div>
-                <div className="mt-2 font-mono text-sm">DT-702450912</div>
+                <div className="mt-2 font-mono text-sm">
+                  {bookingId ? bookingId.slice(0, 18) : "DT-" + Math.abs(hashCode(booking?.pujaId + booking?.date + booking?.time)).toString(36).toUpperCase()}
+                </div>
                 <div className="mt-6 grid gap-3 text-sm">
                   <div className="flex justify-between">
                     <span className="muted-dt">{t("bpay.puja")}</span>
@@ -141,4 +162,13 @@ export default function BookingConfirmation() {
       </div>
     </section>
   );
+}
+
+function hashCode(s) {
+  let h = 0;
+  for (let i = 0; i < (s || "").length; i++) {
+    h = ((h << 5) - h) + s.charCodeAt(i);
+    h |= 0;
+  }
+  return h;
 }

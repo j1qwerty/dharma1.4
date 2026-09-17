@@ -10,15 +10,81 @@ import {
   Clock,
   BookmarkSimple,
   Sparkle,
+  MapPin,
 } from "@phosphor-icons/react";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
 import { LeafBranch, LotusLine, Bell, Kalash, SectionDecor } from "../components/common/decor";
 import { useFavorites } from "../lib/favorites";
+import { useAuth } from "../lib/auth";
+import { useBookings } from "../lib/orders";
+import { useAddresses } from "../lib/addresses";
 import { pujas } from "../lib/data";
+import { bookingStatusMeta } from "../lib/bookingStatus";
+
+function BookingRow({ b, lang }) {
+  const p = pujas.find((x) => x.id === b.pujaId);
+  const title = (lang === "hi" && p?.titleHi) ? p.titleHi : (p?.title || b.pujaId);
+  const meta = bookingStatusMeta(b.status);
+  const dateStr = b.date || (b.createdAt?.toDate?.()?.toLocaleDateString?.() || "—");
+  const timeStr = b.time || "";
+  return (
+    <div className="flex items-center gap-4 border-t border-dt py-4">
+      <div className="min-w-0 flex-1">
+        <div className="text-sm font-semibold truncate">{title}</div>
+        <div className="mt-1 text-xs muted-dt">{dateStr}{timeStr ? ` · ${timeStr}` : ""}</div>
+      </div>
+      <span
+        className="rounded-full px-3 py-1.5 text-[10px] font-bold"
+        style={{ background: `${meta.color}22`, color: meta.color }}
+      >
+        {meta.label}
+      </span>
+    </div>
+  );
+}
+
 export default function Dashboard() {
+  const { user } = useAuth();
   const { ids, count } = useFavorites();
+  const { bookings, loading: bookingsLoading } = useBookings(user);
+  const { addresses } = useAddresses(user);
   const saved = pujas.filter((p) => ids.includes(p.id));
+
+  // Derive stats from real bookings
+  const stats = React.useMemo(() => {
+    const total = bookings?.length || 0;
+    const upcoming = bookings?.filter((b) => ["pending", "confirmed", "puja_slot_assigned"].includes(b.status)).length || 0;
+    const completed = bookings?.filter((b) => ["delivered", "archived"].includes(b.status)).length || 0;
+    return { total, upcoming, completed };
+  }, [bookings]);
+
+  const greetingName = user?.displayName || (user?.email ? user.email.split("@")[0] : "friend");
+  const nextBooking = bookings?.find((b) => ["pending", "confirmed", "puja_slot_assigned"].includes(b.status)) || null;
+  const nextPuja = nextBooking ? pujas.find((p) => p.id === nextBooking.pujaId) : null;
+  const lang = "en"; // dashboard is always EN for simplicity
+
+  if (!user) {
+    // Wishlist auth gate: when not signed in, heart icon should route to login.
+    // Dashboard itself is also gated — show sign-in CTA.
+    return (
+      <section className="site-section">
+        <div className="container-dt max-w-[640px] text-center" style={{ padding: "60px 20px" }}>
+          <Heart size={36} className="mx-auto text-gold-600" />
+          <h1 className="display-dt mt-4" style={{ fontSize: 36 }}>Sign in to view your dashboard</h1>
+          <p className="muted-dt mt-3 text-sm">
+            Your wishlist, bookings and saved addresses live here once you sign in.
+            Items you saved without signing in are kept locally and synced after you log in.
+          </p>
+          <div className="mt-6 flex gap-3 justify-center flex-wrap">
+            <Link to="/auth/login" className="btn-gold-dt">Sign in</Link>
+            <Link to="/auth/register" className="btn-ghost-dt">Create account</Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <>
       <section className="ink-dt overflow-hidden has-decor-dt relative">
@@ -28,30 +94,32 @@ export default function Dashboard() {
             <div className="grid gap-6 lg:grid-cols-[1.2fr_.8fr]">
               <div>
                 <div className="eyebrow !text-gold-300">My account</div>
-                <h1 className="display-dt mt-3 text-6xl">Good morning, Aarav.</h1>
+                <h1 className="display-dt mt-3 text-6xl">Good to see you, {greetingName}.</h1>
                 <p className="mt-4 max-w-xl text-sm leading-7 text-white/55">
                   Your account is the place where upcoming bookings, ritual media and saved details
                   stay together.
                 </p>
               </div>
-              <div className="panel-dt p-6 bg-white/[.04] border-white/10">
-                <div className="overflow-hidden rounded-xl">
-                  <ParallaxImage
-                    src="https://picsum.photos/seed/dharma-dashboard/800/500"
-                    alt="Next puja"
-                    className="h-36 w-full"
-                    strength={18}
-                  />
+              {nextPuja && (
+                <div className="panel-dt p-6 bg-white/[.04] border-white/10">
+                  <div className="overflow-hidden rounded-xl">
+                    <ParallaxImage
+                      src={nextPuja.image}
+                      alt="Next puja"
+                      className="h-36 w-full"
+                      strength={18}
+                    />
+                  </div>
+                  <div className="mt-4 text-xs text-white/45">Next puja</div>
+                  <div className="display-dt mt-2 text-4xl">{nextPuja.title}</div>
+                  <div className="mt-3 flex items-center gap-2 text-xs text-white/45">
+                    <CalendarBlank size={15} /> {nextBooking?.date || "—"}{nextBooking?.time ? ` · ${nextBooking.time}` : ""}
+                  </div>
+                  <Link to="/booking/tracking" className="btn-gold-dt mt-6">
+                    Track booking <ArrowRight size={14} />
+                  </Link>
                 </div>
-                <div className="mt-4 text-xs text-white/45">Next puja</div>
-                <div className="display-dt mt-2 text-4xl">Maha Rudrabhishek</div>
-                <div className="mt-3 flex items-center gap-2 text-xs text-white/45">
-                  <CalendarBlank size={15} /> Sep 09 · 07:30 AM
-                </div>
-                <Link to="/booking/tracking" className="btn-gold-dt mt-6">
-                  Track booking <ArrowRight size={14} />
-                </Link>
-              </div>
+              )}
             </div>
           </Reveal>
         </div>
@@ -63,9 +131,9 @@ export default function Dashboard() {
         <div className="container-dt">
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             {[
-              ["Total bookings", "5"],
-              ["Upcoming", "2"],
-              ["Completed", "3"],
+              ["Total bookings", stats.total],
+              ["Upcoming", stats.upcoming],
+              ["Completed", stats.completed],
             ].map(([a, b], i) => (
               <Reveal delay={i * 0.04} key={a}>
                 <div className="panel-dt p-6">
@@ -75,6 +143,29 @@ export default function Dashboard() {
               </Reveal>
             ))}
           </div>
+
+          {/* Quick links: addresses + bookings */}
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            <Link to="/addresses" className="panel-dt p-5 flex items-center gap-4 hover:border-gold-400/50 transition-colors">
+              <MapPin size={22} className="text-gold-600 flex-none" />
+              <div className="min-w-0">
+                <div className="text-sm font-semibold">Saved addresses</div>
+                <div className="text-xs muted-dt mt-0.5">
+                  {addresses?.length || 0} saved · max 5
+                </div>
+              </div>
+              <ArrowUpRight size={16} className="muted-dt flex-none ml-auto" />
+            </Link>
+            <Link to="/bookings" className="panel-dt p-5 flex items-center gap-4 hover:border-gold-400/50 transition-colors">
+              <BookmarkSimple size={22} className="text-gold-600 flex-none" />
+              <div className="min-w-0">
+                <div className="text-sm font-semibold">My bookings</div>
+                <div className="text-xs muted-dt mt-0.5">All your rituals in one place</div>
+              </div>
+              <ArrowUpRight size={16} className="muted-dt flex-none ml-auto" />
+            </Link>
+          </div>
+
           <div className="mt-12 grid gap-6 lg:grid-cols-[1.1fr_.9fr]">
             <Reveal>
               <div className="panel-dt p-7">
@@ -83,26 +174,18 @@ export default function Dashboard() {
                     <div className="eyebrow">Upcoming</div>
                     <h2 className="mt-2 display-dt text-4xl">Your bookings</h2>
                   </div>
-                  <Link className="btn-ghost-dt" to="/bookings">
-                    View all
-                  </Link>
+                  <Link className="btn-ghost-dt" to="/bookings">View all</Link>
                 </div>
                 <div className="mt-6 grid gap-1">
-                  {[
-                    ["Maha Rudrabhishek", "Sep 09 · 07:30 AM", "Confirmed"],
-                    ["Ganesh Vighnaharta Puja", "Sep 10 · 09:00 AM", "Confirmed"],
-                    ["Mahalakshmi Dhan Akarshan", "Oct 20 · 06:15 PM", "Upcoming"],
-                  ].map((x) => (
-                    <div key={x[0]} className="flex items-center gap-4 border-t border-dt py-4">
-                      <div className="min-w-0 flex-1">
-                        <div className="text-sm font-semibold">{x[0]}</div>
-                        <div className="mt-1 text-xs muted-dt">{x[1]}</div>
-                      </div>
-                      <span className="rounded-full bg-gold-400/12 px-3 py-1.5 text-[10px] font-bold text-gold-600 dark:text-gold-300">
-                        {x[2]}
-                      </span>
-                    </div>
-                  ))}
+                  {bookingsLoading ? (
+                    <p className="text-xs muted-dt">Loading…</p>
+                  ) : bookings && bookings.length > 0 ? (
+                    bookings.slice(0, 5).map((b) => (
+                      <BookingRow key={b.id} b={b} lang={lang} />
+                    ))
+                  ) : (
+                    <p className="text-xs muted-dt">No bookings yet — pick a puja to begin.</p>
+                  )}
                 </div>
               </div>
             </Reveal>
@@ -111,31 +194,39 @@ export default function Dashboard() {
                 <div className="eyebrow">My blessings</div>
                 <h2 className="mt-2 display-dt text-4xl">Recent rituals</h2>
                 <div className="mt-6 grid gap-4">
-                  {["Satyanarayan Katha", "Sankat Mochan Hanuman Seva", "Maha Rudrabhishek"].map(
-                    (x) => (
-                      <div key={x} className="flex gap-3">
-                        <span className="grid h-10 w-10 place-items-center rounded-full surface-2-dt">
-                          <Play size={14} weight="fill" />
-                        </span>
-                        <div>
-                          <div className="text-sm font-semibold">{x}</div>
-                          <div className="mt-1 text-xs muted-dt">Photos and video available</div>
+                  {(bookings || [])
+                    .filter((b) => ["delivered", "archived"].includes(b.status))
+                    .slice(0, 3)
+                    .map((b) => {
+                      const p = pujas.find((x) => x.id === b.pujaId);
+                      return (
+                        <div key={b.id} className="flex gap-3">
+                          <span className="grid h-10 w-10 place-items-center rounded-full surface-2-dt">
+                            <Play size={14} weight="fill" />
+                          </span>
+                          <div>
+                            <div className="text-sm font-semibold">{p?.title || b.pujaId}</div>
+                            <div className="mt-1 text-xs muted-dt">Photos and video available</div>
+                          </div>
                         </div>
-                      </div>
-                    )
+                      );
+                    })}
+                  {(!bookings || bookings.filter((b) => ["delivered", "archived"].includes(b.status)).length === 0) && (
+                    <p className="text-xs muted-dt">No completed rituals yet.</p>
                   )}
                 </div>
               </div>
             </Reveal>
           </div>
+
           <section className="mt-12">
             <div className="grid gap-4 md:grid-cols-2">
               {[
-                [VideoCamera, "Puja videos", "Open your recorded ceremonies"],
-                [BookmarkSimple, "Saved details", "Keep family information ready"],
-              ].map(([Icon, title, copy], i) => (
+                [VideoCamera, "Puja videos", "Open your recorded ceremonies", "/bookings"],
+                [BookmarkSimple, "Saved details", "Keep family information ready", "/addresses"],
+              ].map(([Icon, title, copy, to], i) => (
                 <Reveal key={title} delay={i * 0.05}>
-                  <Link to="/bookings" className="panel-dt p-6 block">
+                  <Link to={to} className="panel-dt p-6 block">
                     <Icon size={20} className="text-gold-600" />
                     <div className="mt-5 text-3xl display-dt">{title}</div>
                     <p className="mt-2 text-xs muted-dt">{copy}</p>
@@ -144,6 +235,7 @@ export default function Dashboard() {
               ))}
             </div>
           </section>
+
           {/* Saved pujas — driven by the favorites wishlist */}
           <section className="mt-12 border-t border-dt pt-12">
             <div className="flex items-end justify-between gap-4 flex-wrap">
@@ -198,6 +290,7 @@ export default function Dashboard() {
               </div>
             )}
           </section>
+
           <section className="mt-12 border-t border-dt pt-12">
             <div className="grid gap-8 lg:grid-cols-2">
               <Reveal>
@@ -213,7 +306,9 @@ export default function Dashboard() {
                   <div className="panel-dt p-5">
                     <Clock size={18} className="text-gold-600" />
                     <div className="mt-4 text-2xl display-dt">Next reminder</div>
-                    <div className="mt-1 text-xs muted-dt">Sep 08 · Sankalp check</div>
+                    <div className="mt-1 text-xs muted-dt">
+                      {nextBooking ? (nextBooking.date || "Soon") : "No upcoming rituals"}
+                    </div>
                   </div>
                   <div className="panel-dt p-5">
                     <Heart size={18} className="text-gold-600" />

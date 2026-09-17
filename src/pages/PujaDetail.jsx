@@ -30,6 +30,7 @@ import ShraadhContent from "../components/common/ShraadhContent";
 import { buildInquiryHref, buildInquiryMessage } from "../lib/booking";
 import { useAuth } from "../lib/auth";
 import { logInquiry } from "../lib/cmsAdmin";
+import { ux } from "../lib/analytics";
 
 export default function PujaDetail() {
   const { id } = useParams();
@@ -95,6 +96,8 @@ export default function PujaDetail() {
                     user,
                     { source: "puja-page" }
                   );
+                  // Analytics: track inquiry as a UX event.
+                  try { ux.inquiry({ puja_id: p.id, source: "puja-page" }); } catch { /* ignore */ }
                 }}
               >
                 {lang === "hi" ? "WhatsApp पर पूछें" : "Ask on WhatsApp"}{" "}

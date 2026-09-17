@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../lib/auth";
 import { useAdminCollection, purgeExpiredTrash } from "../../lib/cmsAdmin";
 import { useCollection } from "../../lib/cms";
 import { getActiveFestivals, getPreviewNow } from "../../lib/schedule";
 import { maskEmail } from "../../lib/privacy";
+import { useSiteSettings, getArchiveAfterDays } from "../../lib/settings";
+import { archiveDeliveredBookings } from "../../lib/orders";
 
 const TRASH_COLLECTIONS = ["pujas", "festivals", "homepage_sections", "stories", "acharyas", "testimonials"];
 
@@ -15,8 +17,8 @@ const QUICK_LINKS = [
   { label: "Stories", path: "/admin/stories", collection: "stories", desc: "Journal + home preview", icon: "stories" },
   { label: "Acharyas", path: "/admin/acharyas", collection: "acharyas", desc: "Profiles + home preview", icon: "acharyas" },
   { label: "Testimonials", path: "/admin/testimonials", collection: "testimonials", desc: "Social proof", icon: "testimonials" },
-  { label: "Bookings", path: "/admin/bookings", collection: "bookings", desc: "Read-only", icon: "bookings" },
-  { label: "Inquiries", path: "/admin/inquiries", collection: "inquiries", desc: "Read-only", icon: "inquiries" },
+  { label: "Bookings", path: "/admin/bookings", collection: "bookings", desc: "Status workflow + filters", icon: "bookings" },
+  { label: "Inquiries", path: "/admin/inquiries", collection: "inquiries", desc: "Search + filter", icon: "inquiries" },
   { label: "Users", path: "/admin/users", collection: "users", desc: "Read-only directory", icon: "users" },
 ];
 
@@ -42,12 +44,24 @@ function Icon({ name, size = 18 }) {
 
 export default function Admin() {
   const { user, adminRole } = useAuth();
+  const { settings } = useSiteSettings();
   const [previewDate, setPreviewDate] = useState("");
   const { data: festivals } = useCollection("festivals");
   const { now } = getPreviewNow();
   const active = getActiveFestivals(festivals || [], previewDate ? new Date(previewDate) : now);
   const previewHref = (path) => (previewDate ? `${path}?cmsPreview=${encodeURIComponent(new Date(previewDate).toISOString())}` : path);
   const [purged, setPurged] = useState(null);
+  const [autoArchived, setAutoArchived] = useState(null);
+
+  // Auto-archive sweep: runs on dashboard load if settings.archiveAfterDays is set.
+  useEffect(() => {
+    if (!settings) return;
+    const days = getArchiveAfterDays(settings);
+    if (!days) return;
+    archiveDeliveredBookings(settings).then((n) => {
+      if (n > 0) setAutoArchived(`Auto-archived ${n} delivered booking${n > 1 ? "s" : ""} older than ${days} days.`);
+    }).catch(() => { /* ignore */ });
+  }, [settings]);
 
   const purgeAll = async () => {
     let total = 0;
@@ -143,14 +157,22 @@ export default function Admin() {
         </p>
       </div>
 
+      {/* Auto-archive notice */}
+      {autoArchived && (
+        <p className="ad-msg ad-msg-info" style={{ marginBottom: 16 }}>{autoArchived}</p>
+      )}
+
       {/* Trash maintenance */}
       <div className="ad-card">
         <h2 className="ad-card-title">Trash maintenance</h2>
         <p className="ad-card-desc">
           Soft-deleted docs auto-delete after 30 days. You can manually purge expired items now.
         </p>
-        <div style={{ marginTop: 14 }}>
+        <div style={{ display: "flex", gap: 10, marginTop: 14, flexWrap: "wrap", alignItems: "center" }}>
           <button className="ad-btn ad-btn-ghost ad-btn-sm" onClick={purgeAll}>Purge expired trash</button>
+          <Link to="/admin/settings" className="ad-btn ad-btn-soft ad-btn-sm">
+            Auto-archive: {getArchiveAfterDays(settings) || "off"}
+          </Link>
         </div>
         {purged && <p className="ad-msg ad-msg-success" style={{ marginTop: 12 }}>{purged}</p>}
       </div>

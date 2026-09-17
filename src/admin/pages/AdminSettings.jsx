@@ -33,6 +33,7 @@ export default function AdminSettings() {
   const [annEnabled, setAnnEnabled] = useState(false);
   const [annText, setAnnText] = useState("");
   const [annTextHi, setAnnTextHi] = useState("");
+  const [archiveDays, setArchiveDays] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(null);
   const [savedKind, setSavedKind] = useState("info");
@@ -45,6 +46,8 @@ export default function AdminSettings() {
       setAnnEnabled(Boolean(settings.announcement?.enabled));
       setAnnText(settings.announcement?.text || "");
       setAnnTextHi(settings.announcement?.textHi || "");
+      const d = settings.archiveAfterDays;
+      setArchiveDays(d == null ? "" : String(d));
     }
   }, [settings]);
 
@@ -53,10 +56,12 @@ export default function AdminSettings() {
     setSaving(true);
     setSaved(null);
     try {
+      const parsedDays = archiveDays === "" ? null : Math.max(1, parseInt(archiveDays, 10));
       await setDoc(doc(db, "site_settings", "global"), {
         phoneAuth: { customer, admin },
         whatsappNumber: whatsapp.trim() || null,
         announcement: { enabled: annEnabled, text: annText || null, textHi: annTextHi || null },
+        archiveAfterDays: parsedDays,
         updatedAt: serverTimestamp(),
       }, { merge: true });
       setSaved("Saved — changes apply on next page load.");
@@ -178,6 +183,27 @@ export default function AdminSettings() {
                 />
               </Field>
             </div>
+          </SectionCard>
+
+          <SectionCard
+            title="Bookings auto-archive"
+            desc="When a booking reaches the 'delivered' status, it auto-moves to 'archived' after this many days. Set to empty to disable auto-archive."
+            icon={
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M5 6l1 14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-14" />
+                <path d="M10 11v6M14 11v6" />
+              </svg>
+            }
+          >
+            <Field label="Auto-archive after (days)" hint="Empty = off. Recommended: 30. The sweep runs on admin dashboard load.">
+              <TextInput
+                type="number"
+                min="1"
+                value={archiveDays}
+                onChange={(e) => setArchiveDays(e.target.value)}
+                placeholder="e.g. 30 — leave empty to disable"
+              />
+            </Field>
           </SectionCard>
 
           {saved && <p className={`ad-msg ${msgCls}`}>{saved}</p>}

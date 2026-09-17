@@ -1,21 +1,47 @@
 import CollectionEditor from "../components/CollectionEditor";
 import { COLLECTIONS, HOMEPAGE_SECTIONS } from "../../lib/content";
 
-const FIELDS = [
-  { key: "key", label: "Section key (fixed)" },
+// Common scheduling + visibility fields shown for every homepage section
+// (under the "Schedule" tab, after the section-specific content tab).
+const COMMON_FIELDS = [
   { key: "enabled", label: "Enabled on homepage", type: "checkbox", hint: "Off hides the section without deleting it." },
-  { key: "title", label: "Title override (EN)", hint: "Empty = auto / i18n default." },
-  { key: "titleHi", label: "Title override (HI)" },
-  { key: "copy", label: "Copy override (EN)", type: "textarea" },
-  { key: "copyHi", label: "Copy override (HI)", type: "textarea" },
-  { key: "image", label: "Image override", type: "image" },
   { key: "startDate", label: "Visible from", type: "datetime" },
   { key: "endDate", label: "Visible until", type: "datetime" },
 ];
 
+/**
+ * Returns the field schema for a specific section. Falls back to the
+ * generic shape (title/copy/image) if the section key is unknown.
+ * Each section gets ONLY the fields relevant to it — colour pickers for
+ * graphical sections, image pickers for media sections, text for text-only
+ * sections.
+ */
+function fieldsForSection(sectionKey) {
+  const section = HOMEPAGE_SECTIONS.find((s) => s.key === sectionKey);
+  if (section?.fields?.length) return section.fields;
+  // Generic fallback
+  return [
+    { key: "title", label: "Title override (EN)", hint: "Empty = auto / i18n default." },
+    { key: "titleHi", label: "Title override (HI)" },
+    { key: "copy", label: "Copy override (EN)", type: "textarea" },
+    { key: "copyHi", label: "Copy override (HI)", type: "textarea" },
+    { key: "image", label: "Image override", type: "image" },
+  ];
+}
+
 const FALLBACK = HOMEPAGE_SECTIONS.map((s, i) => ({
-  id: s.key, key: s.key, status: "published", order: i,
-  title: null, titleHi: null, copy: null, copyHi: null, image: null, enabled: true,
+  id: s.key,
+  key: s.key,
+  status: "published",
+  order: i,
+  // Default empty overrides — the public site loads hardcoded defaults,
+  // these are empty until the admin fills them in.
+  enabled: true,
+  title: null,
+  titleHi: null,
+  copy: null,
+  copyHi: null,
+  image: null,
 }));
 
 export default function AdminHomepage() {
@@ -23,9 +49,11 @@ export default function AdminHomepage() {
     <CollectionEditor
       collection="homepage_sections"
       title="Homepage sections"
-      subtitle="Order here = order on Home (top→bottom). Previews reference pujas/festivals/stories live — no text duplicated."
-      sharedNote={COLLECTIONS.homepage_sections.shared}
-      fields={FIELDS}
+      subtitle="Each section shows only the fields relevant to it — colour pickers for graphical sections, image pickers for media sections, text for text-only sections. Empty fields fall back to the site defaults."
+      sharedNote="By default, the homepage always loads the hardcoded defaults. When you save an override here, the site picks it up in the background and applies it on next page load. Order here = order on Home (top→bottom)."
+      fields={[]}
+      fieldsFor={fieldsForSection}
+      commonFields={COMMON_FIELDS}
       orderField="order"
       idField="key"
       fallbackRows={FALLBACK}
