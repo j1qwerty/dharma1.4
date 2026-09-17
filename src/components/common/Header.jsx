@@ -13,7 +13,8 @@ import {
   ArrowUpRight,
 } from "@phosphor-icons/react";
 import Brand from "./Brand";
-import { deities, deityHi, pujas, stories, acharyas } from "../../lib/data";
+import { deities, deityHi } from "../../lib/data";
+import { useLivePujas, useLiveStories, useLiveAcharyas } from "../../lib/cms";
 import { ThemeContext } from "./ThemeToggle";
 import { useLanguage } from "./LanguageToggle";
 import { useFavorites } from "../../lib/favorites";
@@ -37,7 +38,12 @@ export default function Header() {
   const { user, isAdmin, logout } = useAuth();
   const acctName = user?.displayName || (user?.email ? user.email.split("@")[0] : "");
   const acctInitial = (acctName || user?.email || "?").trim().charAt(0).toUpperCase();
-  const savedPujas = useMemo(() => pujas.filter((p) => ids.includes(p.id)), [ids]);
+  // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
+  // in the background when published overrides arrive.
+  const { items: pujas } = useLivePujas();
+  const { items: stories } = useLiveStories();
+  const { items: acharyas } = useLiveAcharyas();
+  const savedPujas = useMemo(() => pujas.filter((p) => ids.includes(p.id)), [ids, pujas]);
   const links = [
     ["nav.home", "/", true],
     ["nav.pujas", "/pujas", false],
@@ -147,7 +153,7 @@ export default function Header() {
       )
       .slice(0, 3);
     return { pujaResults, storyResults, acharyaResults };
-  }, [query]);
+  }, [query, pujas, stories, acharyas]);
   const hasResults =
     results.pujaResults.length + results.storyResults.length + results.acharyaResults.length > 0;
 
@@ -468,13 +474,8 @@ export default function Header() {
             <div className="fav-wrap-dt">
               <button
                 onClick={() => {
-                  // Auth gate: if not signed in, route to login (next=dashboard).
-                  // Items saved without an account stay in localStorage and
-                  // get merged into the cloud wishlist after login.
-                  if (!user) {
-                    navigate("/auth/login", { state: { from: "/dashboard" } });
-                    return;
-                  }
+                  // Always open the dropdown (works logged-out via localStorage).
+                  // The auth gate lives on the footer link below, not the heart.
                   setFavOpen((v) => !v);
                   setSearchOpen(false);
                 }}
@@ -533,7 +534,8 @@ export default function Header() {
                   )}
                   {savedPujas.length > 0 && (
                     <Link
-                      to="/dashboard"
+                      to={user ? "/dashboard" : "/auth/login"}
+                      state={user ? undefined : { from: "/dashboard" }}
                       onClick={() => setFavOpen(false)}
                       className="fav-panel-foot-dt"
                     >
@@ -567,11 +569,7 @@ export default function Header() {
                   aria-expanded={acctOpen}
                 >
                   <span className="acct-avatar-dt" aria-hidden="true">
-                    {user.photoURL ? (
-                      <img src={user.photoURL} alt="" />
-                    ) : (
-                      acctInitial
-                    )}
+                    {user.photoURL ? <img src={user.photoURL} alt="" /> : acctInitial}
                   </span>
                   <span className="acct-name-dt">{acctName || t("nav.account")}</span>
                   <CaretDown
@@ -590,23 +588,42 @@ export default function Header() {
                       )}
                     </div>
                     {isAdmin ? (
-                      <Link to="/admin" onClick={() => setAcctOpen(false)} className="acct-item-dt" role="menuitem">
+                      <Link
+                        to="/admin"
+                        onClick={() => setAcctOpen(false)}
+                        className="acct-item-dt"
+                        role="menuitem"
+                      >
                         {lang === "hi" ? "एडमिन डैशबोर्ड" : "Admin dashboard"}
                         <ArrowUpRight size={13} className="muted-dt" />
                       </Link>
                     ) : (
                       <>
-                        <Link to="/dashboard" onClick={() => setAcctOpen(false)} className="acct-item-dt" role="menuitem">
+                        <Link
+                          to="/dashboard"
+                          onClick={() => setAcctOpen(false)}
+                          className="acct-item-dt"
+                          role="menuitem"
+                        >
                           {lang === "hi" ? "मेरा खाता" : "My account"}
                           <ArrowUpRight size={13} className="muted-dt" />
                         </Link>
-                        <Link to="/bookings" onClick={() => setAcctOpen(false)} className="acct-item-dt" role="menuitem">
+                        <Link
+                          to="/bookings"
+                          onClick={() => setAcctOpen(false)}
+                          className="acct-item-dt"
+                          role="menuitem"
+                        >
                           {lang === "hi" ? "मेरी बुकिंग" : "My bookings"}
                           <ArrowUpRight size={13} className="muted-dt" />
                         </Link>
                       </>
                     )}
-                    <button onClick={signOut} className="acct-item-dt acct-signout-dt" role="menuitem">
+                    <button
+                      onClick={signOut}
+                      className="acct-item-dt acct-signout-dt"
+                      role="menuitem"
+                    >
                       {lang === "hi" ? "साइन आउट" : "Sign out"}
                     </button>
                   </div>
@@ -616,7 +633,8 @@ export default function Header() {
               <Link className="hidden sm:inline-flex nav-dt font-semibold" to="/auth/login">
                 {t("nav.account")}
               </Link>
-            )}            <Link className="hidden sm:inline-flex btn-gold-dt" to="/pujas">
+            )}{" "}
+            <Link className="hidden sm:inline-flex btn-gold-dt" to="/pujas">
               {t("nav.bookPuja")}
             </Link>
             <button
@@ -678,7 +696,8 @@ export default function Header() {
                 >
                   {t("nav.account")}
                 </Link>
-              )}              <NavLink
+              )}{" "}
+              <NavLink
                 onClick={() => setOpen(false)}
                 className={({ isActive }) =>
                   `py-3 text-xl display-dt border-b border-dt mobile-nav-dt${isActive ? " active" : ""} inline-flex items-center gap-2`
