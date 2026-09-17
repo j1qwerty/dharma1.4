@@ -8,6 +8,8 @@ import { useLanguage } from "./LanguageToggle";
 
 const DISMISS_KEY = "dt-blocker-dismissed";
 const MEASUREMENT_ID = import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || null;
+// Kill-switch for the top banner. false = never shown on any browser.
+const SHOW_BLOCKER_NOTICE = false;
 
 function probeBlocked(timeoutMs = 5000) {
   return new Promise((resolve) => {
@@ -56,7 +58,9 @@ export default function BlockerNotice() {
     return () => { cancelled = true; };
   }, []);
 
-  if (!visible) return null;
+  // Hidden per request 2026-09-17 — never shown on any browser.
+  // Code kept: re-enable by setting SHOW_BLOCKER_NOTICE to true.
+  if (!SHOW_BLOCKER_NOTICE || !visible) return null;
 
   const dismiss = () => {
     try { localStorage.setItem(DISMISS_KEY, "1"); } catch { /* ignore */ }

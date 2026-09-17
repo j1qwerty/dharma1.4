@@ -4,6 +4,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import WhatsApp from "./WhatsApp";
 import AssistantBot from "./AssistantBot";
+import PageAgentBot from "./PageAgentBot";
 import AnnouncementBar from "./AnnouncementBar";
 import PreviewBanner from "./PreviewBanner";
 import { ScrollProgress } from "./Motion";
@@ -20,7 +21,9 @@ export default function Layout() {
         <Outlet />
       </main>
       <WhatsApp />
-      <AssistantBot />
+      {/* Hidden per request 2026-09-17 — custom quick-links bot. Code kept in ./AssistantBot.jsx. */}
+      {false && <AssistantBot />}
+      <PageAgentBot />
       <Footer />
     </>
   );
