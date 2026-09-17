@@ -12,7 +12,7 @@
 //   - everything else: UI reads doc.versions (last 5) for the right-side panel
 // Bookings/inquiries: logBooking/logInquiry persist even when the user
 // continues on WhatsApp — call BEFORE opening wa.me.
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   addDoc,
   collection,
@@ -333,6 +333,249 @@ export async function logInquiry(
 }
 
 export { bookingSlug };
+
+// ---- checkout progress: resilient per-step persistence for the booking flow ----
+// Problem it solves: writes used to fire only at the very end (payment click /
+// confirmation mount), so slow networks, tab closes, or refreshes lost the
+// whole booking. Now every step upserts ONE stable draft doc (no duplicates),
+// failures land in a localStorage outbox retried on reconnect, and the
+// confirmation marks the same doc completed. Admin advances status from there.
+import { useAuth } from "./auth";
+import { useBooking } from "./booking";
+
+const CLIENT_BID_KEY = "dt-client-booking-id";
+const CLIENT_BID_PUJA_KEY = "dt-client-booking-puja";
+const OUTBOX_KEY = "dt-booking-outbox";
+const DRAFT_CREATED_PREFIX = "dt-draft-created-";
+
+function lsGet(k) {
+  try {
+    return localStorage.getItem(k);
+  } catch {
+    return null;
+  }
+}
+function lsSet(k, v) {
+  try {
+    if (v == null) localStorage.removeItem(k);
+    else localStorage.setItem(k, v);
+  } catch {
+    /* storage unavailable */
+  }
+}
+function lsJson(k, fallback) {
+  try {
+    const raw = localStorage.getItem(k);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function newClientBid() {
+  try {
+    if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID().slice(0, 8);
+  } catch {
+    /* fall through */
+  }
+  return `${Date.now().toString(36)}${Math.floor(Math.random() * 1e6).toString(36)}`;
+}
+
+/** Stable per-checkout-flow id. New puja = new flow (auto-separated). Survives refresh. */
+export function getClientBookingId(pujaId) {
+  const cur = lsGet(CLIENT_BID_KEY);
+  const curPuja = lsGet(CLIENT_BID_PUJA_KEY);
+  if (cur && curPuja === (pujaId || "")) return cur;
+  const id = newClientBid();
+  lsSet(CLIENT_BID_KEY, id);
+  lsSet(CLIENT_BID_PUJA_KEY, pujaId || "");
+  return id;
+}
+
+export function checkoutDocId(booking, user) {
+  const bid = getClientBookingId(booking?.pujaId || "puja");
+  return user?.uid ? `draft_${user.uid}_${bid}` : `draft_guest_${bid}`;
+}
+
+/** Firestore rejects `undefined` — deep-convert to null so snapshots never fail to write. */
+function cleanForFirestore(v) {
+  if (v === undefined) return null;
+  if (Array.isArray(v)) return v.map(cleanForFirestore);
+  if (v && typeof v === "object" && !(v instanceof Date)) {
+    const out = {};
+    for (const [k, val] of Object.entries(v)) out[k] = cleanForFirestore(val);
+    return out;
+  }
+  return v;
+}
+
+// ---- offline outbox (localStorage queue, flushed on reconnect / next save) ----
+function readOutbox() {
+  const box = lsJson(OUTBOX_KEY, []);
+  return Array.isArray(box) ? box : [];
+}
+function writeOutbox(box) {
+  try {
+    localStorage.setItem(OUTBOX_KEY, JSON.stringify(box.slice(0, 20)));
+  } catch {
+    /* ignore */
+  }
+}
+
+export function queueCheckoutEntry(docId, payload) {
+  if (!docId || !payload) return;
+  const box = readOutbox().filter((e) => e?.docId !== docId);
+  box.push({ docId, payload, ts: Date.now() });
+  writeOutbox(box);
+}
+
+export async function flushCheckoutOutbox() {
+  if (!canWrite()) return 0;
+  const box = readOutbox();
+  if (!box.length) return 0;
+  const remaining = [];
+  for (const e of box) {
+    try {
+      await setDoc(
+        doc(db, "bookings", e.docId),
+        { ...e.payload, updatedAt: serverTimestamp() },
+        { merge: true }
+      );
+    } catch {
+      remaining.push(e);
+    }
+  }
+  writeOutbox(remaining);
+  return box.length - remaining.length;
+}
+
+let onlineHooked = false;
+function ensureOnlineFlush() {
+  if (onlineHooked || typeof window === "undefined") return;
+  onlineHooked = true;
+  try {
+    window.addEventListener("online", () => {
+      flushCheckoutOutbox().catch(() => {});
+    });
+  } catch {
+    /* ignore */
+  }
+}
+
+function buildProgressPayload(snapshot, user, { step, completed, source }) {
+  const bid = getClientBookingId(snapshot?.pujaId || "puja");
+  const docId = checkoutDocId(snapshot, user);
+  const createdFlag = `${DRAFT_CREATED_PREFIX}${bid}`;
+  const isFirst = !lsGet(createdFlag);
+  const payload = {
+    ...cleanForFirestore(snapshot),
+    id: docId,
+    clientBookingId: bid,
+    userId: user?.uid || null,
+    userEmail: user?.email || snapshot?.email || null,
+    checkoutStep: step || "unknown",
+    completed: Boolean(completed),
+    source: source || "web",
+    // status/admin timestamps are set ONLY on first save — later merges must
+    // never clobber values the admin set (or the original createdAt).
+    ...(isFirst
+      ? { status: "pending", deliveredAt: null, archivedAt: null, createdAt: serverTimestamp() }
+      : {}),
+  };
+  return { docId, payload, createdFlag };
+}
+
+/**
+ * Upsert the stable draft doc for this checkout flow. Never throws:
+ * resolves to the doc id on success, queues to the outbox + resolves null
+ * when offline or on failure (retried automatically on reconnect/next save).
+ */
+export async function saveCheckoutProgress(
+  { booking, user, step = "unknown", completed = false, source = "web" } = {}
+) {
+  if (!canWrite() || !booking?.pujaId) return null;
+  ensureOnlineFlush();
+  const { docId, payload, createdFlag } = buildProgressPayload(booking, user, {
+    step,
+    completed,
+    source,
+  });
+  try {
+    if (typeof navigator !== "undefined" && navigator.onLine === false) {
+      throw new Error("offline");
+    }
+    await setDoc(
+      doc(db, "bookings", docId),
+      { ...payload, updatedAt: serverTimestamp() },
+      { merge: true }
+    );
+    lsSet(createdFlag, "1");
+    // Piggyback: flush anything queued while we were offline.
+    flushCheckoutOutbox().catch(() => {});
+    return docId;
+  } catch {
+    queueCheckoutEntry(docId, payload);
+    return null;
+  }
+}
+
+/**
+ * Call once per booking-step page. Saves on mount (covers refresh landings),
+ * on unmount (covers step-to-step navigation), on tab hide/close, and flushes
+ * the outbox when back online. Slow internet just delays — never loses — the write.
+ */
+export function useCheckoutProgressSync(step, pujaIdOverride) {
+  const { booking } = useBooking();
+  const { user } = useAuth();
+  const latest = useRef(null);
+  latest.current = { booking, user, step, pujaIdOverride };
+
+  useEffect(() => {
+    const snapOf = (cur) => ({
+      ...cur.booking,
+      pujaId: cur.pujaIdOverride || cur.booking?.pujaId,
+    });
+    const cur = latest.current;
+    if (cur?.booking?.pujaId || cur?.pujaIdOverride) {
+      saveCheckoutProgress({ booking: snapOf(cur), user: cur.user, step }).catch(() => {});
+    }
+    flushCheckoutOutbox().catch(() => {});
+    const onOnline = () => flushCheckoutOutbox().catch(() => {});
+    const onHide = () => {
+      // Tab closed/hidden mid-write: stage the latest snapshot so the next
+      // visit (any page running this hook) flushes it.
+      try {
+        const c = latest.current;
+        const snap = { ...c.booking, pujaId: c.pujaIdOverride || c.booking?.pujaId };
+        if (!snap?.pujaId) return;
+        const { docId, payload } = buildProgressPayload(snap, c.user, {
+          step: c.step,
+          completed: false,
+          source: "web",
+        });
+        queueCheckoutEntry(docId, payload);
+      } catch {
+        /* ignore */
+      }
+    };
+    window.addEventListener("online", onOnline);
+    window.addEventListener("pagehide", onHide);
+    return () => {
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("pagehide", onHide);
+      try {
+        const c = latest.current;
+        const snap = { ...c.booking, pujaId: c.pujaIdOverride || c.booking?.pujaId };
+        if (snap?.pujaId) {
+          saveCheckoutProgress({ booking: snap, user: c.user, step: c.step }).catch(() => {});
+        }
+      } catch {
+        /* ignore */
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
+}
 
 // ---- admin read hooks (include drafts + trash flags; public hooks stay published-only) ----
 export function useAdminCollection(collectionName, { includeDeleted = false, max = 200 } = {}) {

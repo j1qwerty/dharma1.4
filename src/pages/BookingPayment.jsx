@@ -6,7 +6,7 @@ import SafeImage from "../components/common/SafeImage";
 import { CheckCircle, LockKey } from "../components/common/Icons";
 import { useBooking, buildBookingWhatsAppHref } from "../lib/booking";
 import { useAuth } from "../lib/auth";
-import { logBooking } from "../lib/cmsAdmin";
+import { saveCheckoutProgress, useCheckoutProgressSync } from "../lib/cmsAdmin";
 import { pujas as defaultPujas } from "../lib/data";
 import { useLivePujas } from "../lib/cms";
 import { useLanguage } from "../components/common/LanguageToggle";
@@ -17,6 +17,8 @@ export default function BookingPayment() {
   const { id } = useParams();
   const nav = useNavigate();
   const { t, lang } = useLanguage();
+  // Draft persists here too, so a refresh on this page never loses the flow.
+  useCheckoutProgressSync("payment", id);
   // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
   // in the background when published overrides arrive.
   const { items: livePujas } = useLivePujas();
@@ -92,8 +94,9 @@ export default function BookingPayment() {
         rel="noreferrer"
         className="btn-whatsapp-dt mt-7"
         onClick={() => {
-          // Store the booking even when the devotee continues on WhatsApp.
-          logBooking({ ...effectiveBooking, lang }, user, { source: "whatsapp", status: "new" });
+          // Upsert the same draft doc (no duplicates) even when the devotee
+          // continues on WhatsApp. Outbox retries cover slow networks.
+          saveCheckoutProgress({ booking: effectiveBooking, user, step: "payment", source: "whatsapp" }).catch(() => {});
           // Give the WhatsApp tab a beat to open before we route to confirmation.
           setTimeout(() => nav("/booking/confirmation"), 1200);
         }}

@@ -49,12 +49,15 @@ service cloud.firestore {
       }
     }
 
-    // Bookings v1: read-only in CMS. Anyone can create (guest checkout logs
-    // even before sign-in); only owner/admin can read, only admin can mutate.
+    // Bookings: anyone can create (guest checkout logs even before sign-in).
+    // Updates: admin, doc owner, or ownerless guest drafts (unguessable ids —
+    // this is what lets the per-step checkout upsert work for guests).
+    // Deletes stay admin-only.
     match /bookings/{id} {
       allow read: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
       allow create: if true;
-      allow update, delete: if isAdmin();
+      allow update: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid) || resource.data.userId == null;
+      allow delete: if isAdmin();
     }
 
     match /admins/{uid} {

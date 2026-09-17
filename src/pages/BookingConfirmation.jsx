@@ -11,7 +11,7 @@ import {
 import { useBooking, buildBookingWhatsAppHref } from "../lib/booking";
 import { useAuth } from "../lib/auth";
 import { saveBooking } from "../lib/orders";
-import { logBooking } from "../lib/cmsAdmin";
+import { saveCheckoutProgress } from "../lib/cmsAdmin";
 import { pujas as defaultPujas } from "../lib/data";
 import { useLivePujas } from "../lib/cms";
 import { Reveal } from "../components/common/Motion";
@@ -39,18 +39,16 @@ export default function BookingConfirmation() {
 
   // Persist every confirmation to Firestore (signed-in upsert + universal log),
   // so bookings exist in admin even for guests / WhatsApp continuations.
-  // Idempotent: sessionStorage guards against re-renders.
+  // Idempotent: sessionStorage guards against re-renders; the stable draft doc
+  // is upserted (completed: true) rather than duplicated.
   useEffect(() => {
     if (user?.uid) saveBooking(user.uid, booking);
     const key = `dt-logged-${booking?.pujaId}-${booking?.date}-${booking?.time}`;
     if (!sessionStorage.getItem(key)) {
       sessionStorage.setItem(key, "1");
-      logBooking({ ...booking, lang }, user, {
-        source: "web-confirmation",
-        status: "pending",
-      }).then((id) => {
-        if (id) setBookingId(id);
-      });
+      saveCheckoutProgress({ booking, user, step: "confirmation", completed: true, source: "web-confirmation" })
+        .then((id) => { if (id) setBookingId(id); })
+        .catch(() => {});
       ux.bookingCompleted({ puja_id: booking?.pujaId, has_user: Boolean(user?.uid) });
     }
     setLogged(true);

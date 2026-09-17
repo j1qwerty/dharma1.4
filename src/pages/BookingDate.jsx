@@ -4,6 +4,7 @@ import BookingFrame from "../components/common/BookingFrame";
 import SafeImage from "../components/common/SafeImage";
 import { CalendarBlank, Clock, CheckCircle } from "../components/common/Icons";
 import { useBooking } from "../lib/booking";
+import { useCheckoutProgressSync } from "../lib/cmsAdmin";
 import { pujas as defaultPujas } from "../lib/data";
 import { useLivePujas } from "../lib/cms";
 import {
@@ -18,6 +19,8 @@ export default function BookingDate() {
   const { booking, update } = useBooking();
   const { id } = useParams();
   const { t, lang } = useLanguage();
+  // Persist a resumable draft at every step (refresh/tab-close/slow-net safe).
+  useCheckoutProgressSync("date", id);
   // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
   // in the background when published overrides arrive.
   const { items: livePujas } = useLivePujas();

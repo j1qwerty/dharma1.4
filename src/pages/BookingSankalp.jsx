@@ -5,6 +5,7 @@ import Field from "../components/common/Field";
 import SankalpPreview from "../components/common/SankalpPreview";
 import SafeImage from "../components/common/SafeImage";
 import { useBooking } from "../lib/booking";
+import { useCheckoutProgressSync } from "../lib/cmsAdmin";
 import { pujas as defaultPujas } from "../lib/data";
 import { useLivePujas } from "../lib/cms";
 import { Heart } from "../components/common/Icons";
@@ -13,6 +14,8 @@ export default function BookingSankalp() {
   const { booking, update } = useBooking();
   const { id } = useParams();
   const { t, lang } = useLanguage();
+  // Persist a resumable draft at every step (refresh/tab-close/slow-net safe).
+  useCheckoutProgressSync("sankalp", id);
   // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
   // in the background when published overrides arrive.
   const { items: livePujas } = useLivePujas();
