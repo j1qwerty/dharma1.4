@@ -10,6 +10,8 @@ import { AuthProvider } from "./lib/auth";
 import RequireAdmin from "./admin/components/RequireAdmin";
 import AdminLayout from "./admin/components/AdminLayout";
 import { ToastProvider } from "./components/common/Toast";
+import ErrorBoundary from "./components/common/ErrorBoundary";
+import BlockerNotice from "./components/common/BlockerNotice";
 import Home from "./pages/Home";
 import Catalog from "./pages/Catalog";
 import PujaDetail from "./pages/PujaDetail";
@@ -32,6 +34,8 @@ const MyBookings = lazy(() => import("./pages/MyBookings"));
 const Stories = lazy(() => import("./pages/Stories"));
 const StoryDetail = lazy(() => import("./pages/StoryDetail"));
 const Auth = lazy(() => import("./pages/Auth"));
+const AuthFinish = lazy(() => import("./pages/AuthFinish"));
+const Addresses = lazy(() => import("./pages/Addresses"));
 const AdminLogin = lazy(() => import("./admin/pages/AdminLogin"));
 const AdminSettings = lazy(() => import("./admin/pages/AdminSettings"));
 const Admin = lazy(() => import("./admin/pages/Admin"));
@@ -74,9 +78,11 @@ function PageFallback() {
 
 function App() {
   return (
+    <ErrorBoundary>
     <BrowserRouter>
       <ThemeProvider>
         <LanguageProvider>
+          <BlockerNotice />
           <ToastProvider>
             <AuthProvider>
             <FavoritesProvider>
@@ -201,6 +207,22 @@ function App() {
                       }
                     />
                     <Route
+                      path="/auth/finish"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <AuthFinish />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="/addresses"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <Addresses />
+                        </Suspense>
+                      }
+                    />
+                    <Route
                       path="/terms"
                       element={
                         <Suspense fallback={<PageFallback />}>
@@ -271,6 +293,7 @@ function App() {
         </LanguageProvider>
       </ThemeProvider>
     </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);

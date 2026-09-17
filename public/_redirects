@@ -1,2 +1,2 @@
-/* Netlify SPA fallback — serve index.html for all routes so BrowserRouter paths work on refresh/direct visit */
+# Netlify SPA fallback — serve index.html for all routes so BrowserRouter paths work on refresh/direct visit
 /* /index.html 200
