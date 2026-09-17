@@ -178,9 +178,9 @@ export default function BookingFrame({ active, children, summary = true }) {
                   {t("bpay.complete")}
                 </a>
               )}
-              <div className="mt-5 rounded-xl bg-surface-2 p-3 text-[10px] leading-5 muted-dt">
+              {/* <div className="mt-5 rounded-xl bg-surface-2 p-3 text-[10px] leading-5 muted-dt">
                 {t("booking.selectionNote")}
-              </div>
+              </div> */}
             </aside>
           )}
         </div>
