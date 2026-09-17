@@ -7,8 +7,12 @@
 // Env: VITE_FIREBASE_MEASUREMENT_ID (G-...) alongside the standard
 // VITE_FIREBASE_* keys. When the ID is missing, this module stays dormant
 // and every call no-ops — the site renders exactly as if analytics didn't exist.
-import { isSupported, getAnalytics, logEvent as fbLogEvent, setCurrentScreen } from "firebase/analytics";
 import { app, firebaseConfigured } from "./firebase";
+
+// NOTE: firebase/analytics is NEVER statically imported here. It is loaded
+// lazily via dynamic import() inside boot(), so the analytics SDK lives in
+// its own chunk and even a catastrophic SDK/blocker failure cannot affect
+// module evaluation or first render. The site always loads without analytics.
 
 // Analytics is strictly best-effort: ad blockers, missing measurement ID, or
 // offline must NEVER break rendering. Every path below resolves to null or
@@ -16,6 +20,7 @@ import { app, firebaseConfigured } from "./firebase";
 const MEASUREMENT_ID = import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || null;
 
 let analytics = null;
+let analyticsApi = null;
 let bootPromise = null;
 
 function boot() {
@@ -23,12 +28,15 @@ function boot() {
   bootPromise = (async () => {
     try {
       if (!firebaseConfigured || !app || !MEASUREMENT_ID) return null;
-      const supported = await isSupported();
+      const mod = await import("firebase/analytics");
+      const supported = await mod.isSupported();
       if (!supported) return null;
-      analytics = getAnalytics(app);
+      analytics = mod.getAnalytics(app);
+      analyticsApi = mod;
       return analytics;
     } catch {
       analytics = null;
+      analyticsApi = null;
       return null;
     }
   })();
@@ -44,29 +52,29 @@ try { boot(); } catch { /* ignore */ }
 /** Low-level: log a custom event with optional params. No-ops if Analytics unavailable. */
 export function logEvent(name, params = {}) {
   try {
-    if (!analytics) {
+    if (!analytics || !analyticsApi) {
       // Best-effort: try booting on first call. Never rejects, never throws.
-      boot().then((a) => {
-        if (!a) return;
-        try { fbLogEvent(a, name, params); } catch { /* ignore */ }
+      boot().then(() => {
+        if (!analytics || !analyticsApi) return;
+        try { analyticsApi.logEvent(analytics, name, params); } catch { /* ignore */ }
       }).catch(() => {});
       return;
     }
-    fbLogEvent(analytics, name, params);
+    analyticsApi.logEvent(analytics, name, params);
   } catch { /* ignore */ }
 }
 
 /** Set the current screen name for funnel tracking. */
 export function setScreenName(name) {
   try {
-    if (!analytics) {
-      boot().then((a) => {
-        if (!a) return;
-        try { setCurrentScreen(a, name); } catch { /* ignore */ }
+    if (!analytics || !analyticsApi) {
+      boot().then(() => {
+        if (!analytics || !analyticsApi) return;
+        try { analyticsApi.setCurrentScreen(analytics, name); } catch { /* ignore */ }
       }).catch(() => {});
       return;
     }
-    setCurrentScreen(analytics, name);
+    analyticsApi.setCurrentScreen(analytics, name);
   } catch { /* ignore */ }
 }
 

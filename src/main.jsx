@@ -77,6 +77,11 @@ function PageFallback() {
 }
 
 function App() {
+  // Signal the plain-JS boot watchdog in index.html that React mounted —
+  // without this, a blocked/failed script would leave a blank page silent.
+  React.useEffect(() => {
+    try { window.__DT_READY = true; } catch { /* ignore */ }
+  }, []);
   return (
     <ErrorBoundary>
     <BrowserRouter>
