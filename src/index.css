@@ -2641,6 +2641,20 @@ html.dark .ink-dt .decor-tone-yellow {
     transform: translateX(-50%) translateY(0);
   }
 }
+/* Right-anchored header dropdowns (wishlist / account / search) share the
+   megamenu's fade-rise feel but WITHOUT translateX(-50%) — that transform
+   belongs to the centered megamenu only and made these panels flash on the
+   left before snapping to right: 0. */
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .megamenu-inner-dt {
   border: 1px solid var(--line);
   border-radius: 18px;
@@ -3054,7 +3068,7 @@ html.dark .ink-dt .decor-tone-yellow {
   background: var(--surface);
   box-shadow: 0 24px 60px rgba(53, 44, 24, 0.16);
   z-index: 60;
-  animation: megamenu-in 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: dropdown-in 0.24s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .fav-panel-head-dt {
   display: flex;
