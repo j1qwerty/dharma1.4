@@ -65,7 +65,7 @@ export function ShraadhTypeCards({ compact = false }) {
                 {hi ? t.positioningHi : t.positioning}
               </p>
               <div className="flex flex-wrap gap-2 pt-4 mt-auto">
-                <Link className="btn-gold-dt !py-2.5 !px-4 !text-[11px]" to="/booking/shraadh/date">
+                <Link className="btn-gold-dt !py-2.5 !px-4 !text-[11px]" to={`/booking/shraadh/date?type=${t.id}`}>
                   {tx(hi, "book")} <ArrowRight size={13} />
                 </Link>
                 <Link className="btn-ghost-dt !py-2.5 !px-4 !text-[11px]" to={`/pujas/shraadh#${t.id}`}>
@@ -183,7 +183,7 @@ export function ShraadhTypeDetails() {
                 {pick(hi, t, "understanding")}
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link className="btn-gold-dt" to="/booking/shraadh/date">
+                <Link className="btn-gold-dt" to={`/booking/shraadh/date?type=${t.id}`}>
                   {tx(hi, "book")} {hi ? t.nameHi : t.name} <ArrowRight size={14} />
                 </Link>
               </div>

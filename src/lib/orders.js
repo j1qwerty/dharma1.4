@@ -32,6 +32,7 @@ export async function saveBooking(userId, booking, { addressId = null, source = 
   const payload = {
     userId,
     pujaId: booking.pujaId,
+    shraadhType: booking.shraadhType || null,
     date: booking.date || null,
     time: booking.time || null,
     package: booking.package || null,

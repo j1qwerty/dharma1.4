@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { pujas } from "./data";
+import { SHRAADH_TYPES } from "./shraadhTypes";
 import { WHATSAPP_NUMBER } from "./site";
 
 const C = createContext(null);
@@ -30,9 +31,15 @@ export function BookingProvider({ children }) {
 }
 export const useBooking = () => useContext(C);
 
+export function shraadhTypeOf(booking) {
+  if (!booking || booking.pujaId !== "shraadh" || !booking.shraadhType) return null;
+  return SHRAADH_TYPES.find((x) => x.id === booking.shraadhType) || null;
+}
+
 /**
  * Build a fully detailed WhatsApp message for the current booking.
- * Includes puja code, title (EN + HI when available), deity, temple, date,
+ * Includes puja code, title (EN + HI when available), shraadh rite + rite
+ * description when a subtype is selected, deity, temple, date,
  * muhurat, package, addons, sankalp (name, gotra, purpose, family) and total.
  *
  * @param {object} booking - the active booking state.
@@ -50,11 +57,13 @@ export function buildBookingWhatsAppMessage(booking, lang = "en") {
 
   const L = hi
     ? {
-        intro: "नमस्ते DharmaTribe, मैं एक पूजा बुक करना चाहता/चाहती हूँ।",
+        intro: "नमस्ते DharmaaTribe, मैं एक पूजा बुक करना चाहता/चाहती हूँ।",
         summaryHead: "बुकिंग विवरण",
         code: "पूजा कोड",
         title: "पूजा",
         titleHi: "पूजा (हिन्दी)",
+        rite: "श्राद्ध विधि",
+        riteDesc: "विधि विवरण",
         deity: "देवता",
         temple: "मंदिर",
         date: "तिथि",
@@ -71,11 +80,13 @@ export function buildBookingWhatsAppMessage(booking, lang = "en") {
         closing: "कृपया इस बुकिंग की पुष्टि करें। धन्यवाद।",
       }
     : {
-        intro: "Namaste DharmaTribe, I would like to book a puja.",
+        intro: "Namaste DharmaaTribe, I would like to book a puja.",
         summaryHead: "Booking details",
         code: "Puja code",
         title: "Puja",
         titleHi: "Puja (Hindi)",
+        rite: "Shraadh rite",
+        riteDesc: "Rite details",
         deity: "Deity",
         temple: "Temple",
         date: "Date",
@@ -99,6 +110,11 @@ export function buildBookingWhatsAppMessage(booking, lang = "en") {
   lines.push(`— ${L.code}: ${p.code || "—"}`);
   lines.push(`— ${L.title}: ${p.title}`);
   if (p.titleHi) lines.push(`— ${L.titleHi}: ${p.titleHi}`);
+  const rite = shraadhTypeOf(booking);
+  if (rite) {
+    lines.push(`— ${L.rite}: ${hi ? rite.nameHi : rite.name}`);
+    lines.push(`— ${L.riteDesc}: ${hi ? rite.shortHi : rite.short}`);
+  }
   if (p.deity) lines.push(`— ${L.deity}: ${p.deity}`);
   if (p.temple) lines.push(`— ${L.temple}: ${p.temple}`);
   lines.push(`— ${L.date}: ${booking.date || "—"}`);
@@ -142,7 +158,7 @@ export function buildInquiryMessage(puja, lang = "en") {
   const temple = puja?.temple || "";
   if (hi) {
     return [
-      "नमस्ते DharmaTribe, मुझे इस पूजा के बारे में पूछना है।",
+      "नमस्ते DharmaaTribe, मुझे इस पूजा के बारे में पूछना है।",
       "",
       `— पूजा: ${title}${titleHi ? ` · ${titleHi}` : ""}`,
       code ? `— पूजा कोड: ${code}` : "",
@@ -154,7 +170,7 @@ export function buildInquiryMessage(puja, lang = "en") {
       .join("\n");
   }
   return [
-    "Namaste DharmaTribe, I have a question about this puja.",
+    "Namaste DharmaaTribe, I have a question about this puja.",
     "",
     `— Puja: ${title}${titleHi ? ` · ${titleHi}` : ""}`,
     code ? `— Puja code: ${code}` : "",
@@ -174,7 +190,7 @@ export function buildInquiryHref(puja, lang = "en", phone = WHATSAPP_NUMBER) {
 export function buildGayaJiMessage(lang = "en") {
   if (lang === "hi") {
     return [
-      "नमस्ते DharmaTribe, मुझे गया जी में श्राद्ध अनुभव की योजना बनानी है।",
+      "नमस्ते DharmaaTribe, मुझे गया जी में श्राद्ध अनुभव की योजना बनानी है।",
       "",
       "— पूजा: Shraadh · श्राद्ध",
       "— स्थान: Gaya Ji",
@@ -183,7 +199,7 @@ export function buildGayaJiMessage(lang = "en") {
     ].join("\n");
   }
   return [
-    "Namaste DharmaTribe, I want to plan a Gaya Ji Shradh experience.",
+    "Namaste DharmaaTribe, I want to plan a Gaya Ji Shradh experience.",
     "",
     "— Puja: Shraadh",
     "— Place: Gaya Ji",

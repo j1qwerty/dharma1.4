@@ -130,7 +130,7 @@ export default function Footer() {
       </div>
       <div className="border-t border-white/10">
         <div className="container-dt flex flex-col gap-2 py-5 text-[10px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
-          <span>© 2026 DharmaTribe</span>
+          <span>© 2026 DharmaaTribe</span>
           <span>{t("footer.rights")}</span>
         </div>
       </div>

@@ -1,4 +1,4 @@
-// Centralised bilingual strings for DharmaTribe.
+// Centralised bilingual strings for DharmaaTribe.
 // Use `t(key)` from useLanguage() to access the active language value.
 
 export const STRINGS = {
@@ -147,7 +147,7 @@ export const STRINGS = {
   },
   "home.readAllStories": { en: "Read all stories", hi: "सभी कथाएँ पढ़ें" },
   "home.readStory": { en: "Read story", hi: "कथा पढ़ें" },
-  "home.widerFeed": { en: "The wider DharmaTribe feed", hi: "DharmaTribe से जुड़े और भी अनुभव" },
+  "home.widerFeed": { en: "The wider DharmaaTribe feed", hi: "DharmaaTribe से जुड़े और भी अनुभव" },
   "home.widerFeedCopy": {
     en: "Use the social layer for rituals in motion, temple moments and festival content.",
     hi: "पूजा के अनुभव, मंदिरों की झलक और आने वाले पर्वों से जुड़ी सामग्री से जुड़े रहें।",
@@ -157,7 +157,7 @@ export const STRINGS = {
   "home.keepIntentionGoing": { en: "Keep one intention going.", hi: "अपने संकल्प को निरंतर बनाए रखें।" },
   "home.keepIntentionCopy": {
     en: "The Phase 3 subscription surfaces are not part of this launch, but the homepage already makes room for monthly Sankalp, tithi seva and annual paths.",
-    hi: "आगे चलकर मासिक संकल्प, तिथि सेवा और वार्षिक पूजा जैसी सेवाओं के लिए भी DharmaTribe आपके साथ रहेगा।",
+    hi: "आगे चलकर मासिक संकल्प, तिथि सेवा और वार्षिक पूजा जैसी सेवाओं के लिए भी DharmaaTribe आपके साथ रहेगा।",
   },
   "home.seeRoadmap": { en: "See the roadmap intent", hi: "आगे की सेवाएँ देखें" },
   "home.templeNetwork": {
@@ -480,11 +480,11 @@ export const STRINGS = {
   "track.openAccount": { en: "Open my account", hi: "मेरी पूजाएँ देखें" },
 
   // About
-  "about.eyebrow": { en: "About DharmaTribe", hi: "DharmaTribe के बारे में" },
+  "about.eyebrow": { en: "About DharmaaTribe", hi: "DharmaaTribe के बारे में" },
   "about.title": { en: "Ancient rituals, clearer access.", hi: "सनातन परंपरा, आपके लिए सहज अनुभव।" },
   "about.copy": {
     en: "A digital layer between a devotee at home and a ritual being performed at a sacred place.",
-    hi: "DharmaTribe आपको अपने घर से ही पवित्र स्थलों पर होने वाली पारंपरिक पूजा से जोड़ने का एक सहज माध्यम है।",
+    hi: "DharmaaTribe आपको अपने घर से ही पवित्र स्थलों पर होने वाली पारंपरिक पूजा से जोड़ने का एक सहज माध्यम है।",
   },
   "about.explorePujas": { en: "Explore pujas", hi: "पूजाएँ देखें" },
   "about.trustTitle": { en: "The product starts with trust.", hi: "हर पूजा की शुरुआत भरोसे से होती है।" },
@@ -548,8 +548,8 @@ export const STRINGS = {
     hi: "जो आचार्य हमारी सनातन परंपरा को आगे बढ़ा रहे हैं।",
   },
   "ach.copy1": {
-    en: "DharmaTribe is built around people who understand that ritual is not performance. It is knowledge, discipline, pronunciation, procedure, intention and responsibility.",
-    hi: "DharmaTribe उन आचार्यों और साधकों के साथ जुड़ा है जो पूजा को केवल एक कर्मकांड नहीं, बल्कि ज्ञान, अनुशासन, सही उच्चारण, विधि, संकल्प और जिम्मेदारी की परंपरा मानते हैं।",
+    en: "DharmaaTribe is built around people who understand that ritual is not performance. It is knowledge, discipline, pronunciation, procedure, intention and responsibility.",
+    hi: "DharmaaTribe उन आचार्यों और साधकों के साथ जुड़ा है जो पूजा को केवल एक कर्मकांड नहीं, बल्कि ज्ञान, अनुशासन, सही उच्चारण, विधि, संकल्प और जिम्मेदारी की परंपरा मानते हैं।",
   },
   "ach.copy2": {
     en: "Our growing network will introduce the scholars and practitioners behind every ritual, with their learning, traditions and areas of expertise clearly presented.",
@@ -661,12 +661,12 @@ export const STRINGS = {
 
   // WhatsApp
   "wa.label": {
-    en: "Chat with DharmaTribe on WhatsApp",
-    hi: "DharmaTribe से WhatsApp पर बात करें",
+    en: "Chat with DharmaaTribe on WhatsApp",
+    hi: "DharmaaTribe से WhatsApp पर बात करें",
   },
   "wa.defaultMessage": {
-    en: "Namaste DharmaTribe, I need help with a puja booking.",
-    hi: "नमस्ते DharmaTribe, मुझे पूजा बुक करने में सहायता चाहिए।",
+    en: "Namaste DharmaaTribe, I need help with a puja booking.",
+    hi: "नमस्ते DharmaaTribe, मुझे पूजा बुक करने में सहायता चाहिए।",
   },
 
   // Common

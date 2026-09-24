@@ -212,7 +212,7 @@ export default function PageTransition() {
           </svg>
         </div>
         <div className="pt-label">
-          <span className="pt-brand">DharmaTribe</span>
+          <span className="pt-brand">DharmaaTribe</span>
           <span className="pt-sub">Sacred passage</span>
         </div>
       </div>

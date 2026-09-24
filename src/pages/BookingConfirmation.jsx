@@ -8,7 +8,7 @@ import {
   VideoCamera,
   WhatsappLogo,
 } from "@phosphor-icons/react";
-import { useBooking, buildBookingWhatsAppHref } from "../lib/booking";
+import { useBooking, buildBookingWhatsAppHref, shraadhTypeOf } from "../lib/booking";
 import { useAuth } from "../lib/auth";
 import { saveBooking } from "../lib/orders";
 import { saveCheckoutProgress } from "../lib/cmsAdmin";
@@ -63,6 +63,7 @@ export default function BookingConfirmation() {
   );
   const waHref = buildBookingWhatsAppHref(booking, lang);
   const title = lang === "hi" && p.titleHi ? p.titleHi : p.title;
+  const rite = shraadhTypeOf(booking);
 
   // When user clicks "Send on WhatsApp", fire an analytics event BEFORE the
   // browser navigates away — the booking itself is already saved above.
@@ -136,6 +137,12 @@ export default function BookingConfirmation() {
                     <span className="muted-dt">{t("bpay.puja")}</span>
                     <span className="text-right">{title}</span>
                   </div>
+                  {rite && (
+                    <div className="flex justify-between gap-4">
+                      <span className="muted-dt flex-none">{lang === "hi" ? "श्राद्ध विधि" : "Shraadh rite"}</span>
+                      <span className="text-right">{lang === "hi" ? rite.nameHi : rite.name}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between">
                     <span className="muted-dt">{t("booking.date")}</span>
                     <span>{booking.date}</span>

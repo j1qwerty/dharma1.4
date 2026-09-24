@@ -246,14 +246,17 @@ function App() {
                         </Suspense>
                       }
                     />
-                    <Route
-                      path="/review"
-                      element={
-                        <Suspense fallback={<PageFallback />}>
-                          <Review />
-                        </Suspense>
-                      }
-                    />
+                    {/* /review hidden (page kept in src/pages/Review.jsx, not linked or routed) */}
+                    {false && (
+                      <Route
+                        path="/review"
+                        element={
+                          <Suspense fallback={<PageFallback />}>
+                            <Review />
+                          </Suspense>
+                        }
+                      />
+                    )}
                     <Route
                       path="/admin/login"
                       element={

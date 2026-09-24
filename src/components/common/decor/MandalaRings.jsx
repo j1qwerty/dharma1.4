@@ -1,6 +1,6 @@
 const stroke = "currentColor";
 
-/* Concentric mandala rings, the recurring DharmaTribe motif. */
+/* Concentric mandala rings, the recurring DharmaaTribe motif. */
 export function MandalaRings({ className = "" }) {
   const rings = [92, 72, 52, 32];
   return (

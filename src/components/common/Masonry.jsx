@@ -40,7 +40,7 @@ export function ImageMasonry({ items }) {
         <Reveal key={src} delay={i * 0.04}>
           <ParallaxImage
             src={src}
-            alt="DharmaTribe ritual"
+            alt="DharmaaTribe ritual"
             className={`w-full ${i % 4 === 0 ? "aspect-[3/4]" : "aspect-[4/3]"}`}
             strength={10}
           />

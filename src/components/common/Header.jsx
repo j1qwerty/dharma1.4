@@ -51,7 +51,6 @@ export default function Header() {
     ["nav.acharyas", "/acharyas", false],
     ["nav.stories", "/stories", false],
     ["nav.about", "/about", false],
-    ["nav.review", "/review", false],
   ];
 
   // Scroll-aware shrink via IntersectionObserver on a top sentinel.
@@ -187,7 +186,7 @@ export default function Header() {
       <div id="header-sentinel-dt" aria-hidden="true" style={{ height: 1 }} />
       <header className={`header-dt ${scrolled ? "header-scrolled-dt" : ""}`}>
         <div className="container-dt flex h-[64px] sm:h-[70px] items-center justify-between gap-2 sm:gap-5">
-          <Link to="/" aria-label="DharmaTribe home" className="min-w-0 shrink">
+          <Link to="/" aria-label="DharmaaTribe home" className="min-w-0 shrink">
             <Brand wordmark />
           </Link>
           <nav className="hidden lg:flex items-center gap-8" aria-label="Primary">

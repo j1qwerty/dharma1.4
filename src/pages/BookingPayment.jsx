@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import BookingFrame from "../components/common/BookingFrame";
 import SafeImage from "../components/common/SafeImage";
 import { CheckCircle } from "../components/common/Icons";
-import { useBooking } from "../lib/booking";
+import { useBooking, shraadhTypeOf } from "../lib/booking";
 import { useCheckoutProgressSync } from "../lib/cmsAdmin";
 import { pujas as defaultPujas } from "../lib/data";
 import { useLivePujas } from "../lib/cms";
@@ -28,9 +28,11 @@ export default function BookingPayment() {
   const family = Number(booking?.sankalp?.family) || 0;
   const addons = Array.isArray(booking.addons) ? booking.addons : [];
   const total = booking.packagePrice || p.price || 0;
+  const rite = shraadhTypeOf({ ...booking, pujaId: p.id });
 
   const rows = [
     [t("bpay.puja"), `${p.title}${p.titleHi ? " · " + p.titleHi : ""}`],
+    ...(rite ? [[lang === "hi" ? "श्राद्ध विधि" : "Shraadh rite", `${lang === "hi" ? rite.nameHi : rite.name}`]] : []),
     [t("detail.temple"), p.temple],
     [t("booking.date"), booking.date],
     [t("booking.muhurat"), booking.time],

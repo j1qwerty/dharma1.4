@@ -10,6 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db, firebaseConfigured } from "../../lib/firebase";
 import { fetchUserAddresses, useAdminCollection } from "../../lib/cmsAdmin";
+import { SHRAADH_TYPES } from "../../lib/shraadhTypes";
 import { isHiddenEmail, maskEmail, roleDisplay, scrubText } from "../../lib/privacy";
 import { useAuth } from "../../lib/auth";
 import { updateBookingStatus } from "../../lib/orders";
@@ -349,6 +350,10 @@ function BookingDrawer({ booking, onClose }) {
         <div style={{ display: "grid", gap: 14, fontSize: 13 }}>
           <Row label="Booking ID" value={<code className="ad-code">{booking.id}</code>} />
           <Row label="Puja" value={booking.pujaId} />
+          {booking.shraadhType && (() => {
+            const rite = SHRAADH_TYPES.find((x) => x.id === booking.shraadhType);
+            return rite ? <Row label="Shraadh rite" value={`${rite.name} — ${rite.short}`} /> : null;
+          })()}
           <Row label="Date" value={booking.date} />
           <Row label="Time" value={booking.time} />
           <Row label="Package" value={`${booking.package || "—"} (₹${(booking.packagePrice || 0).toLocaleString("en-IN")})`} />

@@ -149,7 +149,7 @@ export default function Auth({ mode = "login" }) {
             <Brand dark />
           </div>
           <div className="absolute left-8 right-8 bottom-10">
-            <div className="text-[10px] uppercase tracking-[.18em] text-gold-300">DharmaTribe</div>
+            <div className="text-[10px] uppercase tracking-[.18em] text-gold-300">DharmaaTribe</div>
             <h2 className="display-dt mt-3 text-5xl">Every booking has a place to return to.</h2>
           </div>
         </aside>
@@ -207,7 +207,7 @@ export default function Auth({ mode = "login" }) {
           <Brand dark />
         </div>
         <div className="absolute left-8 right-8 bottom-10">
-          <div className="text-[10px] uppercase tracking-[.18em] text-gold-300">DharmaTribe</div>
+          <div className="text-[10px] uppercase tracking-[.18em] text-gold-300">DharmaaTribe</div>
           <h2 className="display-dt mt-3 text-5xl">Every booking has a place to return to.</h2>
           <p className="mt-4 max-w-md text-sm leading-7 text-white/55">
             Track the ritual, open the video, manage your Sankalp and see what comes next.

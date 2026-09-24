@@ -125,7 +125,7 @@ export default function Review() {
             <div className="mt-8 flex flex-wrap gap-3">
               <a
                 className="btn-gold-dt"
-                href="https://dharmatribe.netlify.app/"
+                href="https://dharmaatribe.netlify.app/"
                 target="_blank"
                 rel="noreferrer"
               >
