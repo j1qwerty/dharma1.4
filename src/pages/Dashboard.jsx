@@ -10,7 +10,6 @@ import {
   Clock,
   BookmarkSimple,
   Sparkle,
-  MapPin,
   MagnifyingGlass,
 } from "@phosphor-icons/react";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
@@ -20,7 +19,6 @@ import { LeafBranch, LotusLine, Bell, Kalash, SectionDecor } from "../components
 import { useFavorites } from "../lib/favorites";
 import { useAuth } from "../lib/auth";
 import { useBookings } from "../lib/orders";
-import { useAddresses } from "../lib/addresses";
 import { useLivePujas } from "../lib/cms";
 import { bookingStatusMeta } from "../lib/bookingStatus";
 
@@ -62,7 +60,6 @@ export default function Dashboard() {
   const { user } = useAuth();
   const { ids, count } = useFavorites();
   const { bookings, loading: bookingsLoading } = useBookings(user);
-  const { addresses } = useAddresses(user);
   // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
   // in the background when published overrides arrive.
   const { items: pujas } = useLivePujas();
@@ -185,23 +182,6 @@ export default function Dashboard() {
                 </div>
               </Reveal>
             ))}
-          </div>
-
-          {/* Quick link: addresses live further down this page */}
-          <div className="mt-8">
-            <a
-              href="#addresses"
-              className="panel-dt p-5 flex items-center gap-4 hover:border-gold-400/50 transition-colors"
-            >
-              <MapPin size={22} className="text-gold-600 flex-none" />
-              <div className="min-w-0">
-                <div className="text-sm font-semibold">Saved addresses</div>
-                <div className="text-xs muted-dt mt-0.5">
-                  {addresses?.length || 0} saved · max 5
-                </div>
-              </div>
-              <ArrowUpRight size={16} className="muted-dt flex-none ml-auto" />
-            </a>
           </div>
 
           <div className="mt-12 grid gap-6 lg:grid-cols-[1.1fr_.9fr]" id="bookings">
