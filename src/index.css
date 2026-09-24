@@ -3607,6 +3607,144 @@ input[type="radio"]:focus-visible {
   transform: translateY(0);
 }
 
+/* --- Shraadh flash chips (home featured card) --- */
+.shraadh-flash-row-dt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.shraadh-flash-dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px 6px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(231, 182, 49, 0.55);
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+  color: var(--gold-dark);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.shraadh-flash-dt:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(213, 161, 27, 0.25);
+}
+.shraadh-flash-dt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.5) 50%, transparent 70%);
+  background-size: 220% 100%;
+  animation: shraadh-flash-sweep 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+html.dark .shraadh-flash-dt::after {
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.22) 50%, transparent 70%);
+  background-size: 220% 100%;
+}
+@keyframes shraadh-flash-sweep {
+  0% { background-position: 180% 0; }
+  55%, 100% { background-position: -80% 0; }
+}
+.shraadh-flash-dot-dt {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex: none;
+  animation: shraadh-dot-pulse 1.8s ease-in-out infinite;
+}
+@keyframes shraadh-dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(231, 182, 49, 0.55); }
+  50% { box-shadow: 0 0 0 5px rgba(231, 182, 49, 0); }
+}
+
+/* --- Shraadh mini strip (details page: 4 small cards, one row) --- */
+.shraadh-mini-dt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 18px;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s, box-shadow 0.35s;
+  animation: shraadh-mini-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.shraadh-mini-dt:hover {
+  transform: translateY(-4px);
+  border-color: rgba(231, 182, 49, 0.5);
+  box-shadow: 0 16px 40px rgba(53, 44, 24, 0.12);
+}
+@keyframes shraadh-mini-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.shraadh-mini-thumb-dt {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.shraadh-mini-thumb-dt img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.shraadh-mini-dt:hover .shraadh-mini-thumb-dt img { transform: scale(1.1); }
+.shraadh-mini-num-dt {
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(10, 9, 6, 0.72);
+  color: #f6d47a;
+  backdrop-filter: blur(6px);
+  animation: shraadh-num-glow 2.6s ease-in-out infinite;
+}
+@keyframes shraadh-num-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(246, 212, 122, 0.45); }
+  50% { box-shadow: 0 0 0 4px rgba(246, 212, 122, 0); }
+}
+.shraadh-mini-copy-dt { min-width: 0; flex: 1; display: grid; gap: 2px; }
+.shraadh-mini-name-dt {
+  font-family: var(--font-display);
+  font-size: 17px;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.shraadh-mini-sub-dt {
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.shraadh-mini-go-dt { flex: none; color: var(--gold-dark); transition: transform 0.3s; }
+.shraadh-mini-dt:hover .shraadh-mini-go-dt { transform: translate(2px, -2px); }
+@media (prefers-reduced-motion: reduce) {
+  .shraadh-flash-dt::after,
+  .shraadh-flash-dot-dt,
+  .shraadh-mini-dt,
+  .shraadh-mini-num-dt { animation: none; }
+}
 /* --- Shraadh content page --- */
 .shraadh-page-dt .shraadh-section-dt {
   padding: 32px 0;

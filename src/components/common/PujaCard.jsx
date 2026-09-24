@@ -6,7 +6,7 @@ import FavToggle from "./FavToggle";
 import { useLanguage } from "./LanguageToggle";
 import { deityHi } from "../../lib/data";
 
-export default function PujaCard({ p, featured = false, index = 0 }) {
+export default function PujaCard({ p, featured = false, index = 0, extra = null }) {
   const { lang, t } = useLanguage();
   const title = lang === "hi" && p.titleHi ? p.titleHi : p.title;
   const desc = lang === "hi" && p.descHi ? p.descHi : p.desc;
@@ -40,6 +40,7 @@ export default function PujaCard({ p, featured = false, index = 0 }) {
         <div className="p-4">
           <span className="puja-tag-inline-dt">{p.tag}</span>
           <p className="text-xs leading-6 text-muted-dt">{desc}</p>
+          {extra}
           <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[10px] text-muted-dt">
             <span className="inline-flex items-center gap-1">
               <CalendarBlank size={13} /> {p.date}

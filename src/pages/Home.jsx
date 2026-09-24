@@ -284,7 +284,30 @@ export default function Home() {
             </Reveal>
             {shraadhPuja && (
               <Reveal delay={0.1}>
-                <PujaCard p={shraadhPuja} featured />
+                <PujaCard
+                  p={shraadhPuja}
+                  featured
+                  extra={
+                    <span className="shraadh-flash-row-dt">
+                      {[
+                        ["pitru-tarpan", lang === "hi" ? "पितृ तर्पण" : "Pitru Tarpan"],
+                        ["ekoddishta-shraadh", lang === "hi" ? "एकोद्दिष्ट" : "Ekoddishta"],
+                        ["parvan-shraadh", lang === "hi" ? "पार्वण" : "Parvan"],
+                        ["tripindi-shraadh", lang === "hi" ? "त्रिपिंडी" : "Tripindi"],
+                      ].map(([id, label]) => (
+                        <Link
+                          key={id}
+                          to={`/pujas/shraadh#${id}`}
+                          className="shraadh-flash-dt"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <span className="shraadh-flash-dot-dt" aria-hidden="true" />
+                          {label}
+                        </Link>
+                      ))}
+                    </span>
+                  }
+                />
               </Reveal>
             )}
           </div>
