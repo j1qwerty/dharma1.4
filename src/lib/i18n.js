@@ -184,6 +184,15 @@ export const STRINGS = {
     hi: "आने वाले पर्व, नई पूजा सेवाओं और धर्म से जुड़ी उपयोगी जानकारी की समय पर सूचना पाएँ।",
   },
   "home.join": { en: "Join", hi: "जुड़ें" },
+  "home.upcomingEyebrow": { en: "Upcoming pujas", hi: "आने वाली पूजाएँ" },
+  "home.upcomingTitle": {
+    en: "Pitru Paksha is open for booking.",
+    hi: "पितृ पक्ष की बुकिंग शुरू हो गई है।",
+  },
+  "home.upcomingCopy": {
+    en: "Honour your ancestors with an authentic Vedic Shradh, performed by experienced Acharyas while you join live from anywhere in the world.",
+    hi: "अनुभवी आचार्यों द्वारा विधि-विधान से संपन्न श्राद्ध में दुनिया में कहीं से भी लाइव जुड़कर अपने पितरों का स्मरण करें।",
+  },
 
   // Catalog
   "catalog.eyebrow": { en: "Pujas", hi: "पूजा सेवाएँ" },

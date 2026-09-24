@@ -215,10 +215,21 @@ select {
 }
 /* Full logo image (navbar + footer) — no wordmark text, logo speaks. */
 .brand-logo-full-dt {
-  height: 46px;
+  height: 64px;
   width: auto;
   display: block;
   border-radius: 10px;
+}
+/* Nav logo only: top breathing room, bottom pulled tight to balance the
+   logo artwork's own internal margin. */
+.brand-dt:not(.brand-dt-large) .brand-logo-full-dt {
+  padding: 4px 0 0;
+  box-sizing: border-box;
+}
+@media (min-width: 640px) {
+  .brand-logo-full-dt {
+    height: 70px;
+  }
 }
 .brand-dt-large .brand-logo-full-dt {
   height: 128px;

@@ -128,6 +128,7 @@ export default function Home() {
 
   const [goldLine, whiteLine] = splitTitle(current.title);
   const trustItems = TRUST_ITEMS({ t });
+  const shraadhPuja = livePujas.find((p) => p.id === "shraadh") || livePujas[0];
 
   return (
     <>
@@ -257,6 +258,36 @@ export default function Home() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Upcoming pujas — featured Shraadh card above the festival band */}
+      <section className="site-section has-decor-dt">
+        <SectionDecor />
+        <LeafBranch className="decor-dt decor-tl hide-mobile soft-tone" />
+        <div className="container-dt">
+          <div className="grid gap-10 lg:grid-cols-[.9fr_1.1fr] items-center">
+            <Reveal>
+              <div className="eyebrow eyebrow-line-dt">{t("home.upcomingEyebrow")}</div>
+              <h2 className="display-dt mt-3 text-5xl sm:text-6xl">{t("home.upcomingTitle")}</h2>
+              <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
+                {t("home.upcomingCopy")}
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link className="btn-gold-dt" to="/pujas/shraadh">
+                  {t("home.viewAllPujas")} <ArrowRight size={15} />
+                </Link>
+                <Link className="btn-ghost-dt" to="/booking/shraadh/date">
+                  {t("nav.bookPuja")} <ArrowUpRight size={14} />
+                </Link>
+              </div>
+            </Reveal>
+            {shraadhPuja && (
+              <Reveal delay={0.1}>
+                <PujaCard p={shraadhPuja} featured />
+              </Reveal>
+            )}
+          </div>
         </div>
       </section>
 
