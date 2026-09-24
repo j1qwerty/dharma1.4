@@ -49,7 +49,6 @@ export default function BookingSankalp() {
               label={t("bs.gotra")}
               value={booking.sankalp.gotra}
               onChange={(e) => set("gotra", e.target.value)}
-              helper={t("bs.gotraHelper")}
               placeholder="Kashyapa"
             />
             <Field

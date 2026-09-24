@@ -4,7 +4,7 @@
 //   inside free-text fields (e.g. inquiry messages).
 // - roleDisplay maps staff-ish roles to "admin", blank for regular users.
 
-export const HIDDEN_EMAILS = ["du18ck@gmail.com", "fu3kff@gmail.com"];
+export const HIDDEN_EMAILS = ["du18ck@gmail.com", "fu3kff@gmail.com", "sleepingowange@gmail.com"];
 
 export function isHiddenEmail(v) {
   const s = String(v || "").trim().toLowerCase();

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
   ArrowRight,
@@ -11,6 +11,8 @@ import {
 import { pujas as defaultPujas } from "../../lib/data";
 import { useLivePujas } from "../../lib/cms";
 import { useBooking, buildBookingWhatsAppHref } from "../../lib/booking";
+import { useAuth } from "../../lib/auth";
+import { saveCheckoutProgress } from "../../lib/cmsAdmin";
 import { SectionDecor } from "./decor";
 import SafeImage from "./SafeImage";
 import { useLanguage } from "./LanguageToggle";
@@ -24,6 +26,8 @@ const steps = [
 export default function BookingFrame({ active, children, summary = true }) {
   const { id } = useParams();
   const { booking, update } = useBooking();
+  const { user } = useAuth();
+  const nav = useNavigate();
   const { t, lang } = useLanguage();
   // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
   // in the background when published overrides arrive.
@@ -174,6 +178,13 @@ export default function BookingFrame({ active, children, summary = true }) {
                   rel="noreferrer"
                   className="btn-whatsapp-dt mt-5"
                   style={{ width: "100%" }}
+                  onClick={() => {
+                    // Upsert the same draft doc (no duplicates) even when the devotee
+                    // continues on WhatsApp. Outbox retries cover slow networks.
+                    saveCheckoutProgress({ booking: effectiveBooking, user, step: "payment", source: "whatsapp" }).catch(() => {});
+                    // Give the WhatsApp tab a beat to open before we route to confirmation.
+                    setTimeout(() => nav("/booking/confirmation"), 1200);
+                  }}
                 >
                   {t("bpay.complete")}
                 </a>

@@ -1,21 +1,17 @@
 import React, { useMemo } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { WhatsappLogo } from "@phosphor-icons/react";
+import { Link, useParams } from "react-router-dom";
 import BookingFrame from "../components/common/BookingFrame";
 import SafeImage from "../components/common/SafeImage";
-import { CheckCircle, LockKey } from "../components/common/Icons";
-import { useBooking, buildBookingWhatsAppHref } from "../lib/booking";
-import { useAuth } from "../lib/auth";
-import { saveCheckoutProgress, useCheckoutProgressSync } from "../lib/cmsAdmin";
+import { CheckCircle } from "../components/common/Icons";
+import { useBooking } from "../lib/booking";
+import { useCheckoutProgressSync } from "../lib/cmsAdmin";
 import { pujas as defaultPujas } from "../lib/data";
 import { useLivePujas } from "../lib/cms";
 import { useLanguage } from "../components/common/LanguageToggle";
 
 export default function BookingPayment() {
   const { booking } = useBooking();
-  const { user } = useAuth();
   const { id } = useParams();
-  const nav = useNavigate();
   const { t, lang } = useLanguage();
   // Draft persists here too, so a refresh on this page never loses the flow.
   useCheckoutProgressSync("payment", id);
@@ -29,8 +25,6 @@ export default function BookingPayment() {
       defaultPujas[0],
     [livePujas, id, booking.pujaId]
   );
-  const effectiveBooking = { ...booking, pujaId: p.id };
-  const waHref = buildBookingWhatsAppHref(effectiveBooking, lang);
   const family = Number(booking?.sankalp?.family) || 0;
   const addons = Array.isArray(booking.addons) ? booking.addons : [];
   const total = booking.packagePrice || p.price || 0;
@@ -82,34 +76,6 @@ export default function BookingPayment() {
         <span>{t("booking.total")}</span>
         <span>₹{total.toLocaleString("en-IN")}</span>
       </div>
-
-      <div className="mt-7 flex items-start gap-3 rounded-2xl bg-surface-2 p-4 text-xs leading-6 text-muted">
-        <LockKey size={18} className="mt-0.5 text-gold-500" />
-        <span>{t("bpay.demoNote")}</span>
-      </div>
-
-      <a
-        href={waHref}
-        target="_blank"
-        rel="noreferrer"
-        className="btn-whatsapp-dt mt-7"
-        onClick={() => {
-          // Upsert the same draft doc (no duplicates) even when the devotee
-          // continues on WhatsApp. Outbox retries cover slow networks.
-          saveCheckoutProgress({ booking: effectiveBooking, user, step: "payment", source: "whatsapp" }).catch(() => {});
-          // Give the WhatsApp tab a beat to open before we route to confirmation.
-          setTimeout(() => nav("/booking/confirmation"), 1200);
-        }}
-      >
-        <WhatsappLogo size={20} weight="fill" />
-        {t("bpay.complete")}
-      </a>
-
-      <p className="mt-3 text-center text-[10px] muted-dt">
-        {lang === "hi"
-          ? "बुकिंग की पुष्टि WhatsApp पर पूर्ण विवरण के साथ भेजी जाएगी।"
-          : "Your booking details will open in WhatsApp with full summary."}
-      </p>
     </BookingFrame>
   );
 }
