@@ -44,31 +44,11 @@ export default function Footer() {
 
   return (
     <footer className="ink-dt mt-12 overflow-hidden">
-      <div className="container-dt section-dt pb-12">
+      <div className="container-dt pt-10 pb-12">
         <div className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-[1.35fr_.65fr_.65fr_1fr] lg:gap-12">
           <div className="col-span-2 lg:col-span-1">
-            <Brand dark />
+            <Brand dark large />
             <p className="mt-5 max-w-sm text-sm leading-7 text-white/55">{t("footer.tagline")}</p>
-            <div className="mt-6 flex gap-2">
-              <a
-                className="grid h-9 w-9 place-items-center rounded-full border border-white/10 hover:border-gold-400/50 hover:text-gold-300 transition-colors"
-                href="#"
-              >
-                <InstagramLogo size={15} />
-              </a>
-              <a
-                className="grid h-9 w-9 place-items-center rounded-full border border-white/10 hover:border-gold-400/50 hover:text-gold-300 transition-colors"
-                href="#"
-              >
-                <FacebookLogo size={15} />
-              </a>
-              <a
-                className="grid h-9 w-9 place-items-center rounded-full border border-white/10 hover:border-gold-400/50 hover:text-gold-300 transition-colors"
-                href="#"
-              >
-                <YoutubeLogo size={15} />
-              </a>
-            </div>
           </div>
           <div>
             <div className="text-xs text-gold-300">{t("footer.explore")}</div>
@@ -89,7 +69,30 @@ export default function Footer() {
             </div>
           </div>
           <div className="col-span-2 lg:col-span-1">
-            <div className="text-xs text-gold-300">{t("footer.stayConnected")}</div>
+            <div className="flex gap-2">
+              <a
+                className="grid h-9 w-9 place-items-center rounded-full border border-white/10 hover:border-gold-400/50 hover:text-gold-300 transition-colors"
+                href="#"
+                aria-label="Instagram"
+              >
+                <InstagramLogo size={15} />
+              </a>
+              <a
+                className="grid h-9 w-9 place-items-center rounded-full border border-white/10 hover:border-gold-400/50 hover:text-gold-300 transition-colors"
+                href="#"
+                aria-label="Facebook"
+              >
+                <FacebookLogo size={15} />
+              </a>
+              <a
+                className="grid h-9 w-9 place-items-center rounded-full border border-white/10 hover:border-gold-400/50 hover:text-gold-300 transition-colors"
+                href="#"
+                aria-label="YouTube"
+              >
+                <YoutubeLogo size={15} />
+              </a>
+            </div>
+            <div className="mt-6 text-xs text-gold-300">{t("footer.stayConnected")}</div>
             <p className="mt-4 text-sm leading-6 text-white/55">{t("footer.stayCopy")}</p>
             <form
               className="mt-4 flex overflow-hidden rounded-full border border-white/10 bg-white/[.04] focus-within:border-gold-400/50 transition-colors"

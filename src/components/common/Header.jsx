@@ -187,7 +187,7 @@ export default function Header() {
       <header className={`header-dt ${scrolled ? "header-scrolled-dt" : ""}`}>
         <div className="container-dt flex h-[64px] sm:h-[70px] items-center justify-between gap-2 sm:gap-5">
           <Link to="/" aria-label="DharmaTribe home" className="min-w-0 shrink">
-            <Brand />
+            <Brand wordmark />
           </Link>
           <nav className="hidden lg:flex items-center gap-8" aria-label="Primary">
             {links.map(([key, to, exact]) =>
