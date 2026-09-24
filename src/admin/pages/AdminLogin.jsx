@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../lib/auth";
+import { isSuperAdmin } from "../../lib/roles";
 import PhoneLogin from "../../components/common/PhoneLogin";
 import GoogleIcon from "../../components/common/GoogleIcon";
 
@@ -8,7 +9,7 @@ import { useSiteSettings, isPhoneEnabled } from "../../lib/settings";
 import { maskEmail } from "../../lib/privacy";
 
 export default function AdminLogin() {
-  const { user, isAdmin, loading, configured, signInWithGoogle, signInWithEmail } = useAuth();
+  const { user, isAdmin, adminRole, loading, configured, signInWithGoogle, signInWithEmail } = useAuth();
   const { settings } = useSiteSettings();
   const showPhone = configured && isPhoneEnabled(settings, "admin");
   const [err, setErr] = useState(null);
@@ -17,19 +18,23 @@ export default function AdminLogin() {
   const nav = useNavigate();
   const loc = useLocation();
   const from = loc.state?.from || "/admin";
+  // Super-admins land in the CMS console; staff (admin role) in the staff console.
+  const landing = isSuperAdmin(adminRole) ? from : "/staff";
 
-  if (!loading && user && isAdmin) { nav(from, { replace: true }); return null; }
+  if (!loading && user && isAdmin) { nav(landing, { replace: true }); return null; }
 
+  // Landing is decided by the render guard below, which runs after the
+  // auth listener has resolved adminRole (avoids routing on a stale role).
   const goGoogle = async () => {
     setErr(null);
-    try { await signInWithGoogle(); nav(from, { replace: true }); }
+    try { await signInWithGoogle(); }
     catch (e) { setErr(e.message); }
   };
 
   const goEmail = async (e) => {
     e.preventDefault();
     setErr(null);
-    try { await signInWithEmail(email, password); nav(from, { replace: true }); }
+    try { await signInWithEmail(email, password); }
     catch (e2) { setErr(e2.message); }
   };
 
@@ -109,7 +114,7 @@ export default function AdminLogin() {
           {showPhone && (
             <div style={{ marginTop: 24, paddingTop: 20, borderTop: "1px solid var(--adm-line)" }}>
               <div className="ad-login-divider" style={{ marginTop: 0 }}>or sign in with phone</div>
-              <PhoneLogin onDone={() => nav(from, { replace: true })} />
+              <PhoneLogin onDone={() => { /* render guard above routes on role */ }} />
             </div>
           )}
 

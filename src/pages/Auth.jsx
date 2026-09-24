@@ -15,7 +15,7 @@ const art =
 export default function Auth({ mode = "login" }) {
   const nav = useNavigate();
   const loc = useLocation();
-  const { user, isAdmin, loading, configured, signInWithGoogle, signInWithEmail, signUpWithEmail, sendEmailOtp, completeEmailSignIn } = useAuth();
+  const { user, adminRole, loading, configured, signInWithGoogle, signInWithEmail, signUpWithEmail, sendEmailOtp, completeEmailSignIn } = useAuth();
   const [expectRedirect, setExpectRedirect] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,15 +29,15 @@ export default function Auth({ mode = "login" }) {
   const [otpBusy, setOtpBusy] = useState(false);
   const [otpErr, setOtpErr] = useState(null);
 
-  // Role-aware landing: staff → /admin, customers → /dashboard (or the page
+  // Role-aware landing: staff → /admin or /staff, customers → /dashboard (or the page
   // they came from — e.g. clicking the heart icon while logged out).
   useEffect(() => {
     if (expectRedirect && !loading && user) {
       setExpectRedirect(false);
       const from = loc.state?.from;
-      nav(from || postLoginPath(isAdmin), { replace: true });
+      nav(from || postLoginPath(adminRole), { replace: true });
     }
-  }, [expectRedirect, loading, user, isAdmin, nav, loc.state]);
+  }, [expectRedirect, loading, user, adminRole, nav, loc.state]);
 
   const goGoogle = async () => {
     setEmailErr(null);

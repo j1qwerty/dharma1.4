@@ -11,7 +11,8 @@ import { ScrollProgress } from "./Motion";
 import PageTransition from "./PageTransition";
 export default function Layout() {
   const loc = useLocation();
-  const isAdmin = loc.pathname.startsWith("/admin");
+  // /admin and /staff are console surfaces: public header, no public footer.
+  const isAdmin = loc.pathname.startsWith("/admin") || loc.pathname.startsWith("/staff");
   if (isAdmin) {
     return (
       <>

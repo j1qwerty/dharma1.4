@@ -17,7 +17,7 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db, firebaseConfigured } from "./firebase";
-import { ROLES, canAccessAdmin } from "./roles";
+import { ROLES, canAccessAdmin, canAccessStaff, isSuperAdmin } from "./roles";
 import { ux } from "./analytics";
 
 const AuthCtx = createContext({ user: null, role: ROLES.CUSTOMER, adminRole: null, isAdmin: false, loading: true, configured: firebaseConfigured });
@@ -169,7 +169,11 @@ export function useAuth() {
   return useContext(AuthCtx);
 }
 
-/** Post-login landing: staff go to the CMS, everyone else to their account. */
-export function postLoginPath(isAdmin) {
-  return isAdmin ? "/admin" : "/dashboard";
+/** Post-login landing: super-admins go to the CMS, staff to the staff
+ *  console, everyone else to their account. Accepts an admins/{uid} role
+ *  (or legacy boolean isAdmin). */
+export function postLoginPath(adminRole) {
+  if (adminRole === true || isSuperAdmin(adminRole)) return "/admin";
+  if (canAccessStaff(adminRole)) return "/staff";
+  return "/dashboard";
 }

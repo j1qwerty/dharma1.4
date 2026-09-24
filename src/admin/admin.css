@@ -1369,6 +1369,91 @@ html.dark .admin-root {
 }
 @keyframes ad-spin { to { transform: rotate(360deg); } }
 
+/* ---------- Staff console (no sidebar — top tab bar) ---------- */
+.staff-root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--adm-bg);
+  display: flex;
+  flex-direction: column;
+}
+.staff-topbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 24px;
+  background: var(--adm-surface);
+  border-bottom: 1px solid var(--adm-line);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  flex-wrap: wrap;
+}
+.staff-brand { display: flex; align-items: center; gap: 10px; }
+.staff-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--adm-gold) 0%, var(--adm-gold-2) 100%);
+  color: #1a1408;
+  font-size: 16px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.staff-brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+.staff-brand-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--adm-text);
+}
+.staff-brand-role {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--adm-gold-2);
+}
+.staff-tabs { display: flex; gap: 4px; flex: 1; }
+.staff-tab {
+  padding: 8px 16px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--adm-muted);
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 0.12s, color 0.12s;
+}
+.staff-tab:hover { background: var(--adm-surface-2); color: var(--adm-text); }
+.staff-tab.active {
+  background: var(--adm-gold-soft);
+  color: var(--adm-gold-2);
+  border-color: var(--adm-line-strong);
+}
+.staff-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+.staff-user-email {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--adm-muted);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.staff-root > .ad-main { flex: 1; }
+@media (max-width: 720px) {
+  .staff-topbar { padding: 10px 16px; gap: 12px; }
+  .staff-user-email { display: none; }
+}
+
 /* ---------- Section heading inside cards ---------- */
 .ad-section-label {
   font-size: 10px;

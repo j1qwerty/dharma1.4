@@ -27,7 +27,7 @@ function fmt(v) {
 }
 
 /** UIDs present in admins/* — these rows are staff, never listed as users. */
-function useAdminIds() {
+export function useAdminIds() {
   const [ids, setIds] = useState(null);
   useEffect(() => {
     if (!firebaseConfigured || !db) { setIds(new Set()); return; }

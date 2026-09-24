@@ -9,7 +9,7 @@ import { logUX } from "../lib/analytics";
 export default function AuthFinish() {
   const nav = useNavigate();
   const loc = useLocation();
-  const { completeEmailSignIn, loading, isAdmin } = useAuth();
+  const { completeEmailSignIn, loading, adminRole } = useAuth();
   const [err, setErr] = useState(null);
   const [busy, setBusy] = useState(true);
 
@@ -27,7 +27,7 @@ export default function AuthFinish() {
         logUX("login", { method: "email-link" });
         if (!cancelled) {
           setBusy(false);
-          nav(postLoginPath(isAdmin), { replace: true });
+          nav(postLoginPath(adminRole), { replace: true });
         }
       } catch (e) {
         if (!cancelled) {

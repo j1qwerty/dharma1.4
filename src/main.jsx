@@ -8,6 +8,7 @@ import { BookingProvider } from "./lib/booking";
 import { FavoritesProvider } from "./lib/favorites";
 import { AuthProvider } from "./lib/auth";
 import RequireAdmin from "./admin/components/RequireAdmin";
+import RequireStaff from "./staff/RequireStaff";
 import AdminLayout from "./admin/components/AdminLayout";
 import { ToastProvider } from "./components/common/Toast";
 import ErrorBoundary from "./components/common/ErrorBoundary";
@@ -44,7 +45,11 @@ const AdminStories = lazy(() => import("./admin/pages/AdminStories"));
 const AdminAcharyas = lazy(() => import("./admin/pages/AdminAcharyas"));
 const AdminTestimonials = lazy(() => import("./admin/pages/AdminTestimonials"));
 const AdminTrash = lazy(() => import("./admin/pages/AdminTrash"));
+const StaffLayout = lazy(() => import("./staff/StaffLayout"));
+const StaffUsers = lazy(() => import("./staff/StaffUsers"));
+const StaffUserDetail = lazy(() => import("./staff/StaffUserDetail"));
 import { AdminBookings, AdminInquiries, AdminUsers } from "./admin/pages/AdminTables";
+import { StaffBookings, StaffInquiries } from "./staff/StaffTables";
 const Legal = lazy(() => import("./pages/Legal"));
 const DecorPreview = lazy(() => import("./pages/DecorPreview"));
 const Review = lazy(() => import("./pages/Review"));
@@ -277,6 +282,20 @@ function App() {
                       <Route path="users" element={<Suspense fallback={<PageFallback />}><AdminUsers /></Suspense>} />
                       <Route path="trash" element={<Suspense fallback={<PageFallback />}><AdminTrash /></Suspense>} />
                       <Route path="settings" element={<Suspense fallback={<PageFallback />}><AdminSettings /></Suspense>} />
+                    </Route>
+                    <Route
+                      path="/staff"
+                      element={
+                        <RequireStaff>
+                          <StaffLayout />
+                        </RequireStaff>
+                      }
+                    >
+                      <Route index element={<Navigate to="users" replace />} />
+                      <Route path="users" element={<Suspense fallback={<PageFallback />}><StaffUsers /></Suspense>} />
+                      <Route path="users/:uid" element={<Suspense fallback={<PageFallback />}><StaffUserDetail /></Suspense>} />
+                      <Route path="bookings" element={<Suspense fallback={<PageFallback />}><StaffBookings /></Suspense>} />
+                      <Route path="inquiries" element={<Suspense fallback={<PageFallback />}><StaffInquiries /></Suspense>} />
                     </Route>
                     <Route path="*" element={<NotFound />} />
                   </Route>

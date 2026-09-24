@@ -1,10 +1,10 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../lib/auth";
-import { isSuperAdmin, canAccessStaff } from "../../lib/roles";
+import { useAuth } from "../lib/auth";
+import { canAccessStaff } from "../lib/roles";
 
-/** /admin (CMS console) is super-admin only. Staff (admin role) go to /staff. */
-export default function RequireAdmin({ children }) {
-  const { user, isAdmin, adminRole, loading, configured } = useAuth();
+/** /staff console: admin, editor, or super-admin. Others go to login. */
+export default function RequireStaff({ children }) {
+  const { user, adminRole, loading, configured } = useAuth();
   const loc = useLocation();
   if (loading) {
     return (
@@ -20,15 +20,13 @@ export default function RequireAdmin({ children }) {
         <h1 className="ad-page-title" style={{ fontSize: 28, marginTop: 8 }}>Firebase not configured</h1>
         <p className="ad-page-sub" style={{ marginTop: 12 }}>
           Add <code className="ad-code">VITE_FIREBASE_*</code> to <code className="ad-code">.env.local</code>
-          (see <code className="ad-code">firebase.md</code>) to enable the admin console.
+          (see <code className="ad-code">firebase.md</code>) to enable the staff console.
         </p>
       </div>
     );
   }
-  if (!user || !isAdmin) return <Navigate to="/admin/login" state={{ from: loc.pathname }} replace />;
-  if (!isSuperAdmin(adminRole)) {
-    // Staff (admin role) belong to the staff console, everyone else to login.
-    return <Navigate to={canAccessStaff(adminRole) ? "/staff" : "/admin/login"} replace />;
+  if (!user || !canAccessStaff(adminRole)) {
+    return <Navigate to="/admin/login" state={{ from: loc.pathname }} replace />;
   }
   return children;
 }

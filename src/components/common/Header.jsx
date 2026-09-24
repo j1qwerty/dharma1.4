@@ -35,7 +35,8 @@ export default function Header() {
   const { dark, toggle } = useContext(ThemeContext) ?? { dark: false, toggle: () => {} };
   const { lang, toggle: toggleLang, t } = useLanguage();
   const { ids, count: favCount } = useFavorites();
-  const { user, isAdmin, logout } = useAuth();
+  const { user, isAdmin, adminRole, logout } = useAuth();
+  const staffHome = adminRole === "super-admin" ? "/admin" : "/staff";
   const acctName = user?.displayName || (user?.email ? user.email.split("@")[0] : "");
   const acctInitial = (acctName || user?.email || "?").trim().charAt(0).toUpperCase();
   // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
@@ -589,7 +590,7 @@ export default function Header() {
                     </div>
                     {isAdmin ? (
                       <Link
-                        to="/admin"
+                        to={staffHome}
                         onClick={() => setAcctOpen(false)}
                         className="acct-item-dt"
                         role="menuitem"
@@ -668,7 +669,7 @@ export default function Header() {
                   <Link
                     onClick={() => setOpen(false)}
                     className="py-3 text-xl display-dt border-b border-dt mobile-nav-dt"
-                    to={isAdmin ? "/admin" : "/dashboard"}
+                    to={isAdmin ? staffHome : "/dashboard"}
                   >
                     {acctName || t("nav.account")}
                   </Link>
