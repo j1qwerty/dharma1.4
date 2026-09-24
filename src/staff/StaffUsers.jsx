@@ -1,18 +1,48 @@
 // Staff → Users: customer accounts only, with last login.
 // Click a row to open the full user detail (bookings, inquiries, wishlist, addresses).
+// Headers sort asc/desc; month/year + from–to filter on joined date; paginated.
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminCollection } from "../lib/cmsAdmin";
-import { useAdminIds } from "../admin/pages/AdminTables";
+import {
+  useAdminIds,
+  sortRows,
+  applyDateFilter,
+  asDate,
+  yearOptions,
+  DateFilterFields,
+  usePagination,
+  PaginationBar,
+} from "../admin/pages/AdminTables";
 import { isHiddenEmail, scrubText } from "../lib/privacy";
 import { isCustomer } from "../lib/roles";
 import { fmt } from "./common";
+
+const USER_COLS = [
+  { key: "displayName", label: "Name", sortValue: (r) => r.displayName || "" },
+  { key: "email", label: "Email", sortValue: (r) => r.email || "" },
+  { key: "phone", label: "Phone", sortValue: (r) => r.phone || "" },
+  { key: "lastLoginAt", label: "Last login", sortValue: (r) => r.lastLoginAt?.toMillis?.() || 0 },
+  { key: "createdAt", label: "Joined", sortValue: (r) => r.createdAt?.toMillis?.() || 0 },
+];
 
 export default function StaffUsers() {
   const { rows, loading, remote } = useAdminCollection("users", { max: 200 });
   const adminIds = useAdminIds();
   const [search, setSearch] = useState("");
+  const [sortKey, setSortKey] = useState("createdAt");
+  const [sortDir, setSortDir] = useState("desc");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
   const nav = useNavigate();
+
+  const onSort = (key) => {
+    if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    else { setSortKey(key); setSortDir("asc"); }
+  };
+  const clearDates = () => { setFrom(""); setTo(""); setMonth(""); setYear(""); };
 
   const users = useMemo(() => {
     if (!rows) return null;
@@ -30,8 +60,15 @@ export default function StaffUsers() {
           String(r.id || "").toLowerCase().includes(q)
       );
     }
-    return out;
-  }, [rows, adminIds, search]);
+    out = applyDateFilter(out, { from, to, month, year }, (r) => asDate(r.createdAt));
+    return sortRows(out, sortKey, sortDir, USER_COLS);
+  }, [rows, adminIds, search, from, to, month, year, sortKey, sortDir]);
+
+  const years = useMemo(() => yearOptions(rows, (r) => asDate(r.createdAt)), [rows]);
+  const pg = usePagination(
+    users, 20,
+    JSON.stringify([search, from, to, month, year, sortKey, sortDir, users?.length])
+  );
 
   return (
     <div>
@@ -66,20 +103,33 @@ export default function StaffUsers() {
             className="ad-input ad-input-sm"
             style={{ maxWidth: 340, marginBottom: 14 }}
           />
+          <DateFilterFields
+            from={from} to={to} month={month} year={year} years={years}
+            onFrom={setFrom} onTo={setTo} onMonth={setMonth} onYear={setYear}
+            onClear={clearDates}
+          />
           <div className="ad-table-wrap">
             <div className="ad-table-scroll">
               <table className="ad-table">
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Last login</th>
-                    <th>Joined</th>
+                    {USER_COLS.map((c) => (
+                      <th
+                        key={c.key}
+                        aria-sort={sortKey === c.key ? (sortDir === "asc" ? "ascending" : "descending") : undefined}
+                      >
+                        <button type="button" className="ad-th-sort" onClick={() => onSort(c.key)} title={`Sort by ${c.label}`}>
+                          {c.label}
+                          <span aria-hidden="true" className={sortKey === c.key ? "on" : ""}>
+                            {sortKey === c.key ? (sortDir === "asc" ? " ▲" : " ▼") : " ⇅"}
+                          </span>
+                        </button>
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((r) => (
+                  {pg.pageRows.map((r) => (
                     <tr
                       key={r.id}
                       onClick={() => nav(`/staff/users/${r.id}`)}
@@ -96,9 +146,7 @@ export default function StaffUsers() {
               </table>
             </div>
           </div>
-          <p className="ad-stat-foot" style={{ marginTop: 8 }}>
-            Showing {users.length} of {rows.length} accounts.
-          </p>
+          <PaginationBar page={pg.page} totalPages={pg.totalPages} total={pg.total} pageSize={pg.pageSize} onPage={pg.setPage} />
         </>
       )}
     </div>

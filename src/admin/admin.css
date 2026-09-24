@@ -752,6 +752,22 @@ html.dark .admin-root {
   border-bottom: 1px solid var(--adm-line);
   white-space: nowrap;
 }
+.ad-th-sort {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.ad-th-sort:hover { color: var(--adm-text); }
+.ad-th-sort span { opacity: 0.45; font-size: 9px; }
+.ad-th-sort span.on { opacity: 1; color: var(--adm-gold-2); }
 .ad-table tbody td {
   padding: 12px 14px;
   border-bottom: 1px solid var(--adm-line);

@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db, firebaseConfigured } from "../lib/firebase";
 import { fetchUserAddresses, useAdminCollection } from "../lib/cmsAdmin";
+import { sortRows, usePagination, PaginationBar } from "../admin/pages/AdminTables";
 import { useLivePujas } from "../lib/cms";
 import { formatAddress } from "../lib/addresses";
 import { scrubText } from "../lib/privacy";
@@ -66,14 +67,39 @@ export default function StaffUserDetail() {
   }, [uid]);
 
   const email = userDoc?.email || null;
+  const [bSortKey, setBSortKey] = useState("createdAt");
+  const [bSortDir, setBSortDir] = useState("desc");
+  const [qNewest, setQNewest] = useState(true);
+
+  const onBSort = (key) => {
+    if (bSortKey === key) setBSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    else { setBSortKey(key); setBSortDir("asc"); }
+  };
+
+  const BOOKING_COLS = useMemo(() => [
+    { key: "pujaId", label: "Puja", sortValue: (b) => b.pujaId || "" },
+    { key: "date", label: "Date", sortValue: (b) => b.date || "" },
+    { key: "package", label: "Package", sortValue: (b) => b.package || "" },
+    { key: "status", label: "Status", sortValue: (b) => b.status || "" },
+    { key: "createdAt", label: "Created", sortValue: (b) => b.createdAt?.toMillis?.() || 0 },
+  ], []);
+
   const userBookings = useMemo(() => {
     if (!bookings) return null;
-    return bookings.filter((b) => b.userId === uid || (email && b.userEmail === email));
-  }, [bookings, uid, email]);
+    const list = bookings.filter((b) => b.userId === uid || (email && b.userEmail === email));
+    return sortRows(list, bSortKey, bSortDir, BOOKING_COLS);
+  }, [bookings, uid, email, bSortKey, bSortDir, BOOKING_COLS]);
   const userInquiries = useMemo(() => {
     if (!inquiries) return null;
-    return inquiries.filter((i) => i.userId === uid || (email && i.userEmail === email));
-  }, [inquiries, uid, email]);
+    const list = inquiries.filter((i) => i.userId === uid || (email && i.userEmail === email));
+    const dir = qNewest ? "desc" : "asc";
+    return sortRows(list, "createdAt", dir, [
+      { key: "createdAt", sortValue: (i) => i.createdAt?.toMillis?.() || 0 },
+    ]);
+  }, [inquiries, uid, email, qNewest]);
+
+  const bPg = usePagination(userBookings, 8, JSON.stringify([bSortKey, bSortDir, userBookings?.length]));
+  const qPg = usePagination(userInquiries, 5, JSON.stringify([qNewest, userInquiries?.length]));
   const wishlist = useMemo(() => {
     const ids = Array.isArray(userDoc?.savedPujas) ? userDoc.savedPujas : [];
     return ids.map((id) => pujas.find((p) => p.id === id) || { id, title: id });
@@ -119,26 +145,43 @@ export default function StaffUserDetail() {
           <p className="ad-stat-foot">No bookings for this user.</p>
         )}
         {userBookings && userBookings.length > 0 && (
-          <div className="ad-table-wrap">
-            <div className="ad-table-scroll">
-              <table className="ad-table">
-                <thead>
-                  <tr><th>Puja</th><th>Date</th><th>Package</th><th>Status</th><th>Created</th></tr>
-                </thead>
-                <tbody>
-                  {userBookings.map((b) => (
-                    <tr key={b.id}>
-                      <td>{b.pujaId || "—"}</td>
-                      <td>{b.date || "—"}{b.time ? ` · ${b.time}` : ""}</td>
-                      <td>{b.package || "—"}</td>
-                      <td><StatusBadge status={b.status} /></td>
-                      <td>{fmt(b.createdAt)}</td>
+          <>
+            <div className="ad-table-wrap">
+              <div className="ad-table-scroll">
+                <table className="ad-table">
+                  <thead>
+                    <tr>
+                      {BOOKING_COLS.map((c) => (
+                        <th
+                          key={c.key}
+                          aria-sort={bSortKey === c.key ? (bSortDir === "asc" ? "ascending" : "descending") : undefined}
+                        >
+                          <button type="button" className="ad-th-sort" onClick={() => onBSort(c.key)} title={`Sort by ${c.label}`}>
+                            {c.label}
+                            <span aria-hidden="true" className={bSortKey === c.key ? "on" : ""}>
+                              {bSortKey === c.key ? (bSortDir === "asc" ? " ▲" : " ▼") : " ⇅"}
+                            </span>
+                          </button>
+                        </th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {bPg.pageRows.map((b) => (
+                      <tr key={b.id}>
+                        <td>{b.pujaId || "—"}</td>
+                        <td>{b.date || "—"}{b.time ? ` · ${b.time}` : ""}</td>
+                        <td>{b.package || "—"}</td>
+                        <td><StatusBadge status={b.status} /></td>
+                        <td>{fmt(b.createdAt)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+            <PaginationBar page={bPg.page} totalPages={bPg.totalPages} total={bPg.total} pageSize={bPg.pageSize} onPage={bPg.setPage} />
+          </>
         )}
       </Section>
 
@@ -148,8 +191,14 @@ export default function StaffUserDetail() {
           <p className="ad-stat-foot">No inquiries from this user.</p>
         )}
         {userInquiries && userInquiries.length > 0 && (
-          <div style={{ display: "grid", gap: 10 }}>
-            {userInquiries.map((q) => (
+          <>
+            <div style={{ marginBottom: 10 }}>
+              <button type="button" className="ad-btn ad-btn-ghost ad-btn-sm" onClick={() => setQNewest((v) => !v)}>
+                {qNewest ? "Newest first ↓" : "Oldest first ↑"}
+              </button>
+            </div>
+            <div style={{ display: "grid", gap: 10 }}>
+              {qPg.pageRows.map((q) => (
               <div key={q.id} style={{ padding: 12, background: "var(--adm-surface-2)", borderRadius: 8, fontSize: 13 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
                   <strong>{q.pujaId || "General"}</strong>
@@ -166,6 +215,8 @@ export default function StaffUserDetail() {
               </div>
             ))}
           </div>
+          <PaginationBar page={qPg.page} totalPages={qPg.totalPages} total={qPg.total} pageSize={qPg.pageSize} onPage={qPg.setPage} />
+          </>
         )}
       </Section>
 
