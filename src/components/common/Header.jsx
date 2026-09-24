@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+﻿import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   MagnifyingGlass,
@@ -606,15 +606,6 @@ export default function Header() {
                           role="menuitem"
                         >
                           {lang === "hi" ? "मेरा खाता" : "My account"}
-                          <ArrowUpRight size={13} className="muted-dt" />
-                        </Link>
-                        <Link
-                          to="/bookings"
-                          onClick={() => setAcctOpen(false)}
-                          className="acct-item-dt"
-                          role="menuitem"
-                        >
-                          {lang === "hi" ? "मेरी बुकिंग" : "My bookings"}
                           <ArrowUpRight size={13} className="muted-dt" />
                         </Link>
                       </>

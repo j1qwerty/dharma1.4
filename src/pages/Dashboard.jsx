@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -11,6 +11,7 @@ import {
   BookmarkSimple,
   Sparkle,
   MapPin,
+  MagnifyingGlass,
 } from "@phosphor-icons/react";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
@@ -43,8 +44,17 @@ function BookingRow({ b, lang, pujas }) {
       >
         {meta.label}
       </span>
+      <Link to="/booking/tracking" className="btn-ghost-dt !py-2 !px-3 !text-[11px] flex-none">
+        Track <ArrowRight size={13} />
+      </Link>
     </div>
   );
+}
+
+function bookingTab(b) {
+  const s = String(b.status || "").toLowerCase();
+  if (["delivered", "archived", "completed"].includes(s)) return "Completed";
+  return "Upcoming";
 }
 
 export default function Dashboard() {
@@ -74,6 +84,20 @@ export default function Dashboard() {
     null;
   const nextPuja = nextBooking ? pujas.find((p) => p.id === nextBooking.pujaId) : null;
   const lang = "en"; // dashboard is always EN for simplicity
+
+  // All bookings in one place (merged from MyBookings): search + status tabs.
+  const [q, setQ] = useState("");
+  const [tab, setTab] = useState("All");
+  const filteredBookings = React.useMemo(() => {
+    const list = bookings || [];
+    const query = q.trim().toLowerCase();
+    return list.filter((b) => {
+      if (tab !== "All" && bookingTab(b) !== tab) return false;
+      if (!query) return true;
+      const p = pujas.find((x) => x.id === b.pujaId);
+      return `${p?.title || ""} ${b.pujaId || ""} ${b.date || ""}`.toLowerCase().includes(query);
+    });
+  }, [bookings, pujas, q, tab]);
 
   if (!user) {
     // Wishlist auth gate: when not signed in, heart icon should route to login.
@@ -162,7 +186,7 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Quick links: addresses + bookings */}
+          {/* Quick links: addresses + wishlist */}
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             <Link
               to="/addresses"
@@ -177,40 +201,63 @@ export default function Dashboard() {
               </div>
               <ArrowUpRight size={16} className="muted-dt flex-none ml-auto" />
             </Link>
-            <Link
-              to="/bookings"
+            <a
+              href="#wishlist"
               className="panel-dt p-5 flex items-center gap-4 hover:border-gold-400/50 transition-colors"
             >
-              <BookmarkSimple size={22} className="text-gold-600 flex-none" />
+              <Heart size={22} className="text-gold-600 flex-none" />
               <div className="min-w-0">
-                <div className="text-sm font-semibold">My bookings</div>
-                <div className="text-xs muted-dt mt-0.5">All your rituals in one place</div>
+                <div className="text-sm font-semibold">Saved pujas</div>
+                <div className="text-xs muted-dt mt-0.5">
+                  {count} {count === 1 ? "ritual" : "rituals"} in your wishlist
+                </div>
               </div>
               <ArrowUpRight size={16} className="muted-dt flex-none ml-auto" />
-            </Link>
+            </a>
           </div>
 
-          <div className="mt-12 grid gap-6 lg:grid-cols-[1.1fr_.9fr]">
+          <div className="mt-12 grid gap-6 lg:grid-cols-[1.1fr_.9fr]" id="bookings">
             <Reveal>
               <div className="panel-dt p-7">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-3 flex-wrap">
                   <div>
-                    <div className="eyebrow">Upcoming</div>
+                    <div className="eyebrow">Every ritual, one place</div>
                     <h2 className="mt-2 display-dt text-4xl">Your bookings</h2>
                   </div>
-                  <Link className="btn-ghost-dt" to="/bookings">
-                    View all
-                  </Link>
+                  <div className="flex gap-2">
+                    {["All", "Upcoming", "Completed"].map((label) => (
+                      <button
+                        key={label}
+                        onClick={() => setTab(label)}
+                        className={`rounded-full border px-3.5 py-1.5 text-[11px] font-semibold ${tab === label ? "border-gold-400 bg-gold-400/10 text-gold-600" : "border-dt muted-dt"}`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="mt-6 grid gap-1">
+                <div className="mt-4 flex items-center gap-3 rounded-full border border-dt surface-dt px-4 py-2.5">
+                  <MagnifyingGlass size={16} className="muted-dt flex-none" />
+                  <input
+                    value={q}
+                    onChange={(e) => setQ(e.target.value)}
+                    placeholder="Search bookings"
+                    className="w-full bg-transparent text-sm outline-none"
+                  />
+                </div>
+                <div className="mt-4 grid gap-1">
                   {bookingsLoading ? (
                     <p className="text-xs muted-dt">Loading…</p>
-                  ) : bookings && bookings.length > 0 ? (
-                    bookings
-                      .slice(0, 5)
-                      .map((b) => <BookingRow key={b.id} b={b} lang={lang} pujas={pujas} />)
+                  ) : filteredBookings.length > 0 ? (
+                    filteredBookings.map((b) => (
+                      <BookingRow key={b.id} b={b} lang={lang} pujas={pujas} />
+                    ))
                   ) : (
-                    <p className="text-xs muted-dt">No bookings yet — pick a puja to begin.</p>
+                    <p className="text-xs muted-dt">
+                      {bookings?.length
+                        ? "No bookings match this view."
+                        : "No bookings yet — pick a puja to begin."}
+                    </p>
                   )}
                 </div>
               </div>
@@ -248,7 +295,7 @@ export default function Dashboard() {
           <section className="mt-12">
             <div className="grid gap-4 md:grid-cols-2">
               {[
-                [VideoCamera, "Puja videos", "Open your recorded ceremonies", "/bookings"],
+                [VideoCamera, "Puja videos", "Open your recorded ceremonies", "/booking/tracking"],
                 [BookmarkSimple, "Saved details", "Keep family information ready", "/addresses"],
               ].map(([Icon, title, copy, to], i) => (
                 <Reveal key={title} delay={i * 0.05}>
@@ -263,7 +310,7 @@ export default function Dashboard() {
           </section>
 
           {/* Saved pujas — driven by the favorites wishlist */}
-          <section className="mt-12 border-t border-dt pt-12">
+          <section className="mt-12 border-t border-dt pt-12" id="wishlist">
             <div className="flex items-end justify-between gap-4 flex-wrap">
               <div>
                 <div className="eyebrow">Your wishlist</div>

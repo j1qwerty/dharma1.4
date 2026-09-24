@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "./components/common/ThemeToggle";
 import { LanguageProvider } from "./components/common/LanguageToggle";
 import Layout from "./components/common/Layout";
@@ -30,7 +30,6 @@ const BookingPayment = lazy(() => import("./pages/BookingPayment"));
 const BookingConfirmation = lazy(() => import("./pages/BookingConfirmation"));
 const Tracking = lazy(() => import("./pages/Tracking"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
-const MyBookings = lazy(() => import("./pages/MyBookings"));
 const Stories = lazy(() => import("./pages/Stories"));
 const StoryDetail = lazy(() => import("./pages/StoryDetail"));
 const Auth = lazy(() => import("./pages/Auth"));
@@ -163,11 +162,7 @@ function App() {
                     />
                     <Route
                       path="/bookings"
-                      element={
-                        <Suspense fallback={<PageFallback />}>
-                          <MyBookings />
-                        </Suspense>
-                      }
+                      element={<Navigate to="/dashboard" replace />}
                     />
                     <Route
                       path="/stories"
