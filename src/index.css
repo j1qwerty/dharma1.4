@@ -204,6 +204,14 @@ select {
   border: 1px solid rgba(231, 182, 49, 0.56);
   color: var(--gold-dark);
   background: color-mix(in srgb, var(--surface) 85%, var(--gold) 10%);
+  overflow: hidden;
+}
+.brand-mark-img-dt img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+  display: block;
 }
 .brand-word-dt {
   font-family: var(--font-display);
@@ -365,9 +373,20 @@ select {
   z-index: 2;
   flex: 1;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 18px;
   padding-top: 84px;
   padding-bottom: 150px;
+}
+.hero-tagline-dt {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f6d47a;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.5);
 }
 .hero-copy-inner-dt {
   max-width: 640px;

@@ -21,6 +21,10 @@ export const STRINGS = {
   "nav.howBookingWorks": { en: "How booking works", hi: "पूजा बुकिंग कैसे होती है" },
 
   // Hero / home
+  "home.tagline": {
+    en: "Rooted in wisdom. Relevant for life. Together we rise.",
+    hi: "Rooted in wisdom. Relevant for life. Together we rise.",
+  },
   "home.heroSlide1Title": {
     en: "Sacred rituals. Modern access.",
     hi: "पवित्र पूजा, अब आपके लिए सहज और सरल।",

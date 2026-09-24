@@ -28,6 +28,7 @@ import FaqAccordion from "../components/common/FaqAccordion";
 import { GalleryTile } from "../components/common/Lightbox";
 import { useLanguage } from "../components/common/LanguageToggle";
 import ShraadhContent from "../components/common/ShraadhContent";
+import PitruPakshaOnline from "../components/common/PitruPakshaOnline";
 import { buildInquiryHref, buildInquiryMessage } from "../lib/booking";
 import { useAuth } from "../lib/auth";
 import { logInquiry } from "../lib/cmsAdmin";
@@ -140,6 +141,8 @@ export default function PujaDetail() {
         </div>
         <SectionCurve edge="bottom" />
       </section>
+
+      {isShraadh && <PitruPakshaOnline />}
 
       {isShraadh && <ShraadhContent />}
 

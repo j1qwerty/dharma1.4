@@ -200,6 +200,9 @@ export default function Home() {
               ))}
             </div>
           </motion.div>
+          <div className="hero-tagline-dt" aria-label="Dharmaa Tribe tagline">
+            {t("home.tagline")}
+          </div>
         </div>
 
         {/* Bottom curve — rounded corners on side-bottom only */}

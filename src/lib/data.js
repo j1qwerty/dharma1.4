@@ -5,8 +5,8 @@ export const pujas = [
   {
     id: "shraadh",
     code: "PUJA-009",
-    title: "Shraadh",
-    titleHi: "श्राद्ध",
+    title: "Shraadh (PITRU PAKSHA ONLINE SHRADH POOJA)",
+    titleHi: "श्राद्ध (पितृ पक्ष ऑनलाइन श्राद्ध पूजा)",
     deity: "Pitru",
     temple: "At Home · Temple · Gaya Ji",
     date: "Pitru Paksha",
