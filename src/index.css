@@ -3745,6 +3745,115 @@ html.dark .shraadh-flash-dt::after {
   .shraadh-mini-dt,
   .shraadh-mini-num-dt { animation: none; }
 }
+/* --- Shraadh vision band (redesigned, icon-led, no emoji) --- */
+.vision-band-dt {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 85% 10%, rgba(231, 182, 49, 0.16), transparent 55%),
+    radial-gradient(circle at 10% 90%, rgba(231, 182, 49, 0.08), transparent 50%),
+    #14120d;
+  color: #f8f1e3;
+  padding: clamp(28px, 5vw, 56px);
+  margin-top: 8px;
+}
+.vision-eyebrow-dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #f6d47a;
+}
+.vision-eyebrow-dt::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.7;
+}
+.vision-title-dt {
+  margin-top: 14px;
+  font-size: clamp(38px, 5vw, 64px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+.vision-tagline-dt {
+  margin-top: 10px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 17px;
+  color: rgba(248, 241, 227, 0.75);
+}
+.vision-intro-dt {
+  margin-top: 18px;
+  max-width: 640px;
+  display: grid;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: rgba(248, 241, 227, 0.6);
+}
+.vision-grid-dt {
+  margin-top: 34px;
+  display: grid;
+  gap: 1px;
+  background: rgba(248, 241, 227, 0.12);
+  border: 1px solid rgba(248, 241, 227, 0.12);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.vision-cell-dt {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px 22px 20px;
+  background: #14120d;
+  transition: background 0.3s;
+}
+.vision-cell-dt:hover { background: #1b1812; }
+.vision-cell-dt.lead { grid-column: 1 / -1; }
+@media (min-width: 720px) {
+  .vision-grid-dt { grid-template-columns: 1fr 1fr; }
+}
+.vision-index-dt {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: rgba(248, 241, 227, 0.3);
+}
+.vision-icon-dt {
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #f6d47a;
+  background: rgba(231, 182, 49, 0.1);
+  border: 1px solid rgba(231, 182, 49, 0.35);
+}
+.vision-copy-dt { min-width: 0; }
+.vision-name-dt {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #f6d47a;
+}
+.vision-body-dt {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: rgba(248, 241, 227, 0.62);
+}
+
 /* --- Shraadh content page --- */
 .shraadh-page-dt .shraadh-section-dt {
   padding: 32px 0;

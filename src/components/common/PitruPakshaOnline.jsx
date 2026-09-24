@@ -1,6 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpRight } from "@phosphor-icons/react";
+import {
+  ArrowUpRight,
+  Flame,
+  BookOpen,
+  MapTrifold,
+  CalendarBlank,
+  UsersThree,
+} from "@phosphor-icons/react";
 import { useLanguage } from "./LanguageToggle";
 import { SectionDecor } from "./decor";
 import FaqAccordion from "./FaqAccordion";
@@ -118,11 +125,11 @@ const EN = {
   visionB: "Dharmaa Tribe is being created as a contemporary platform for people who wish to stay connected with Sanatan traditions, knowledge and practices — wherever they live.",
   visionC: "Online pooja is only the beginning. Our vision extends across:",
   vision: [
-    ["🪔 AUTHENTIC ONLINE POOJA", "Traditional rituals conducted by experienced Acharyas, accessible to families across India and the world."],
-    ["📚 VEDIC KNOWLEDGE & LEARNING", "Accessible learning experiences around Vedic literature, philosophy, traditions and practices."],
-    ["🕉️ SPIRITUAL JOURNEYS", "Thoughtfully curated journeys to sacred places, temples and centres of Sanatan knowledge."],
-    ["🕉️ FESTIVAL & RITUAL GUIDANCE", "Helping families understand what a festival or ritual means, when it is observed and how it may traditionally be performed."],
-    ["🌿 A COMMUNITY AROUND DHARMA", "A space where tradition can be understood, practised and passed on — particularly across generations and across borders."],
+    ["AUTHENTIC ONLINE POOJA", "Traditional rituals conducted by experienced Acharyas, accessible to families across India and the world."],
+    ["VEDIC KNOWLEDGE & LEARNING", "Accessible learning experiences around Vedic literature, philosophy, traditions and practices."],
+    ["SPIRITUAL JOURNEYS", "Thoughtfully curated journeys to sacred places, temples and centres of Sanatan knowledge."],
+    ["FESTIVAL & RITUAL GUIDANCE", "Helping families understand what a festival or ritual means, when it is observed and how it may traditionally be performed."],
+    ["A COMMUNITY AROUND DHARMA", "A space where tradition can be understood, practised and passed on — particularly across generations and across borders."],
   ],
   beliefTitle: "Our belief",
   belief: [
@@ -256,11 +263,11 @@ const HI = {
   visionB: "धर्मा ट्राइब उन लोगों के लिए समकालीन मंच के रूप में बन रहा है जो सनातन परंपराओं, ज्ञान और प्रथाओं से जुड़े रहना चाहते हैं — चाहे वे कहीं भी रहते हों।",
   visionC: "ऑनलाइन पूजा केवल शुरुआत है। हमारी दृष्टि आगे तक है:",
   vision: [
-    ["🪔 प्रामाणिक ऑनलाइन पूजा", "अनुभवी आचार्यों द्वारा पारंपरिक अनुष्ठान — भारत और दुनिया भर के परिवारों के लिए सुलभ।"],
-    ["📚 वैदिक ज्ञान और शिक्षा", "वैदिक साहित्य, दर्शन, परंपराओं और प्रथाओं पर सुलभ शिक्षण अनुभव।"],
-    ["🕉️ आध्यात्मिक यात्राएँ", "पवित्र स्थानों, मंदिरों और सनातन ज्ञान केंद्रों की सुविचारित यात्राएँ।"],
-    ["🕉️ पर्व और अनुष्ठान मार्गदर्शन", "परिवारों को यह समझने में सहायता कि कोई पर्व या अनुष्ठान क्या है, कब मनाया जाता है और पारंपरिक रूप से कैसे निभाया जा सकता है।"],
-    ["🌿 धर्म के इर्द-गिर्द समुदाय", "ऐसा स्थान जहाँ परंपरा को समझा, निभाया और आगे बढ़ाया जा सके — विशेषकर पीढ़ियों और सीमाओं के पार।"],
+    ["प्रामाणिक ऑनलाइन पूजा", "अनुभवी आचार्यों द्वारा पारंपरिक अनुष्ठान — भारत और दुनिया भर के परिवारों के लिए सुलभ।"],
+    ["वैदिक ज्ञान और शिक्षा", "वैदिक साहित्य, दर्शन, परंपराओं और प्रथाओं पर सुलभ शिक्षण अनुभव।"],
+    ["आध्यात्मिक यात्राएँ", "पवित्र स्थानों, मंदिरों और सनातन ज्ञान केंद्रों की सुविचारित यात्राएँ।"],
+    ["पर्व और अनुष्ठान मार्गदर्शन", "परिवारों को यह समझने में सहायता कि कोई पर्व या अनुष्ठान क्या है, कब मनाया जाता है और पारंपरिक रूप से कैसे निभाया जा सकता है।"],
+    ["धर्म के इर्द-गिर्द समुदाय", "ऐसा स्थान जहाँ परंपरा को समझा, निभाया और आगे बढ़ाया जा सके — विशेषकर पीढ़ियों और सीमाओं के पार।"],
   ],
   beliefTitle: "हमारा विश्वास",
   belief: [
@@ -297,6 +304,7 @@ export default function PitruPakshaOnline() {
   const inquiryHref = buildInquiryHref(shraadhPuja, lang);
   const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}`;
   const L = lang === "hi" ? HI : EN;
+  const VISION_ICONS = [Flame, BookOpen, MapTrifold, CalendarBlank, UsersThree];
 
   return (
     <section className="site-section has-decor-dt shraadh-page-dt">
@@ -443,22 +451,32 @@ export default function PitruPakshaOnline() {
           </div>
         </div>
 
-        {/* Vision */}
-        <div className="shraadh-section-dt">
-          <span className="shraadh-section-num-dt">{L.visionEyebrow}</span>
-          <h3 className="shraadh-section-title-dt">{L.visionTitle}</h3>
-          <div className="shraadh-section-body-dt">
-            <p>{L.visionA}</p>
+        {/* Vision — redesigned ink band, icon-led pillars */}
+        <div className="vision-band-dt">
+          <span className="vision-eyebrow-dt">{L.visionEyebrow}</span>
+          <h3 className="display-dt vision-title-dt">{L.visionTitle}</h3>
+          <p className="vision-tagline-dt">{L.visionA}</p>
+          <div className="vision-intro-dt">
             <p>{L.visionB}</p>
             <p>{L.visionC}</p>
           </div>
-          <div className="shraadh-three-grid-dt">
-            {L.vision.map(([title, body]) => (
-              <div key={title} className="shraadh-card-dt">
-                <div className="shraadh-card-title-dt">{title}</div>
-                <div className="shraadh-card-body-dt">{body}</div>
-              </div>
-            ))}
+          <div className="vision-grid-dt">
+            {L.vision.map(([title, body], i) => {
+              const Icon = VISION_ICONS[i % VISION_ICONS.length];
+              const lead = i === 0;
+              return (
+                <div key={title} className={`vision-cell-dt${lead ? " lead" : ""}`}>
+                  <span className="vision-index-dt">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="vision-icon-dt">
+                    <Icon size={22} weight="duotone" />
+                  </span>
+                  <div className="vision-copy-dt">
+                    <div className="vision-name-dt">{title}</div>
+                    <div className="vision-body-dt">{body}</div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
