@@ -4,10 +4,10 @@ import { ArrowRight, ArrowUpRight, CheckCircle } from "@phosphor-icons/react";
 import { useLanguage } from "./LanguageToggle";
 import { Reveal, ParallaxImage } from "./Motion";
 import { SectionDecor } from "./decor";
-import { pujas as defaultPujas } from "../lib/data";
-import { useLivePujas } from "../lib/cms";
-import { buildInquiryHref } from "../lib/booking";
-import { SHRAADH_TYPES, SHRAADH_COMPARE, SHRAADH_GUIDANCE } from "../lib/shraadhTypes";
+import { pujas as defaultPujas } from "../../lib/data";
+import { useLivePujas } from "../../lib/cms";
+import { buildInquiryHref } from "../../lib/booking";
+import { SHRAADH_TYPES, SHRAADH_COMPARE, SHRAADH_GUIDANCE } from "../../lib/shraadhTypes";
 
 /* ------------------------------------------------------------------ *
  * ShraadhTypes — the four Shraadh observances (umbrella: Shraadh).
