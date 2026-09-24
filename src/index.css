@@ -45,15 +45,15 @@ html.dark {
   --deep: #0c0c0a;
 }
 
-/* Hindi (Devanagari) typefaces — Hind for UI/body (most legible
-   Devanagari sans), Tiro Devanagari Hindi for display serif. The app
-   sets <html lang="hi"> when Hindi is active, so all font stacks switch
-   automatically. Arya stays as fallback. */
+/* Hindi (Devanagari) typefaces — Arya for headings (display serif),
+   Hind for content/body (most legible Devanagari sans). The app sets
+   <html lang="hi"> when Hindi is active, so all font stacks switch
+   automatically. Tiro Devanagari Hindi stays as display fallback. */
 html[lang="hi"] {
   --font-sans: "Hind", "Arya", "Spectral", "Avenir Next", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Tiro Devanagari Hindi", "Arya", "Cormorant Garamond", Georgia, "Times New Roman", serif;
-  --font-timer: "Tiro Devanagari Hindi", "Arya", "Marcellus", Georgia, serif;
-  --display-font: "Tiro Devanagari Hindi", "Arya", "Fraunces", "Noto Serif", serif;
+  --font-display: "Arya", "Tiro Devanagari Hindi", "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-timer: "Arya", "Tiro Devanagari Hindi", "Marcellus", Georgia, serif;
+  --display-font: "Arya", "Tiro Devanagari Hindi", "Fraunces", "Noto Serif", serif;
 }
 
 * {
@@ -3725,7 +3725,9 @@ html.dark .shraadh-flash-dt::after {
 .shraadh-mini-name-dt {
   font-family: var(--font-display);
   font-size: 17px;
-  line-height: 1.15;
+  line-height: 1.45;
+  margin-top: 2px;
+  padding-top: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
