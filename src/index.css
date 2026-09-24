@@ -45,13 +45,15 @@ html.dark {
   --deep: #0c0c0a;
 }
 
-/* Hindi (Devanagari) typeface — Arya. The app sets <html lang="hi"> when
-   Hindi is active, so all font stacks switch to Arya automatically. */
+/* Hindi (Devanagari) typefaces — Hind for UI/body (most legible
+   Devanagari sans), Tiro Devanagari Hindi for display serif. The app
+   sets <html lang="hi"> when Hindi is active, so all font stacks switch
+   automatically. Arya stays as fallback. */
 html[lang="hi"] {
-  --font-sans: "Arya", "Spectral", "Avenir Next", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Arya", "Cormorant Garamond", Georgia, "Times New Roman", serif;
-  --font-timer: "Arya", "Marcellus", Georgia, serif;
-  --display-font: "Arya", "Fraunces", "Noto Serif", serif;
+  --font-sans: "Hind", "Arya", "Spectral", "Avenir Next", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Tiro Devanagari Hindi", "Arya", "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-timer: "Tiro Devanagari Hindi", "Arya", "Marcellus", Georgia, serif;
+  --display-font: "Tiro Devanagari Hindi", "Arya", "Fraunces", "Noto Serif", serif;
 }
 
 * {
