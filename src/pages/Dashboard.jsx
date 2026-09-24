@@ -15,6 +15,7 @@ import {
 } from "@phosphor-icons/react";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionCurve from "../components/common/SectionCurve";
+import AddressManager from "../components/common/AddressManager";
 import { LeafBranch, LotusLine, Bell, Kalash, SectionDecor } from "../components/common/decor";
 import { useFavorites } from "../lib/favorites";
 import { useAuth } from "../lib/auth";
@@ -186,10 +187,10 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Quick links: addresses + wishlist */}
-          <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            <Link
-              to="/addresses"
+          {/* Quick link: addresses live further down this page */}
+          <div className="mt-8">
+            <a
+              href="#addresses"
               className="panel-dt p-5 flex items-center gap-4 hover:border-gold-400/50 transition-colors"
             >
               <MapPin size={22} className="text-gold-600 flex-none" />
@@ -197,19 +198,6 @@ export default function Dashboard() {
                 <div className="text-sm font-semibold">Saved addresses</div>
                 <div className="text-xs muted-dt mt-0.5">
                   {addresses?.length || 0} saved · max 5
-                </div>
-              </div>
-              <ArrowUpRight size={16} className="muted-dt flex-none ml-auto" />
-            </Link>
-            <a
-              href="#wishlist"
-              className="panel-dt p-5 flex items-center gap-4 hover:border-gold-400/50 transition-colors"
-            >
-              <Heart size={22} className="text-gold-600 flex-none" />
-              <div className="min-w-0">
-                <div className="text-sm font-semibold">Saved pujas</div>
-                <div className="text-xs muted-dt mt-0.5">
-                  {count} {count === 1 ? "ritual" : "rituals"} in your wishlist
                 </div>
               </div>
               <ArrowUpRight size={16} className="muted-dt flex-none ml-auto" />
@@ -296,7 +284,7 @@ export default function Dashboard() {
             <div className="grid gap-4 md:grid-cols-2">
               {[
                 [VideoCamera, "Puja videos", "Open your recorded ceremonies", "/booking/tracking"],
-                [BookmarkSimple, "Saved details", "Keep family information ready", "/addresses"],
+                [BookmarkSimple, "Saved details", "Keep family information ready", "#addresses"],
               ].map(([Icon, title, copy, to], i) => (
                 <Reveal key={title} delay={i * 0.05}>
                   <Link to={to} className="panel-dt p-6 block">
@@ -362,6 +350,19 @@ export default function Dashboard() {
                 </Link>
               </div>
             )}
+          </section>
+
+          {/* Saved addresses — merged from the Addresses page */}
+          <section className="mt-12 border-t border-dt pt-12" id="addresses">
+            <div className="eyebrow">Prasad & coordination</div>
+            <h2 className="display-dt mt-2 text-4xl">Saved addresses</h2>
+            <p className="mt-2 text-sm muted-dt max-w-xl">
+              Add up to 5 delivery addresses. We use these for prasad delivery and ritual
+              coordination.
+            </p>
+            <div className="mt-6">
+              <AddressManager user={user} />
+            </div>
           </section>
 
           <section className="mt-12 border-t border-dt pt-12">

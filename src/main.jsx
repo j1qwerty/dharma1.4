@@ -34,7 +34,6 @@ const Stories = lazy(() => import("./pages/Stories"));
 const StoryDetail = lazy(() => import("./pages/StoryDetail"));
 const Auth = lazy(() => import("./pages/Auth"));
 const AuthFinish = lazy(() => import("./pages/AuthFinish"));
-const Addresses = lazy(() => import("./pages/Addresses"));
 const AdminLogin = lazy(() => import("./admin/pages/AdminLogin"));
 const AdminSettings = lazy(() => import("./admin/pages/AdminSettings"));
 const Admin = lazy(() => import("./admin/pages/Admin"));
@@ -216,11 +215,7 @@ function App() {
                     />
                     <Route
                       path="/addresses"
-                      element={
-                        <Suspense fallback={<PageFallback />}>
-                          <Addresses />
-                        </Suspense>
-                      }
+                      element={<Navigate to="/dashboard" replace />}
                     />
                     <Route
                       path="/terms"
