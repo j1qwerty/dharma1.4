@@ -277,7 +277,7 @@ export default function Home() {
                 <Link className="btn-gold-dt" to="/pujas/shraadh">
                   {t("home.viewAllPujas")} <ArrowRight size={15} />
                 </Link>
-                <Link className="btn-ghost-dt" to="/booking/shraadh/date">
+                <Link className="btn-ghost-dt" to="/pujas/shraadh">
                   {t("nav.bookPuja")} <ArrowUpRight size={14} />
                 </Link>
               </div>

@@ -12,6 +12,7 @@ import { intentions, deities, deityHi } from "../lib/data";
 import { upcomingFestivals } from "../lib/dates";
 import { useLivePujas, useLiveFestivals } from "../lib/cms";
 import PujaCard from "../components/common/PujaCard";
+import { ShraadhTypeCards } from "../components/common/ShraadhTypes";
 import SafeImage from "../components/common/SafeImage";
 import SectionHeading from "../components/common/SectionHeading";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
@@ -168,6 +169,21 @@ export default function Catalog() {
               </button>
             ))}
           </div>
+
+          {/* Shraadh umbrella: four rites above the full catalogue (shraadh only). */}
+          <section className="mt-12 has-decor-dt">
+            <SectionDecor />
+            <SectionHeading
+              title={lang === "hi" ? "श्राद्ध की चार विधियाँ" : "Shradh, in four sacred paths"}
+              copy={
+                lang === "hi"
+                  ? "पितृ तर्पण, एकोद्दिष्ट, पार्वण और त्रिपिंडी — विवरण के लिए किसी भी विधि पर जाएँ।"
+                  : "Pitru Tarpan, Ekoddishta, Parvan and Tripindi — open any rite for its full details."
+              }
+              soft
+            />
+            <ShraadhTypeCards compact />
+          </section>
 
           <div className="mt-14 grid gap-12 lg:grid-cols-[220px_1fr]">
             <aside className={`${mobileFiltersOpen ? "block" : "hidden"} lg:block`}>

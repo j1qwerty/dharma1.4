@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect, useMemo } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -28,6 +28,7 @@ import FaqAccordion from "../components/common/FaqAccordion";
 import { GalleryTile } from "../components/common/Lightbox";
 import { useLanguage } from "../components/common/LanguageToggle";
 import ShraadhContent from "../components/common/ShraadhContent";
+import ShraadhTypes from "../components/common/ShraadhTypes";
 import PitruPakshaOnline from "../components/common/PitruPakshaOnline";
 import { buildInquiryHref, buildInquiryMessage } from "../lib/booking";
 import { useAuth } from "../lib/auth";
@@ -36,6 +37,7 @@ import { ux } from "../lib/analytics";
 
 export default function PujaDetail() {
   const { id } = useParams();
+  const loc = useLocation();
   const { t, lang } = useLanguage();
   const { user } = useAuth();
   // Cache-first: render hardcoded puja instantly, then refresh from Firestore
@@ -49,6 +51,16 @@ export default function PujaDetail() {
     [livePujas, id]
   );
   const toast = useToast();
+  // Deep links from cards (e.g. /pujas/shraadh#parvan-shraadh) scroll to the rite.
+  useEffect(() => {
+    if (loc.hash) {
+      const el = document.querySelector(loc.hash);
+      if (el) {
+        const t = setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
+        return () => clearTimeout(t);
+      }
+    }
+  }, [loc.hash, id]);
   const title = lang === "hi" && p.titleHi ? p.titleHi : p.title;
   const desc = lang === "hi" && p.descHi ? p.descHi : p.desc;
   const isShraadh = p.id === "shraadh";
@@ -141,6 +153,8 @@ export default function PujaDetail() {
         </div>
         <SectionCurve edge="bottom" />
       </section>
+
+      {isShraadh && <ShraadhTypes />}
 
       {isShraadh && <PitruPakshaOnline />}
 
