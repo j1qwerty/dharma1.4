@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db, firebaseConfigured } from "../../lib/firebase";
 import { useSiteSettings } from "../../lib/settings";
+import { resetCmsEnabledCache } from "../../lib/cms";
 import { isPageAgentHidden, setPageAgentHidden } from "../../lib/pageAgent";
 import { Field, TextArea, TextInput, Toggle } from "../components/ui";
 
@@ -35,6 +36,7 @@ export default function AdminSettings() {
   const [annText, setAnnText] = useState("");
   const [annTextHi, setAnnTextHi] = useState("");
   const [archiveDays, setArchiveDays] = useState("");
+  const [cmsEnabled, setCmsEnabled] = useState(false);
   const [showBot, setShowBot] = useState(() => !isPageAgentHidden());
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(null);
@@ -50,6 +52,7 @@ export default function AdminSettings() {
       setAnnTextHi(settings.announcement?.textHi || "");
       const d = settings.archiveAfterDays;
       setArchiveDays(d == null ? "" : String(d));
+      setCmsEnabled(settings.cmsEnabled === true);
     }
   }, [settings]);
 
@@ -64,8 +67,10 @@ export default function AdminSettings() {
         whatsappNumber: whatsapp.trim() || null,
         announcement: { enabled: annEnabled, text: annText || null, textHi: annTextHi || null },
         archiveAfterDays: parsedDays,
+        cmsEnabled,
         updatedAt: serverTimestamp(),
       }, { merge: true });
+      resetCmsEnabledCache();
       setSaved("Saved — changes apply on next page load.");
       setSavedKind("success");
     } catch (e) {
@@ -226,6 +231,25 @@ export default function AdminSettings() {
               desc="Off hides the launcher everywhere. Visitors can re-enable it from the header eye toggle."
               value={showBot}
               onChange={(v) => { setShowBot(v); setPageAgentHidden(!v); }}
+            />
+          </SectionCard>
+
+          <SectionCard
+            title="CMS content (Firestore)"
+            desc="Master switch for site content. While off, pujas, festivals, stories, acharyas and homepage sections always render from local code — Firestore copies are ignored. Turn on only when admin-panel edits should go live."
+            icon={
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <ellipse cx="12" cy="5" rx="9" ry="3" />
+                <path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5" />
+                <path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3" />
+              </svg>
+            }
+          >
+            <Toggle
+              label="Pull site content from Firestore"
+              desc="Off (development default): local data.js is final. On: published admin edits override local content within a minute."
+              value={cmsEnabled}
+              onChange={setCmsEnabled}
             />
           </SectionCard>
 

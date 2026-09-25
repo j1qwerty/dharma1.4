@@ -11,6 +11,35 @@ import {
   acharyas as defaultAcharyas,
 } from "./data";
 
+// ---- CMS kill-switch ----
+// During development src/lib/data.js is final. Published Firestore docs for
+// site content (pujas, festivals, stories, acharyas, homepage_sections) are
+// only fetched + merged when site_settings/global.cmsEnabled === true
+// (toggle in super-admin Settings, default off). Operational collections
+// (users, bookings, inquiries, addresses, admins) are NOT affected.
+let cmsFlagCache = { value: null, at: 0 };
+const CMS_FLAG_TTL = 60 * 1000;
+
+export async function getCmsEnabled() {
+  if (!firebaseConfigured || !db) return false;
+  if (cmsFlagCache.value !== null && Date.now() - cmsFlagCache.at < CMS_FLAG_TTL) {
+    return cmsFlagCache.value;
+  }
+  try {
+    const snap = await getDoc(doc(db, "site_settings", "global"));
+    const v = snap.exists() ? snap.data()?.cmsEnabled === true : false;
+    cmsFlagCache = { value: v, at: Date.now() };
+    return v;
+  } catch {
+    return cmsFlagCache.value ?? false;
+  }
+}
+
+/** Drop the cached flag (call after saving Settings) so the next read is fresh. */
+export function resetCmsEnabledCache() {
+  cmsFlagCache = { value: null, at: 0 };
+}
+
 export function useCollection(path, { liveOnly = true, orderField = null, max = 100 } = {}) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(firebaseConfigured);
@@ -73,7 +102,9 @@ export function useDoc(path, id) {
  * loads that on site in bg and updates".
  *
  * Returns the hardcoded list immediately so the page renders instantly.
- * Then fetches `published` items from Firestore in the background and merges:
+ * Then, only when the CMS kill-switch is enabled
+ * (site_settings/global.cmsEnabled, super-admin Settings), fetches
+ * `published` items from Firestore in the background and merges:
  * - For each Firestore published item that matches a default by id → override
  *   the default's fields with the Firestore version (non-empty wins).
  * - For each Firestore published item with NO default match → append it
@@ -100,6 +131,11 @@ export function useLiveCollection(path, defaults, { orderField = null, idOf = (x
     let cancelled = false;
     (async () => {
       try {
+        // CMS disabled → local data.js is final, skip Firestore entirely.
+        if (!(await getCmsEnabled())) {
+          if (!cancelled) setLoading(false);
+          return;
+        }
         const constraints = [where("status", "==", "published"), limit(200)];
         // Order needs an index — fall back to client sort when it fails.
         let snap;
@@ -207,6 +243,11 @@ export function useHomepageOverrides() {
     let cancelled = false;
     (async () => {
       try {
+        // CMS disabled → local defaults are final, skip Firestore entirely.
+        if (!(await getCmsEnabled())) {
+          if (!cancelled) setLoading(false);
+          return;
+        }
         const snap = await getDocs(query(collection(db, "homepage_sections"), limit(100)));
         if (cancelled) return;
         const map = {};

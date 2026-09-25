@@ -7,6 +7,7 @@
 //     whatsappNumber: "9958728666",
 //     announcement: { enabled, text, textHi },
 //     archiveAfterDays: number | null  // null = no auto-archive
+//     cmsEnabled: bool  // master switch: Firestore CMS overrides site content
 //   }
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
