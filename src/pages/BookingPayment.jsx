@@ -27,7 +27,6 @@ export default function BookingPayment() {
   );
   const family = Number(booking?.sankalp?.family) || 0;
   const addons = Array.isArray(booking.addons) ? booking.addons : [];
-  const total = booking.packagePrice || p.price || 0;
   const rite = shraadhTypeOf({ ...booking, pujaId: p.id });
 
   const rows = [
@@ -36,10 +35,7 @@ export default function BookingPayment() {
     [t("detail.temple"), p.temple],
     [t("booking.date"), booking.date],
     [t("booking.muhurat"), booking.time],
-    [
-      t("booking.package"),
-      `${booking.package} · ₹${(booking.packagePrice || 0).toLocaleString("en-IN")}`,
-    ],
+    [t("booking.package"), booking.package || "—"],
     [t("bpay.addons"), addons.length ? addons.join(", ") : "—"],
     [t("bs.fullName"), booking?.sankalp?.name || "—"],
     [t("bs.gotra"), booking?.sankalp?.gotra || "—"],
@@ -74,9 +70,8 @@ export default function BookingPayment() {
         ))}
       </div>
 
-      <div className="mt-5 flex justify-between border-t border-line pt-4 text-base font-bold">
-        <span>{t("booking.total")}</span>
-        <span>₹{total.toLocaleString("en-IN")}</span>
+      <div className="mt-5 border-t border-line pt-4 text-xs leading-6 text-muted">
+        {t("booking.priceNote")}
       </div>
     </BookingFrame>
   );

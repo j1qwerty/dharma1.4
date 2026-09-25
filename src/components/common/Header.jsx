@@ -413,7 +413,7 @@ export default function Header() {
                                     {lang === "hi" && p.titleHi ? p.titleHi : p.title}
                                   </span>
                                   <span className="block text-[10px] muted-dt">
-                                    {p.deity} · ₹{p.price.toLocaleString("en-IN")}
+                                    {p.deity}
                                   </span>
                                 </span>
                                 <ArrowUpRight size={14} className="muted-dt flex-none" />
@@ -534,7 +534,7 @@ export default function Header() {
                               {lang === "hi" && p.titleHi ? p.titleHi : p.title}
                             </span>
                             <span className="block text-[10px] muted-dt">
-                              {p.deity} · ₹{p.price.toLocaleString("en-IN")}
+                              {p.deity}
                             </span>
                           </span>
                           <ArrowUpRight size={14} className="muted-dt flex-none" />

@@ -17,9 +17,9 @@ export const pujas = [
     type: "Shraadh",
     image:
       "/puja/Shraadh.jpg",
-    desc: "Ancestral observance performed with śraddhā — at home with a Vedacharya, on your behalf from a temple, or at Gaya Ji.",
+    desc: "Ancestral observance performed with śraddhā — at home with a Vedacharya, on your behalf.",
     descHi:
-      "श्रद्धा के साथ संपन्न होने वाला पितृ अनुष्ठान — घर पर वेदाचार्य के साथ, आपकी ओर से मंदिर से, या गया जी में।",
+      "श्रद्धा के साथ संपन्न होने वाला पितृ अनुष्ठान — घर पर वेदाचार्य के साथ, आपकी ओर से।",
   },
   {
     id: "mahadeva-rudra",
@@ -493,9 +493,10 @@ export const acharyas = [
     experience: "Shastri · B.Ed. · Shodasha Samskaras",
     experienceHi: "शास्त्री · B.Ed. · षोडश संस्कार",
     image: "/Acharya/Manish Pandey.jpeg",
+    phone: "+91 98359 22210",
     bio: "Acharya Manish Pandey is a trained Sanskrit scholar and Vedic ritual practitioner — Shastri from Sampurnanand Sanskrit University with Sanskrit-medium schooling and B.Ed. Based at Chhittupur, Kashi Vishwanath Dham, he conducts Shodasha Samskaras, Rudrabhishek, Yajna-Havan, Vivah Sanskar, Griha Pravesh and Shanti Anushthans with authenticity, devotion and proper ritual methodology.",
     bioHi:
-      "आचार्य मनीष पाण्डेय प्रशिक्षित संस्कृत विद्वान और वैदिक अनुष्ठान साधक हैं — सम्पूर्णानंद संस्कृत विश्वविद्यालय से शास्त्री, संस्कृत-माध्यम शिक्षा एवं B.Ed.। छित्तूपुर, काशी विश्वनाथ धाम निवासी — षोडश संस्कार, रुद्राभिषेक, यज्ञ-हवन, विवाह संस्कार, गृह प्रवेश और शांति अनुष्ठान प्रामाणिकता, भक्ति और उचित अनुष्ठान विधि के साथ संपन्न कराते हैं।",
+      "आचार्य मनीष पाण्डेय प्रशिक्षित संस्कृत विद्वान और वैदिक अनुष्ठान साधक हैं — सम्पूर्णानन्द संस्कृत विश्वविद्यालय से शास्त्री, संस्कृत-माध्यम शिक्षा एवं B.Ed.। काशी विश्वनाथ धाम, छित्तूपुर निवासी — षोडश संस्कार, रुद्राभिषेक, यज्ञ-हवन, विवाह संस्कार, गृह प्रवेश और शांति अनुष्ठान शास्त्रोक्त विधि एवं सनातन परंपरा के अनुसार संपन्न कराते हैं। “शास्त्रोक्त विधि • सनातन वैदिक परंपरा • श्रद्धा एवं विधिपूर्वक अनुष्ठान”।",
   },
   {
     id: "rupesh-pandey",
@@ -513,9 +514,10 @@ export const acharyas = [
     experience: "Samavedacharya · Shastri · B.Ed.",
     experienceHi: "सामवेदाचार्य · शास्त्री · B.Ed.",
     image: "/Acharya/Rupesh Pandey.jpeg",
+    phone: "+91 89533 03796",
     bio: "Vaidik Rupesh Pandey is a trained Sanskrit scholar and Vedic ritual practitioner — Samavedacharya and Shastri from Sampurnanand Sanskrit University with Sanskrit-medium schooling and Shikshashastri (B.Ed.). Based at Shri Kashi Vishwanath Dham, he conducts Shodasha Samskaras, Karmakanda, Rudrabhishek, Vivah Sanskar and Shanti Anushthans per Shastric procedure and Sanatan tradition.",
     bioHi:
-      "वैदिक रूपेश पाण्डेय प्रशिक्षित संस्कृत विद्वान और वैदिक अनुष्ठान साधक हैं — सम्पूर्णानंद संस्कृत विश्वविद्यालय से सामवेदाचार्य एवं शास्त्री, संस्कृत-माध्यम शिक्षा तथा शिक्षाशास्त्री (B.Ed.)। श्री काशी विश्वनाथ धाम निवासी — षोडश संस्कार, कर्मकांड, रुद्राभिषेक, विवाह संस्कार और शांति अनुष्ठान शास्त्रोक्त विधि एवं सनातन परंपरा के अनुसार संपन्न कराते हैं।",
+      "वैदिक रूपेश पाण्डेय प्रशिक्षित संस्कृत विद्वान और वैदिक अनुष्ठान साधक हैं — सम्पूर्णानन्द संस्कृत विश्वविद्यालय से सामवेदाचार्य एवं शास्त्री, संस्कृत-माध्यम शिक्षा तथा शिक्षाशास्त्री (B.Ed.)। श्री काशी विश्वनाथ धाम निवासी — षोडश संस्कार, कर्मकांड, रुद्राभिषेक, विवाह संस्कार और शांति अनुष्ठान शास्त्रोक्त विधि एवं सनातन परंपरा के अनुसार संपन्न कराते हैं। “शास्त्रोक्त विधि • सनातन वैदिक परंपरा • श्रद्धा एवं विधिपूर्वक अनुष्ठान”।",
   },
   {
     id: "rishabh-pandey",
@@ -653,9 +655,10 @@ export const acharyas = [
     experience: "Shastri · B.A. Sanskrit · Mantra Anushthan",
     experienceHi: "शास्त्री · B.A. संस्कृत · मंत्र अनुष्ठान",
     image: "/Acharya/Shivam Pandey.jpeg",
+    phone: "+91 88588 10229",
     bio: "Vaidik Shivam Pandey is a traditionally trained Sanskrit scholar from Shri Dham Ayodhya — Shastri in Shukla Yajurveda (Madhyandina Shakha) with Sanskrit-medium schooling and B.A. in Sanskrit. Rooted in mantra discipline and sincere devotion, he conducts Shodasha Samskaras, Rudrabhishek and Shiva Upasana, Yajna-Havan, Japa Anushthans and Navagraha Shanti per Shastric procedure and Sanatan tradition.",
     bioHi:
-      "वैदिक शिवम पाण्डेय श्रीधाम अयोध्या के परंपरागत प्रशिक्षित संस्कृत विद्वान हैं — शुक्ल यजुर्वेद (माध्यंदिनी शाखा) में शास्त्री, संस्कृत-माध्यम शिक्षा एवं B.A. संस्कृत। मंत्र अनुशासन और निष्ठापूर्ण भक्ति में निहित — षोडश संस्कार, रुद्राभिषेक एवं शिवोपासना, यज्ञ-हवन, जप अनुष्ठान और नवग्रह शांति शास्त्रोक्त विधि एवं सनातन परंपरा के अनुसार संपन्न कराते हैं।",
+      "वैदिक शिवम पाण्डेय श्रीधाम अयोध्या के परंपरागत प्रशिक्षित संस्कृत विद्वान हैं — शुक्ल यजुर्वेद (माध्यंदिनी शाखा) में शास्त्री, संस्कृत-माध्यम शिक्षा एवं B.A. संस्कृत। मंत्र अनुशासन और निष्ठापूर्ण भक्ति में निहित — षोडश संस्कार, रुद्राभिषेक एवं शिवोपासना, यज्ञ-हवन, जप अनुष्ठान और नवग्रह शांति शास्त्रोक्त विधि एवं सनातन परंपरा के अनुसार संपन्न कराते हैं। “शास्त्रोक्त विधि, वैदिक मंत्र और सनातन परंपरा — श्रद्धापूर्वक अनुष्ठान ही सेवा का आधार है। धर्मो रक्षति रक्षितः।”",
   },
   {
     id: "rahul-dwivedi",

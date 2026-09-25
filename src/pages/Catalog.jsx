@@ -89,12 +89,6 @@ export default function Catalog() {
     setQ("");
   };
 
-  const priceRange = useMemo(() => {
-    if (!result.length) return null;
-    const prices = result.map((p) => p.price);
-    return { min: Math.min(...prices), max: Math.max(...prices) };
-  }, [result]);
-
   // Seasonal shelves soonest-first: order flips automatically as dates pass.
   const orderedFestivals = useMemo(() => upcomingFestivals(liveFestivals), [liveFestivals]);
 
@@ -238,13 +232,6 @@ export default function Catalog() {
                   <div className="mt-2 text-sm muted-dt">
                     {result.length}{" "}
                     {result.length === 1 ? t("catalog.pujaInView") : t("catalog.pujasInView")}
-                    {priceRange && (
-                      <span className="text-muted-dt/70">
-                        {" "}
-                        · ₹{priceRange.min.toLocaleString("en-IN")} - ₹
-                        {priceRange.max.toLocaleString("en-IN")}
-                      </span>
-                    )}
                   </div>
                 </div>
                 <label className="relative">

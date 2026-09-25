@@ -311,7 +311,7 @@ export default function Dashboard() {
                       </div>
                       <div className="mt-0.5 text-sm font-semibold truncate">{p.title}</div>
                       <div className="mt-1 text-[11px] muted-dt">
-                        From ₹{p.price.toLocaleString("en-IN")}
+                        {p.deity}
                       </div>
                     </div>
                     <ArrowUpRight size={15} className="muted-dt flex-none" />

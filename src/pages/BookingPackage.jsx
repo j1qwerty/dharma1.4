@@ -49,6 +49,7 @@ export default function BookingPackage() {
     <BookingFrame active="package">
       <div className="eyebrow">{t("bp.eyebrow")}</div>
       <h2 className="font-display mt-3 text-4xl">{t("bp.title")}</h2>
+      <p className="mt-3 max-w-2xl text-xs leading-6 text-muted">{t("booking.priceNote")}</p>
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
         <SafeImage
           src={currentPuja.image}
@@ -79,7 +80,7 @@ export default function BookingPackage() {
                 toast.push({
                   type: "success",
                   title: `${x[0]} ${t("bp.packageSelected")}`,
-                  desc: `₹${x[1].toLocaleString("en-IN")} · ${x[2]}`,
+                  desc: x[2],
                 });
               }}
               className={`choice text-left ${isActive ? "active" : ""}`}
@@ -88,8 +89,7 @@ export default function BookingPackage() {
                 <span className="font-display text-2xl">{x[0]}</span>
                 {isActive && <CheckCircle size={18} className="text-gold-500" />}
               </div>
-              <div className="mt-3 text-2xl font-semibold">₹{x[1].toLocaleString("en-IN")}</div>
-              <div className="mt-1 text-xs text-muted">{x[2]}</div>
+              <div className="mt-3 text-lg font-semibold">{x[2]}</div>
             </button>
           );
         })}

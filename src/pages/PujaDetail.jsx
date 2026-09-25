@@ -195,32 +195,7 @@ export default function PujaDetail() {
                   <ShieldCheck size={16} />
                   <span className="text-xs font-semibold">{t("detail.bookConfidence")}</span>
                 </div>
-                <div className="mt-5 text-sm muted-dt">{t("detail.startingFrom")}</div>
-                <div className="mt-1 display-dt text-5xl puja-price-dt">
-                  ₹{p.price.toLocaleString("en-IN")}
-                </div>
-                <div className="mt-1 text-[11px] muted-dt">{t("detail.inclusiveOf")}</div>
-
-                <div className="mt-5 rounded-xl border border-dt overflow-hidden puja-breakdown-dt">
-                  <div className="flex items-center justify-between px-4 py-2.5 text-[11px]">
-                    <span className="muted-dt">{t("detail.pujaSeva")}</span>
-                    <span className="font-semibold">
-                      ₹{Math.round(p.price * 0.7).toLocaleString("en-IN")}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between px-4 py-2.5 text-[11px] border-t border-dt">
-                    <span className="muted-dt">{t("detail.materials")}</span>
-                    <span className="font-semibold">
-                      ₹{Math.round(p.price * 0.22).toLocaleString("en-IN")}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between px-4 py-2.5 text-[11px] border-t border-dt">
-                    <span className="muted-dt">{t("detail.videoDelivery")}</span>
-                    <span className="font-semibold">
-                      ₹{Math.round(p.price * 0.08).toLocaleString("en-IN")}
-                    </span>
-                  </div>
-                </div>
+                <div className="mt-5 text-[12px] leading-6 muted-dt">{t("booking.priceNote")}</div>
 
                 <div className="mt-6 grid gap-2">
                   {[

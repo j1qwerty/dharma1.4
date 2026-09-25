@@ -166,9 +166,8 @@ export default function BookingFrame({ active, children, summary = true }) {
                     <span className="text-right">{booking.addons.join(", ")}</span>
                   </div>
                 )}
-                <div className="flex justify-between border-t border-dt pt-3 font-bold">
-                  <span>{t("booking.total")}</span>
-                  <span>₹{(booking.packagePrice || p.price).toLocaleString("en-IN")}</span>
+                <div className="flex justify-between border-t border-dt pt-3">
+                  <span className="muted-dt text-[11px] leading-5">{t("booking.priceNote")}</span>
                 </div>
               </div>
               {active === "payment" && (

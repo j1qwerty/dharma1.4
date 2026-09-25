@@ -357,6 +357,10 @@ export const STRINGS = {
   "booking.muhurat": { en: "Muhurat", hi: "मुहूर्त" },
   "booking.package": { en: "Package", hi: "पूजा का विकल्प" },
   "booking.total": { en: "Total", hi: "कुल राशि" },
+  "booking.priceNote": {
+    en: "Prices are shared personally on WhatsApp before you confirm.",
+    hi: "पुष्टि से पहले कीमतें WhatsApp पर व्यक्तिगत रूप से बताई जाती हैं।",
+  },
   "booking.selectionNote": {
     en: "Your details are stored with the prototype booking so the flow persists as you move between pages.",
     hi: "आपकी चुनी हुई पूजा और दी गई जानकारी अगले चरणों तक सुरक्षित रहती है, ताकि पूरी बुकिंग प्रक्रिया सहज बनी रहे।",
