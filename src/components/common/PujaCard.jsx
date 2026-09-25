@@ -52,9 +52,19 @@ export default function PujaCard({ p, featured = false, index = 0, extra = null 
             </div>
           </div>
         </div>
+        {/* Mobile: same text below the photo (overlay hidden on small screens). */}
+        <div className="puja-below-dt">
+          <h3 className="display-dt">{title}</h3>
+          <div className="puja-below-meta-dt">
+            {deityLabel} · {p.temple}
+          </div>
+          <div className="puja-below-price-dt">
+            {t("catalog.from")} ₹{p.price.toLocaleString("en-IN")}
+          </div>
+        </div>
         <div className="p-4">
           <span className="puja-tag-inline-dt">{p.tag}</span>
-          <p className="text-xs leading-6 text-muted-dt">{desc}</p>
+          <p className="text-xs leading-6 text-muted-dt puja-desc-dt">{desc}</p>
           {extra}
           <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[10px] text-muted-dt">
             <span className="inline-flex items-center gap-1">

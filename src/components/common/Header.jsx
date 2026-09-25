@@ -7,7 +7,6 @@ import {
   Sun,
   Moon,
   CaretDown,
-  PaintBrush,
   Globe,
   Heart,
   ArrowUpRight,
@@ -483,7 +482,7 @@ export default function Header() {
             </div>
             <button
               onClick={toggleTheme}
-              className="grid place-items-center h-8 w-8 sm:h-9 sm:w-9 rounded-full border border-dt top-icon-dt"
+              className="hidden sm:grid place-items-center h-8 w-8 sm:h-9 sm:w-9 rounded-full border border-dt top-icon-dt"
               aria-label={t("nav.toggleTheme")}
               title={t("nav.toggleTheme")}
             >
@@ -491,7 +490,7 @@ export default function Header() {
             </button>
             <button
               onClick={toggleBot}
-              className="grid place-items-center h-8 w-8 sm:h-9 sm:w-9 rounded-full border border-dt top-icon-dt"
+              className="hidden sm:grid place-items-center h-8 w-8 sm:h-9 sm:w-9 rounded-full border border-dt top-icon-dt"
               aria-label={botHidden ? t("nav.showAssistant") : t("nav.hideAssistant")}
               title={botHidden ? t("nav.showAssistant") : t("nav.hideAssistant")}
               aria-pressed={!botHidden}
@@ -691,21 +690,13 @@ export default function Header() {
                 </NavLink>
               ))}
               {user ? (
-                <>
-                  <Link
-                    onClick={() => setOpen(false)}
-                    className="py-3 text-xl display-dt border-b border-dt mobile-nav-dt"
-                    to={isAdmin ? staffHome : "/dashboard"}
-                  >
-                    {acctName || t("nav.account")}
-                  </Link>
-                  <button
-                    onClick={signOut}
-                    className="py-3 text-xl display-dt border-b border-dt mobile-nav-dt text-left"
-                  >
-                    {lang === "hi" ? "साइन आउट" : "Sign out"}
-                  </button>
-                </>
+                <Link
+                  onClick={() => setOpen(false)}
+                  className="py-3 text-xl display-dt border-b border-dt mobile-nav-dt"
+                  to={isAdmin ? staffHome : "/dashboard"}
+                >
+                  {acctName || t("nav.account")}
+                </Link>
               ) : (
                 <Link
                   onClick={() => setOpen(false)}
@@ -715,15 +706,6 @@ export default function Header() {
                   {t("nav.account")}
                 </Link>
               )}{" "}
-              <NavLink
-                onClick={() => setOpen(false)}
-                className={({ isActive }) =>
-                  `py-3 text-xl display-dt border-b border-dt mobile-nav-dt${isActive ? " active" : ""} inline-flex items-center gap-2`
-                }
-                to="/decor"
-              >
-                <PaintBrush size={18} weight="duotone" /> {t("nav.decorPreview")}
-              </NavLink>
               <button
                 onClick={() => {
                   toggleLang();
@@ -732,6 +714,15 @@ export default function Header() {
               >
                 <Globe size={18} weight="duotone" />
                 {lang === "en" ? "हिन्दी" : "English"}
+              </button>
+              <button
+                onClick={toggleTheme}
+                className="py-3 text-xl display-dt border-b border-dt mobile-nav-dt inline-flex items-center gap-2 text-left"
+              >
+                {dark ? <Sun size={18} /> : <Moon size={18} />}
+                {dark
+                  ? lang === "hi" ? "लाइट मोड" : "Light mode"
+                  : lang === "hi" ? "डार्क मोड" : "Dark mode"}
               </button>
               <button
                 onClick={toggleBot}
@@ -744,6 +735,14 @@ export default function Header() {
               <Link onClick={() => setOpen(false)} className="btn-gold-dt mt-3" to="/pujas">
                 {t("nav.bookPuja")}
               </Link>
+              {user && (
+                <button
+                  onClick={signOut}
+                  className="py-3 text-xl display-dt mobile-nav-dt text-left muted-dt"
+                >
+                  {lang === "hi" ? "साइन आउट" : "Sign out"}
+                </button>
+              )}
             </div>
           </div>
         )}

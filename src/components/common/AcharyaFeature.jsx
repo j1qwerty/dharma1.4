@@ -1,6 +1,6 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "@phosphor-icons/react";
 import { Reveal } from "./Motion";
 import { useLanguage } from "./LanguageToggle";
 
@@ -58,6 +58,7 @@ export function AcharyaSpotlight({ principal }) {
 
 export function AcharyaStrip({ items }) {
   const { lang } = useLanguage();
+  const trackRef = useRef(null);
   // Shuffle the non-principal acharyas on every fresh data load / visit.
   const rest = useMemo(() => {
     const list = (items || []).filter((a) => !a.principal);
@@ -67,9 +68,62 @@ export function AcharyaStrip({ items }) {
     }
     return list;
   }, [items]);
+  const interactedAt = useRef(0);
+  // Auto-slide on mobile only: advance one card every second, looping.
+  // Pauses while the user is interacting and for reduced-motion users.
+  // (Hooks stay above the early return so hook order never changes.)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => {
+      const el = trackRef.current;
+      if (!el) return;
+      if (!window.matchMedia?.("(max-width: 639px)").matches) return;
+      if (Date.now() - interactedAt.current < 3000) return;
+      if (document.hidden) return;
+      const max = el.scrollWidth - el.clientWidth - 8;
+      if (el.scrollLeft >= max) el.scrollTo({ left: 0, behavior: "smooth" });
+      else el.scrollBy({ left: 220, behavior: "smooth" });
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+  const markInteracted = () => {
+    interactedAt.current = Date.now();
+  };
   if (!rest.length) return null;
+  const nudge = (dir) => {
+    markInteracted();
+    trackRef.current?.scrollBy({ left: dir * 220, behavior: "smooth" });
+  };
   return (
-    <div className="acharya-strip-dt">
+    <>
+      <div className="acharya-strip-nav-dt">
+        <span className="acharya-strip-hint-dt">
+          {lang === "hi" ? "स्वाइप करें" : "Swipe"}
+        </span>
+        <button
+          type="button"
+          onClick={() => nudge(-1)}
+          className="acharya-strip-arrow-dt"
+          aria-label={lang === "hi" ? "पीछे" : "Previous"}
+        >
+          <ArrowLeft size={16} weight="bold" />
+        </button>
+        <button
+          type="button"
+          onClick={() => nudge(1)}
+          className="acharya-strip-arrow-dt"
+          aria-label={lang === "hi" ? "आगे" : "Next"}
+        >
+          <ArrowRight size={16} weight="bold" />
+        </button>
+      </div>
+      <div
+        className="acharya-strip-dt"
+        ref={trackRef}
+        onTouchStart={markInteracted}
+        onMouseDown={markInteracted}
+      >
       {rest.map((a, i) => {
         const tradition = lang === "hi" && a.traditionHi ? a.traditionHi : a.tradition;
         const place = lang === "hi" && a.placeHi ? a.placeHi : a.place;
@@ -114,6 +168,7 @@ export function AcharyaStrip({ items }) {
           </Reveal>
         );
       })}
-    </div>
+      </div>
+    </>
   );
 }

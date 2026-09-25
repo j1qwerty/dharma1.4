@@ -85,7 +85,7 @@ export function ShraadhTypeMiniStrip() {
   const { lang } = useLanguage();
   const hi = lang === "hi";
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4">
       {SHRAADH_TYPES.map((t, i) => (
         <Reveal key={t.id} delay={i * 0.07}>
           <Link

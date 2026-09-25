@@ -1073,17 +1073,29 @@ html.dark .hero-trust-item-dt svg {
 }
 .puja-overlay-title-dt { font-size: 30px; }
 .puja-overlay-price-dt { flex: none; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.6); }
+/* Mobile duplicate below the photo (overlay row hidden instead). */
+.puja-below-dt { display: none; }
 @media (max-width: 639px) {
-  .puja-overlay-row-dt {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-  .puja-overlay-title-dt {
-    font-size: 22px;
+  .puja-overlay-row-dt { display: none; }
+  /* Mobile cards: drop the middle description, keep tag/title/meta/View. */
+  .puja-desc-dt { display: none; }
+  .puja-below-dt { display: block; padding: 14px 16px 2px; }
+  .puja-below-dt h3 {
+    font-size: 24px;
     line-height: 1.15;
+    letter-spacing: -0.01em;
   }
-  .puja-overlay-price-dt { font-size: 13px; }
+  .puja-below-meta-dt {
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .puja-below-price-dt {
+    margin-top: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold-dark);
+  }
 }
 
 /* Floating stack: WhatsApp + Back-to-top share one vertical column, center-aligned (left side) */
@@ -2593,7 +2605,7 @@ html.dark .ink-dt .decor-tone-yellow {
 }
 .acharya-spotlight-copy-dt { min-width: 0; }
 .acharya-strip-dt {
-  margin-top: 26px;
+  margin-top: 14px;
   display: flex;
   gap: 14px;
   overflow-x: auto;
@@ -2601,6 +2613,38 @@ html.dark .ink-dt .decor-tone-yellow {
   scroll-snap-type: x mandatory;
   scrollbar-width: thin;
 }
+.acharya-strip-nav-dt {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.acharya-strip-hint-dt {
+  margin-right: auto;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.acharya-strip-arrow-dt {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.25s, transform 0.25s;
+}
+.acharya-strip-arrow-dt:hover {
+  border-color: rgba(231, 182, 49, 0.6);
+  transform: translateY(-1px);
+}
+.acharya-strip-arrow-dt:active { transform: translateY(0); }
 .acharya-strip-item-dt { scroll-snap-align: start; flex: none; }
 .acharya-mini-dt {
   display: flex;
@@ -3970,6 +4014,10 @@ html.dark .shraadh-flash-dt::after {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+@media (max-width: 1023px) {
+  .shraadh-mini-name-dt { white-space: normal; }
+  .shraadh-mini-sub-dt { -webkit-line-clamp: 3; }
 }
 .shraadh-mini-sub-dt {
   font-size: 10.5px;
