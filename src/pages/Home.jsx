@@ -36,7 +36,7 @@ import {
   SectionDecor,
 } from "../components/common/decor";
 import FestivalCountdown, { getUpcomingFestivals } from "../components/common/FestivalCountdown";
-import AcharyaCard from "../components/common/AcharyaCard";
+import { AcharyaSpotlight, AcharyaStrip } from "../components/common/AcharyaFeature";
 import { intentions, social } from "../lib/data";
 import { upcomingFestivals } from "../lib/dates";
 import {
@@ -353,7 +353,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Acharyas preview — above the dates section, full-width 3-card grid */}
+      {/* Acharyas preview — principal spotlight + shuffled gallery strip */}
       <section className="site-section has-decor-dt">
         <SectionDecor />
         <LeafBranch className="decor-dt decor-tr hide-mobile soft-tone" />
@@ -369,13 +369,8 @@ export default function Home() {
               {t("home.meetAllAcharyas")} <ArrowUpRight size={14} />
             </Link>
           </div>
-          <div className="mt-12 acharya-grid-dt">
-            {liveAcharyas.map((a, i) => (
-              <Reveal key={a.id} delay={i * 0.05}>
-                <AcharyaCard a={a} />
-              </Reveal>
-            ))}
-          </div>
+          <AcharyaSpotlight principal={liveAcharyas.find((a) => a.principal)} />
+          <AcharyaStrip items={liveAcharyas} />
         </div>
       </section>
 
