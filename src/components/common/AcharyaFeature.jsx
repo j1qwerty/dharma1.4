@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "@phosphor-icons/react";
 import { Reveal } from "./Motion";
 import { useLanguage } from "./LanguageToggle";
+import AcharyaCard from "./AcharyaCard";
 
 /* ------------------------------------------------------------------ *
  * Home-only acharya presentation: principal spotlight (big) + the rest
@@ -43,8 +44,8 @@ export function AcharyaSpotlight({ principal }) {
           {tradition && <div className="mt-2 text-xs font-bold uppercase tracking-[.14em] text-gold-600">{tradition}</div>}
           <p className="mt-4 text-sm leading-7 muted-dt line-clamp-4">{bio}</p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link className="btn-gold-dt" to="/acharyas">
-              {lang === "hi" ? "परिचय पढ़ें" : "Read full profile"} <ArrowRight size={14} />
+            <Link className="btn-gold-dt" to={`/acharyas/${principal.id}`}>
+              {lang === "hi" ? "पूरा परिचय पढ़ें" : "Read full profile"} <ArrowRight size={14} />
             </Link>
             <Link className="btn-ghost-dt" to="/pujas">
               {lang === "hi" ? "पूजा बुक करें" : "Book a puja"} <ArrowUpRight size={14} />
@@ -124,50 +125,11 @@ export function AcharyaStrip({ items }) {
         onTouchStart={markInteracted}
         onMouseDown={markInteracted}
       >
-      {rest.map((a, i) => {
-        const tradition = lang === "hi" && a.traditionHi ? a.traditionHi : a.tradition;
-        const place = lang === "hi" && a.placeHi ? a.placeHi : a.place;
-        const expertise = lang === "hi" && a.expertiseHi ? a.expertiseHi : a.expertise;
-        const lineage = lang === "hi" && a.lineageHi ? a.lineageHi : a.lineage;
-        return (
+        {rest.map((a, i) => (
           <Reveal key={a.id} delay={Math.min(i, 5) * 0.04} className="acharya-strip-item-dt">
-            <Link to="/acharyas" className="acharya-mini-dt">
-              <span className="acharya-mini-media-dt">
-                <img
-                  src={a.image}
-                  alt={a.name}
-                  loading="lazy"
-                  onError={(e) => {
-                    e.currentTarget.src = "/images/placeholder.svg";
-                  }}
-                />
-              </span>
-              <span className="acharya-mini-name-dt">{a.name}</span>
-              {tradition && <span className="acharya-mini-trad-dt">{tradition}</span>}
-              <span className="acharya-mini-rows-dt">
-                {place && (
-                  <span className="acharya-mini-row-dt">
-                    <span className="mini-k-dt">{lang === "hi" ? "स्थान" : "Place"}</span>
-                    <span className="mini-v-dt">{place}</span>
-                  </span>
-                )}
-                {expertise && (
-                  <span className="acharya-mini-row-dt">
-                    <span className="mini-k-dt">{lang === "hi" ? "विशेषज्ञता" : "Expertise"}</span>
-                    <span className="mini-v-dt">{expertise}</span>
-                  </span>
-                )}
-                {lineage && (
-                  <span className="acharya-mini-row-dt">
-                    <span className="mini-k-dt">{lang === "hi" ? "परंपरा" : "Lineage"}</span>
-                    <span className="mini-v-dt">{lineage}</span>
-                  </span>
-                )}
-              </span>
-            </Link>
+            <AcharyaCard a={a} />
           </Reveal>
-        );
-      })}
+        ))}
       </div>
     </>
   );

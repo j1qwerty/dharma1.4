@@ -18,6 +18,7 @@ import Catalog from "./pages/Catalog";
 import PujaDetail from "./pages/PujaDetail";
 import About from "./pages/About";
 import Acharyas from "./pages/Acharyas";
+import AcharyaDetail from "./pages/AcharyaDetail";
 import NotFound from "./pages/NotFound";
 import "./index.css";
 import "./admin/admin.css";
@@ -186,6 +187,14 @@ function App() {
                     />
                     <Route path="/about" element={<About />} />
                     <Route path="/acharyas" element={<Acharyas />} />
+                    <Route
+                      path="/acharyas/:id"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <AcharyaDetail />
+                        </Suspense>
+                      }
+                    />
                     <Route
                       path="/auth/login"
                       element={

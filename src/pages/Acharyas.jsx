@@ -178,7 +178,10 @@ export default function Acharyas() {
                     ))}
                   </div>
                   <div className="mt-6 flex flex-wrap gap-3">
-                    <Link className="btn-gold-dt" to="/pujas">
+                    <Link className="btn-gold-dt" to={`/acharyas/${principal.id}`}>
+                      {lang === "hi" ? "पूरा परिचय पढ़ें" : "Read full profile"} <ArrowUpRight size={14} />
+                    </Link>
+                    <Link className="btn-ghost-dt" to="/pujas">
                       {t("nav.bookPuja")} <ArrowUpRight size={14} />
                     </Link>
                   </div>

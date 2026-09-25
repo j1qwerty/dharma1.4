@@ -1,14 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowUpRight } from "@phosphor-icons/react";
 import { useLanguage } from "./LanguageToggle";
 
 /* ------------------------------------------------------------------ *
- * AcharyaCard - a single acharya profile card. Reused by the Acharyas
- * page grid and the home preview slider. Compact media + name on the
- * photo, structured rows + bio in the body.
+ * AcharyaCard - a single acharya profile card. Same card on home and
+ * /acharyas. Whole card navigates to /acharyas/:id (dedicated detail
+ * page); Read more link does the same. Name sits over the photo on a
+ * translucent gradient.
  * ------------------------------------------------------------------ */
 export default function AcharyaCard({ a, compact = false }) {
   const { lang, t } = useLanguage();
+  const navigate = useNavigate();
+  const go = () => navigate(`/acharyas/${a.id}`);
   const tradition = lang === "hi" && a.traditionHi ? a.traditionHi : a.tradition;
   const place = lang === "hi" && a.placeHi ? a.placeHi : a.place;
   const expertise = lang === "hi" && a.expertiseHi ? a.expertiseHi : a.expertise;
@@ -17,7 +21,20 @@ export default function AcharyaCard({ a, compact = false }) {
   const bio = lang === "hi" && a.bioHi ? a.bioHi : a.bio;
   const principal = Boolean(a.principal);
   return (
-    <div className={`acharya-card-dt${principal ? " principal" : ""}`}>
+    <div
+      className={`acharya-card-dt${principal ? " principal" : ""}`}
+      role="link"
+      tabIndex={0}
+      aria-label={a.name}
+      style={{ cursor: "pointer" }}
+      onClick={go}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          go();
+        }
+      }}
+    >
       <div className="acharya-card-media-dt">
         <img
           src={a.image}
@@ -30,7 +47,9 @@ export default function AcharyaCard({ a, compact = false }) {
         />
         {principal && (
           <div className="principal-badge-dt">
-            <span className="principal-badge-star-dt" aria-hidden="true">✦</span>
+            <span className="principal-badge-star-dt" aria-hidden="true">
+              ✦
+            </span>
             {lang === "hi" ? "प्रमुख वेदाचार्य" : "Principal Vedacharya"}
           </div>
         )}
@@ -61,6 +80,7 @@ export default function AcharyaCard({ a, compact = false }) {
               <a
                 href={`tel:${a.phone.replace(/\s+/g, "")}`}
                 className="text-gold-600 hover:underline"
+                onClick={(e) => e.stopPropagation()}
               >
                 {a.phone}
               </a>
@@ -68,6 +88,13 @@ export default function AcharyaCard({ a, compact = false }) {
           </div>
         )}
         {!compact && <p className="acharya-card-bio-dt">{bio}</p>}
+        <Link
+          to={`/acharyas/${a.id}`}
+          onClick={(e) => e.stopPropagation()}
+          className="mt-1 inline-flex items-center gap-1.5 text-[11px] font-bold text-gold-600 hover:underline"
+        >
+          {lang === "hi" ? "और पढ़ें" : "Read more"} <ArrowUpRight size={13} />
+        </Link>
       </div>
     </div>
   );

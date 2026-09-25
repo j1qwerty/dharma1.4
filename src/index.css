@@ -2480,7 +2480,7 @@ html.dark .ink-dt .decor-tone-yellow {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(15, 13, 9, 0.7));
+  background: linear-gradient(180deg, transparent 35%, rgba(15, 13, 9, 0.55) 62%, rgba(15, 13, 9, 0.88));
 }
 .acharya-card-badge-dt {
   position: absolute;
@@ -2645,36 +2645,56 @@ html.dark .ink-dt .decor-tone-yellow {
   transform: translateY(-1px);
 }
 .acharya-strip-arrow-dt:active { transform: translateY(0); }
-.acharya-strip-item-dt { scroll-snap-align: start; flex: none; }
-/* Desktop: slider becomes a 5-up grid (arrows + hint hidden). */
+.acharya-strip-item-dt {
+  scroll-snap-align: start;
+  flex: none;
+  width: min(272px, 78vw);
+  min-width: 0;
+}
+.acharya-strip-item-dt > * { height: 100%; }
+/* Desktop: slider becomes a wide-tile grid (arrows + hint hidden). */
 @media (min-width: 640px) {
   .acharya-strip-nav-dt { display: none; }
   div.acharya-strip-dt {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    column-gap: 8px;
+    row-gap: 30px;
     overflow: visible;
     scroll-snap-type: none;
     padding: 6px 0 4px;
     margin: 14px 0 0;
   }
   div.acharya-strip-dt > .acharya-strip-item-dt { min-width: 0; }
-  .acharya-mini-dt { width: 100%; }
+  div.acharya-strip-dt > .acharya-strip-item-dt { min-width: 0; width: auto; }
 }
 .acharya-mini-dt {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 168px;
+  width: 200px;
 }
 /* Desktop tile width is set by the grid rule above (width: 100%). */
 .acharya-mini-media-dt {
   display: block;
+  position: relative;
   border-radius: 16px;
   overflow: hidden;
   aspect-ratio: 4 / 5;
   border: 1px solid var(--line);
   background: #100f0b;
+}
+.acharya-mini-nameover-dt {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 44px 12px 12px;
+  background: linear-gradient(180deg, transparent, rgba(10, 9, 6, 0.6) 40%, rgba(10, 9, 6, 0.9));
+  color: #fff8e8;
+  font-family: var(--font-display);
+  font-size: 17px;
+  line-height: 1.3;
 }
 .acharya-mini-media-dt img {
   width: 100%;
@@ -2726,6 +2746,15 @@ html.dark .ink-dt .decor-tone-yellow {
   color: var(--text);
   font-weight: 500;
   line-height: 1.55;
+}
+.acharya-mini-more-dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--gold-dark);
 }
 /* --- Acharyas page principal feature (image left, content right) --- */
 .acharya-feature-dt {
