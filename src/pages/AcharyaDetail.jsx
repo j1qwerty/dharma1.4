@@ -79,7 +79,6 @@ export default function AcharyaDetail() {
               )}
             </div>
             <div className="acharya-profile-copy-dt">
-            <div className="acharya-profile-copy-dt">
               <div className="eyebrow eyebrow-line-dt">
                 {hi ? "हमारे आचार्य" : "Our acharyas"}
               </div>
