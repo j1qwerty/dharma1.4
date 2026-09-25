@@ -141,6 +141,7 @@ export default function Acharyas() {
                   <img
                     src={principal.image}
                     alt={principal.name}
+                    loading="lazy"
                     onError={(e) => {
                       e.currentTarget.src = "/images/placeholder.svg";
                     }}

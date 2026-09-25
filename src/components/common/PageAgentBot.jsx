@@ -4,7 +4,6 @@
 // description (English + Hindi); Start boots the bot in the site language
 // (bot supports en-US/zh-CN only — Hindi maps to English, see lib/pageAgent).
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { useLanguage } from "./LanguageToggle";
 import {
   PAGEAGENT_VISIBILITY_EVENT,
@@ -46,8 +45,6 @@ export default function PageAgentBot() {
   const [error, setError] = useState(null);
   const [hidden, setHidden] = useState(() => isPageAgentHidden());
   const wrapRef = useRef(null);
-  const { pathname } = useLocation();
-  const isAdminPage = pathname.startsWith("/admin");
 
   // Re-render when visibility changes (Hide button here or Settings toggle).
   useEffect(() => {
@@ -94,10 +91,9 @@ export default function PageAgentBot() {
     setOpen(false);
   };
 
-  // Hidden flag suppresses the launcher on ADMIN routes only — public
-  // (non-admin) pages always show it automatically, even after hiding.
-  // Unhide anytime via Admin → Settings → Assistant bot.
-  if (hidden && isAdminPage) return null;
+  // Hidden flag suppresses the launcher everywhere until re-enabled
+  // via the header assistant toggle (or Admin → Settings).
+  if (hidden) return null;
 
   return (
     <div
@@ -112,8 +108,8 @@ export default function PageAgentBot() {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: 8,
-          padding: "10px 16px 10px 12px",
+          gap: 6,
+          padding: "7px 12px 7px 9px",
           borderRadius: 999,
           cursor: "pointer",
           color: "#fff",
@@ -122,8 +118,8 @@ export default function PageAgentBot() {
           animation: "pa-pulse 2.2s ease-out infinite, pa-floaty 3s ease-in-out infinite",
         }}
       >
-        <BotSvg />
-        <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: "0.14em" }}>AI</span>
+        <BotSvg size={18} />
+        <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.14em" }}>AI</span>
       </button>
       {open && (
         <div
@@ -154,16 +150,14 @@ export default function PageAgentBot() {
                 </button>
               </>
             )}
-            {isAdminPage && (
-              <button
-                className="btn-ghost-dt text-xs"
-                onClick={onHide}
-                style={{ cursor: "pointer" }}
-                title={hi ? "बॉट छिपाएँ (admin पेजों पर)" : "Hide bot on admin pages"}
-              >
-                {hi ? "छिपाएँ" : "Hide"}
-              </button>
-            )}
+            <button
+              className="btn-ghost-dt text-xs"
+              onClick={onHide}
+              style={{ cursor: "pointer" }}
+              title={hi ? "असिस्टेंट छिपाएँ" : "Hide assistant"}
+            >
+              {hi ? "छिपाएँ" : "Hide"}
+            </button>
           </div>
           {!isPageAgentReady() && (
             <p className="text-[11px] muted-dt mt-2">

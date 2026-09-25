@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ArrowUpRight, CalendarBlank, Clock, MapPin } from "@phosphor-icons/react";
 import { Reveal, ParallaxImage } from "./Motion";
 import FavToggle from "./FavToggle";
@@ -8,12 +8,27 @@ import { deityHi } from "../../lib/data";
 
 export default function PujaCard({ p, featured = false, index = 0, extra = null }) {
   const { lang, t } = useLanguage();
+  const navigate = useNavigate();
   const title = lang === "hi" && p.titleHi ? p.titleHi : p.title;
   const desc = lang === "hi" && p.descHi ? p.descHi : p.desc;
   const deityLabel = lang === "hi" ? deityHi[p.deity] || p.deity : p.deity;
   return (
     <Reveal delay={index * 0.05}>
-      <Link to={`/pujas/${p.id}`} className="card-dt block">
+      {/* Root is a div (not a Link) so inner links/buttons never nest anchors. */}
+      <div
+        className="card-dt block"
+        role="link"
+        tabIndex={0}
+        aria-label={title}
+        style={{ cursor: "pointer" }}
+        onClick={() => navigate(`/pujas/${p.id}`)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            navigate(`/pujas/${p.id}`);
+          }
+        }}
+      >
         <div className={`media-dt ${featured ? "aspect-[16/10]" : "aspect-[4/3]"}`}>
           <ParallaxImage src={p.image} alt={title} className="h-full w-full" strength={12} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
@@ -24,14 +39,14 @@ export default function PujaCard({ p, featured = false, index = 0, extra = null 
             <FavToggle id={p.id} title={title} variant="photo" size={15} className="!w-9 !h-9" />
           </div>
           <div className="absolute bottom-4 left-4 right-4 text-white">
-            <div className="flex items-end justify-between gap-4">
+            <div className="puja-overlay-row-dt">
               <div>
-                <h3 className="display-dt text-3xl">{title}</h3>
+                <h3 className="display-dt puja-overlay-title-dt">{title}</h3>
                 <div className="mt-1 text-[11px] text-white/65">
                   {deityLabel} · {p.temple}
                 </div>
               </div>
-              <div className="font-semibold text-sm">
+              <div className="font-semibold text-sm puja-overlay-price-dt">
                 {t("catalog.from")} ₹{p.price.toLocaleString("en-IN")}
               </div>
             </div>
@@ -56,7 +71,7 @@ export default function PujaCard({ p, featured = false, index = 0, extra = null 
             </span>
           </div>
         </div>
-      </Link>
+      </div>
     </Reveal>
   );
 }

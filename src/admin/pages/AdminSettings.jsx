@@ -210,7 +210,7 @@ export default function AdminSettings() {
 
           <SectionCard
             title="Assistant bot"
-            desc="Floating AI helper. Public pages always show it; this switch hides it on admin pages only. Per-browser, applies instantly (no Save needed)."
+            desc="Floating AI helper. This switch hides it everywhere until re-enabled from the header eye toggle. Per-browser, applies instantly (no Save needed)."
             icon={
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="4" y="9" width="16" height="11" rx="5" />
@@ -222,8 +222,8 @@ export default function AdminSettings() {
             }
           >
             <Toggle
-              label="Show floating assistant bot on admin pages"
-              desc="Off hides the launcher while you work in the console. Public pages are unaffected."
+              label="Show floating assistant bot"
+              desc="Off hides the launcher everywhere. Visitors can re-enable it from the header eye toggle."
               value={showBot}
               onChange={(v) => { setShowBot(v); setPageAgentHidden(!v); }}
             />

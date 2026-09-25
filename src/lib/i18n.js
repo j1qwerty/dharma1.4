@@ -14,6 +14,8 @@ export const STRINGS = {
   "nav.decorPreview": { en: "Decor preview", hi: "पूजा सजावट देखें" },
   "nav.search": { en: "Search", hi: "खोजें" },
   "nav.toggleTheme": { en: "Toggle theme", hi: "थीम बदलें" },
+  "nav.hideAssistant": { en: "Hide assistant", hi: "असिस्टेंट छिपाएँ" },
+  "nav.showAssistant": { en: "Show assistant", hi: "असिस्टेंट दिखाएँ" },
   "nav.toggleLang": { en: "हिन्दी", hi: "English" },
   "nav.browseByDeity": { en: "Browse by deity", hi: "देवता के अनुसार देखें" },
   "nav.viewAllPujas": { en: "View all pujas", hi: "सभी पूजाएँ देखें" },

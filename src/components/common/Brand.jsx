@@ -10,7 +10,7 @@ export default function Brand({ dark = false, large = false, wordmark = false })
       />
       {wordmark && (
         <span className={`brand-word-dt ${dark ? "text-white" : ""}`}>
-          Dharma<span className="text-gold-500">Tribe</span>
+          Dharmaa<span className="text-gold-500">Tribe</span>
         </span>
       )}
     </span>

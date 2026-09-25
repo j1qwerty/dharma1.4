@@ -11,6 +11,8 @@ import {
   Globe,
   Heart,
   ArrowUpRight,
+  Eye,
+  EyeSlash,
 } from "@phosphor-icons/react";
 import Brand from "./Brand";
 import { deities, deityHi } from "../../lib/data";
@@ -19,6 +21,11 @@ import { ThemeContext } from "./ThemeToggle";
 import { useLanguage } from "./LanguageToggle";
 import { useFavorites } from "../../lib/favorites";
 import { useAuth } from "../../lib/auth";
+import {
+  PAGEAGENT_VISIBILITY_EVENT,
+  isPageAgentHidden,
+  setPageAgentHidden,
+} from "../../lib/pageAgent";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -28,6 +35,7 @@ export default function Header() {
   const [acctOpen, setAcctOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [botHidden, setBotHidden] = useState(() => isPageAgentHidden());
   const closeTimer = useRef(null);
   const searchInputRef = useRef(null);
   const searchInputMobileRef = useRef(null);
@@ -164,6 +172,16 @@ export default function Header() {
 
   function toggleTheme() {
     toggle();
+  }
+
+  // Assistant visibility toggle (icon-only on desktop, icon+text on mobile).
+  useEffect(() => {
+    const sync = () => setBotHidden(isPageAgentHidden());
+    window.addEventListener(PAGEAGENT_VISIBILITY_EVENT, sync);
+    return () => window.removeEventListener(PAGEAGENT_VISIBILITY_EVENT, sync);
+  }, []);
+  function toggleBot() {
+    setPageAgentHidden(!isPageAgentHidden());
   }
 
   async function signOut() {
@@ -471,6 +489,15 @@ export default function Header() {
             >
               {dark ? <Sun size={16} /> : <Moon size={16} />}
             </button>
+            <button
+              onClick={toggleBot}
+              className="grid place-items-center h-8 w-8 sm:h-9 sm:w-9 rounded-full border border-dt top-icon-dt"
+              aria-label={botHidden ? t("nav.showAssistant") : t("nav.hideAssistant")}
+              title={botHidden ? t("nav.showAssistant") : t("nav.hideAssistant")}
+              aria-pressed={!botHidden}
+            >
+              {botHidden ? <EyeSlash size={16} /> : <Eye size={16} />}
+            </button>
             <div className="fav-wrap-dt">
               <button
                 onClick={() => {
@@ -705,6 +732,14 @@ export default function Header() {
               >
                 <Globe size={18} weight="duotone" />
                 {lang === "en" ? "हिन्दी" : "English"}
+              </button>
+              <button
+                onClick={toggleBot}
+                className="py-3 text-xl display-dt border-b border-dt mobile-nav-dt inline-flex items-center gap-2 text-left"
+                aria-pressed={!botHidden}
+              >
+                {botHidden ? <EyeSlash size={18} /> : <Eye size={18} />}
+                {botHidden ? t("nav.showAssistant") : t("nav.hideAssistant")}
               </button>
               <Link onClick={() => setOpen(false)} className="btn-gold-dt mt-3" to="/pujas">
                 {t("nav.bookPuja")}

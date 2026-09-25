@@ -15,7 +15,7 @@ export default function WhatsApp() {
       title={t("wa.label")}
     >
       <span className="whatsapp-dot-dt">
-        <WhatsappLogo size={26} weight="fill" />
+        <WhatsappLogo size={22} weight="fill" />
       </span>
     </a>
   );

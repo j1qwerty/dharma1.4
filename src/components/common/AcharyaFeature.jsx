@@ -72,6 +72,9 @@ export function AcharyaStrip({ items }) {
     <div className="acharya-strip-dt">
       {rest.map((a, i) => {
         const tradition = lang === "hi" && a.traditionHi ? a.traditionHi : a.tradition;
+        const place = lang === "hi" && a.placeHi ? a.placeHi : a.place;
+        const expertise = lang === "hi" && a.expertiseHi ? a.expertiseHi : a.expertise;
+        const lineage = lang === "hi" && a.lineageHi ? a.lineageHi : a.lineage;
         return (
           <Reveal key={a.id} delay={Math.min(i, 5) * 0.04} className="acharya-strip-item-dt">
             <Link to="/acharyas" className="acharya-mini-dt">
@@ -87,6 +90,26 @@ export function AcharyaStrip({ items }) {
               </span>
               <span className="acharya-mini-name-dt">{a.name}</span>
               {tradition && <span className="acharya-mini-trad-dt">{tradition}</span>}
+              <span className="acharya-mini-rows-dt">
+                {place && (
+                  <span className="acharya-mini-row-dt">
+                    <span className="mini-k-dt">{lang === "hi" ? "स्थान" : "Place"}</span>
+                    <span className="mini-v-dt">{place}</span>
+                  </span>
+                )}
+                {expertise && (
+                  <span className="acharya-mini-row-dt">
+                    <span className="mini-k-dt">{lang === "hi" ? "विशेषज्ञता" : "Expertise"}</span>
+                    <span className="mini-v-dt">{expertise}</span>
+                  </span>
+                )}
+                {lineage && (
+                  <span className="acharya-mini-row-dt">
+                    <span className="mini-k-dt">{lang === "hi" ? "परंपरा" : "Lineage"}</span>
+                    <span className="mini-v-dt">{lineage}</span>
+                  </span>
+                )}
+              </span>
             </Link>
           </Reveal>
         );
