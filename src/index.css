@@ -2706,8 +2706,6 @@ html.dark .ink-dt .decor-tone-yellow {
   div.acharya-strip-dt {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
-}
-  div.acharya-strip-dt > .acharya-strip-item-dt { min-width: 0; }
   div.acharya-strip-dt > .acharya-strip-item-dt { min-width: 0; width: auto; }
 }
 .acharya-mini-dt {
