@@ -40,7 +40,8 @@ export function shraadhTypeOf(booking) {
  * Build a fully detailed WhatsApp message for the current booking.
  * Includes puja code, title (EN + HI when available), shraadh rite + rite
  * description when a subtype is selected, deity, temple, date,
- * muhurat, package, addons, sankalp (name, gotra, purpose, family) and total.
+ * muhurat, package, addons and sankalp (name, gotra, purpose, family).
+ * No prices — those are shared personally on WhatsApp before confirmation.
  *
  * @param {object} booking - the active booking state.
  * @param {("en"|"hi")} lang - language for the message header / labels.
@@ -48,9 +49,6 @@ export function shraadhTypeOf(booking) {
 export function buildBookingWhatsAppMessage(booking, lang = "en") {
   const p = pujas.find((x) => x.id === booking.pujaId) || pujas[0];
   const addons = Array.isArray(booking.addons) ? booking.addons : [];
-  const total =
-    (booking.packagePrice || p.price || 0) +
-    addons.reduce((sum, _x, i) => sum + (i === 0 ? 0 : 0), 0); // addons have no price in prototype
   const family = Number(booking?.sankalp?.family) || 0;
 
   const hi = lang === "hi";
@@ -119,9 +117,7 @@ export function buildBookingWhatsAppMessage(booking, lang = "en") {
   if (p.temple) lines.push(`— ${L.temple}: ${p.temple}`);
   lines.push(`— ${L.date}: ${booking.date || "—"}`);
   lines.push(`— ${L.time}: ${booking.time || "—"}`);
-  lines.push(
-    `— ${L.package}: ${booking.package || "—"} (₹${(booking.packagePrice || p.price || 0).toLocaleString("en-IN")})`
-  );
+  lines.push(`— ${L.package}: ${booking.package || "—"}`);
   lines.push(`— ${L.addons}: ${addons.length ? addons.join(", ") : L.none}`);
   lines.push("");
   lines.push(`*${L.sankalpHead}*`);
@@ -129,8 +125,6 @@ export function buildBookingWhatsAppMessage(booking, lang = "en") {
   lines.push(`— ${L.gotra}: ${booking?.sankalp?.gotra || "—"}`);
   lines.push(`— ${L.purpose}: ${booking?.sankalp?.purpose || "—"}`);
   lines.push(`— ${L.family}: ${family > 0 ? family : "—"}`);
-  lines.push("");
-  lines.push(`*${L.total}: ₹${total.toLocaleString("en-IN")}*`);
   lines.push("");
   lines.push(L.closing);
   return lines.join("\n");

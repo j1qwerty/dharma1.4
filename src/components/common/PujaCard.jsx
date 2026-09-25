@@ -12,6 +12,9 @@ export default function PujaCard({ p, featured = false, index = 0, extra = null 
   const title = lang === "hi" && p.titleHi ? p.titleHi : p.title;
   const desc = lang === "hi" && p.descHi ? p.descHi : p.desc;
   const deityLabel = lang === "hi" ? deityHi[p.deity] || p.deity : p.deity;
+  // Shraadh is location-agnostic (online/at-home) — its temple string would
+  // repeat the desc, so the card omits temple lines for this puja only.
+  const showTemple = p.id !== "shraadh";
   return (
     <Reveal delay={index * 0.05}>
       {/* Root is a div (not a Link) so inner links/buttons never nest anchors. */}
@@ -43,7 +46,7 @@ export default function PujaCard({ p, featured = false, index = 0, extra = null 
               <div>
                 <h3 className="display-dt puja-overlay-title-dt">{title}</h3>
                 <div className="mt-1 text-[11px] text-white/65">
-                  {deityLabel} · {p.temple}
+                  {deityLabel}{showTemple && p.temple ? ` · ${p.temple}` : ""}
                 </div>
               </div>
             </div>
@@ -53,7 +56,7 @@ export default function PujaCard({ p, featured = false, index = 0, extra = null 
         <div className="puja-below-dt">
           <h3 className="display-dt">{title}</h3>
           <div className="puja-below-meta-dt">
-            {deityLabel} · {p.temple}
+            {deityLabel}{showTemple && p.temple ? ` · ${p.temple}` : ""}
           </div>
         </div>
         <div className="p-4">
@@ -67,9 +70,11 @@ export default function PujaCard({ p, featured = false, index = 0, extra = null 
             <span className="inline-flex items-center gap-1">
               <Clock size={13} /> {p.time}
             </span>
-            <span className="inline-flex items-center gap-1">
-              <MapPin size={13} /> {p.temple}
-            </span>
+            {showTemple && p.temple && (
+              <span className="inline-flex items-center gap-1">
+                <MapPin size={13} /> {p.temple}
+              </span>
+            )}
             <span className="ml-auto inline-flex items-center gap-1 font-bold text-gold-600">
               {t("catalog.view")} <ArrowUpRight size={14} />
             </span>
