@@ -74,7 +74,7 @@ export const HOMEPAGE_SECTIONS = [
   },
   {
     key: "acharyasPreview", label: "Acharyas preview",
-    desc: "Live preview of acharyas (3 cards).",
+    desc: "Live preview of acharyas grid.",
     fields: [
       { key: "title", label: "Heading (EN)" },
       { key: "titleHi", label: "Heading (HI)" },
@@ -198,7 +198,7 @@ export const IMAGE_RULES = {
   puja: { label: "Puja card", aspect: "4 / 3", recommended: "1200 × 900", min: "800 × 600", maxMB: 2, accept: "jpg, png, webp", note: "PujaCard aspect-[4/3]. Existing: public/puja/*.jpg." },
   festival: { label: "Festival calendar", aspect: "16 / 9", recommended: "1600 × 900", min: "1200 × 675", maxMB: 2, accept: "jpg, png, webp", note: "Calendar h-[220px]/sm:h-[320px] full-bleed. Existing: public/festivals/*.jpg." },
   story: { label: "Story cover", aspect: "16 / 9", recommended: "1200 × 675", min: "800 × 450", maxMB: 1.5, accept: "png, jpg, webp", note: "StoryMasonry min-h-[210px]. Existing: public/stories/*.png." },
-  acharya: { label: "Acharya portrait", aspect: "3 / 4", recommended: "900 × 1200", min: "600 × 800", maxMB: 1.5, accept: "jpg, png, webp", note: "AcharyaCard portrait. Existing: /amitdiwedi.jpg, /mohitsharma.jpg, /chandrashekhar.jpg." },
+  acharya: { label: "Acharya portrait", aspect: "3 / 4", recommended: "900 × 1200", min: "600 × 800", maxMB: 1.5, accept: "jpg, png, webp", note: "AcharyaCard portrait. Existing: /amitdiwedi.jpg, /mohitsharma.jpg, /chandrashekhar.jpg, /Acharya/Dr. rangnath.jpeg, /Acharya/omkar nath Tiwari.jpeg, /Acharya/Prem Narayan Tripathi.jpeg, /Acharya/Dileep Pandey.jpeg." },
   hero: { label: "Homepage hero", aspect: "8 / 5", recommended: "2000 × 1250", min: "1600 × 1000", maxMB: 3, accept: "jpg, webp", note: "Full-bleed ParallaxImage + Ken Burns. Keep subject centred for crop." },
   temple: { label: "Temple network", aspect: "3 / 2", recommended: "1200 × 800", min: "800 × 533", maxMB: 2, accept: "webp, jpg, png", note: "h-44/md:h-72. Existing: public/temples/*." },
   generic: { label: "Section image", aspect: "free", recommended: "1600 × 1000", min: "800 × 500", maxMB: 2, accept: "jpg, png, webp", note: "Masonry /more/* has no fixed crop — centre-safe." },

@@ -2365,6 +2365,66 @@ html.dark .ink-dt .decor-tone-yellow {
   border-color: rgba(231, 182, 49, 0.42);
   box-shadow: 0 24px 60px rgba(53, 44, 24, 0.11);
 }
+/* Principal Vedacharya: gold frame, warm glow, shimmering badge. */
+.acharya-card-dt.principal {
+  border: 1px solid rgba(231, 182, 49, 0.65);
+  box-shadow:
+    0 0 0 1px rgba(231, 182, 49, 0.25),
+    0 18px 55px rgba(213, 161, 27, 0.18);
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(160deg, rgba(246, 212, 122, 0.7), rgba(231, 182, 49, 0.15) 40%, rgba(246, 212, 122, 0.5)) border-box;
+}
+.acharya-card-dt.principal:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 0 0 1px rgba(231, 182, 49, 0.4),
+    0 26px 70px rgba(213, 161, 27, 0.28);
+}
+.principal-badge-dt {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #1a1408;
+  background: linear-gradient(180deg, #f6d47a, #e0a92e);
+  box-shadow: 0 8px 24px rgba(213, 161, 27, 0.45);
+  overflow: hidden;
+}
+.principal-badge-dt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%);
+  background-size: 220% 100%;
+  animation: principal-shimmer 2.6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes principal-shimmer {
+  0% { background-position: 180% 0; }
+  55%, 100% { background-position: -80% 0; }
+}
+.principal-badge-star-dt {
+  animation: principal-star-pulse 2s ease-in-out infinite;
+  display: inline-block;
+}
+@keyframes principal-star-pulse {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.25) rotate(20deg); opacity: 0.85; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .principal-badge-dt::after,
+  .principal-badge-star-dt { animation: none; }
+}
 .acharya-card-media-dt {
   position: relative;
   aspect-ratio: 4 / 5;

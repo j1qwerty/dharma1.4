@@ -635,8 +635,8 @@ export const STRINGS = {
 
   // Footer
   "footer.tagline": {
-    en: "Traditional rituals, clear booking, and a place to return to when the ceremony is complete.",
-    hi: "पारंपरिक पूजा-विधि, सहज बुकिंग और पूजा संपन्न होने के बाद उससे जुड़े अनुभव को सँजोकर रखने का माध्यम।",
+    en: "Rooted in wisdom. Relevant for life. Together we rise.",
+    hi: "Rooted in wisdom. Relevant for life. Together we rise",
   },
   "footer.explore": { en: "Explore", hi: "देखें" },
   "footer.legal": { en: "Legal", hi: "कानूनी जानकारी" },

@@ -54,14 +54,14 @@ export default function Acharyas() {
                 <div className="ah-label-dt">{t("ach.tradition")}</div>
                 <div className="ah-value-dt">
                   {lang === "hi"
-                    ? "अंक ज्योतिष · वैदिक ज्योतिष · ग्राफोलॉजी"
-                    : "Numerology · Vedic · Graphology"}
+                    ? "वैदिक कर्मकांड · अंक ज्योतिष · वैदिक ज्योतिष · ग्राफोलॉजी"
+                    : "Vedic Karmakanda · Numerology · Vedic · Graphology"}
                 </div>
               </div>
               <div>
                 <div className="ah-label-dt">{t("ach.placeLearning")}</div>
                 <div className="ah-value-dt">
-                  {lang === "hi" ? "दिल्ली · दिल्ली-एनसीआर" : "Delhi · Delhi-NCR"}
+                  {lang === "hi" ? "वाराणसी · नासिक · दिल्ली · दिल्ली-एनसीआर" : "Varanasi · Nashik · Delhi · Delhi-NCR"}
                 </div>
               </div>
               <div>

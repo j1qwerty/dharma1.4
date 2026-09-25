@@ -18,6 +18,7 @@ const FIELDS = [
   { key: "experienceHi", label: "Experience (HI)" },
   { key: "phone", label: "Phone" },
   { key: "email", label: "Email" },
+  { key: "principal", label: "Principal Vedacharya", type: "checkbox" },
   { key: "image", label: "Portrait", type: "image" },
   { key: "bio", label: "Bio (EN)", type: "textarea" },
   { key: "bioHi", label: "Bio (HI)", type: "textarea" },

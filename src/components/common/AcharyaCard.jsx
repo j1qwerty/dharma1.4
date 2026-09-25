@@ -15,8 +15,9 @@ export default function AcharyaCard({ a, compact = false }) {
   const lineage = lang === "hi" && a.lineageHi ? a.lineageHi : a.lineage;
   const experience = lang === "hi" && a.experienceHi ? a.experienceHi : a.experience;
   const bio = lang === "hi" && a.bioHi ? a.bioHi : a.bio;
+  const principal = Boolean(a.principal);
   return (
-    <div className="acharya-card-dt">
+    <div className={`acharya-card-dt${principal ? " principal" : ""}`}>
       <div className="acharya-card-media-dt">
         <img
           src={a.image}
@@ -27,6 +28,12 @@ export default function AcharyaCard({ a, compact = false }) {
             e.currentTarget.src = "/images/placeholder.svg";
           }}
         />
+        {principal && (
+          <div className="principal-badge-dt">
+            <span className="principal-badge-star-dt" aria-hidden="true">✦</span>
+            {lang === "hi" ? "प्रमुख वेदाचार्य" : "Principal Vedacharya"}
+          </div>
+        )}
         <div className="acharya-card-name-dt">{a.name}</div>
       </div>
       <div className="acharya-card-body-dt">
