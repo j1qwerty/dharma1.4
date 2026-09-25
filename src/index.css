@@ -1098,11 +1098,11 @@ html.dark .hero-trust-item-dt svg {
   }
 }
 
-/* Floating stack: WhatsApp + Back-to-top share one vertical column, center-aligned (left side) */
+/* Floating stack (right side, bottom-up): Back-to-top, then WhatsApp above it */
 .whatsapp-dt {
   position: fixed;
-  left: 16px;
-  bottom: 16px;
+  right: 16px;
+  bottom: 64px; /* back-to-top 36 + 12 gap + 16 */
   z-index: 50;
   display: grid;
   place-items: center;
@@ -1124,11 +1124,11 @@ html.dark .hero-trust-item-dt svg {
   color: #073f1e;
   animation: floatwa 3s ease-in-out infinite;
 }
-/* Back-to-top sits above the viewport edge on the right (36px core) */
+/* Back-to-top sits at the bottom of the right-side floating stack */
 .back-to-top-dt {
   position: fixed;
   right: 20px;
-  bottom: 72px; /* 16 + 44 + 12 gap */
+  bottom: 16px;
   z-index: 45;
   display: grid;
   place-items: center;
