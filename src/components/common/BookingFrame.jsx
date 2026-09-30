@@ -60,25 +60,30 @@ export default function BookingFrame({ active, children, summary = true }) {
           <h1 className="display-dt mt-3 text-center text-5xl sm:text-6xl">
             {lang === "hi" && p.titleHi ? p.titleHi : p.title}
           </h1>
-          <div className="mt-8 grid grid-cols-4 gap-2">
-            {steps.map(([key, labelKey, Icon], i) => (
-              <div key={key} className="flex flex-col items-center gap-2 text-center">
-                <div
-                  className={`grid h-8 w-8 place-items-center rounded-full border ${i <= activeIndex ? "border-gold-400 bg-gold-400 text-ink-950" : "border-dt muted-dt"}`}
-                >
-                  <Icon size={13} />
-                </div>
-                <div className={`text-[9px] ${i === activeIndex ? "font-bold" : "muted-dt"}`}>
-                  {t(labelKey)}
-                </div>
+          {/* Step pills + progress hidden for now — single-step flow (Sankalp only). Kept for later. */}
+          {false && (
+            <>
+              <div className="mt-8 grid grid-cols-4 gap-2">
+                {steps.map(([key, labelKey, Icon], i) => (
+                  <div key={key} className="flex flex-col items-center gap-2 text-center">
+                    <div
+                      className={`grid h-8 w-8 place-items-center rounded-full border ${i <= activeIndex ? "border-gold-400 bg-gold-400 text-ink-950" : "border-dt muted-dt"}`}
+                    >
+                      <Icon size={13} />
+                    </div>
+                    <div className={`text-[9px] ${i === activeIndex ? "font-bold" : "muted-dt"}`}>
+                      {t(labelKey)}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div className="mt-4 progress-dt">
-            {steps.map((_, i) => (
-              <span className={i <= activeIndex ? "active" : ""} key={i} />
-            ))}
-          </div>
+              <div className="mt-4 progress-dt">
+                {steps.map((_, i) => (
+                  <span className={i <= activeIndex ? "active" : ""} key={i} />
+                ))}
+              </div>
+            </>
+          )}
         </div>
         <div className="booking-grid">
           <div className="panel p-6 sm:p-8">
