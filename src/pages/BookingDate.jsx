@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams, Navigate } from "react-router-dom";
 import BookingFrame from "../components/common/BookingFrame";
 import SafeImage from "../components/common/SafeImage";
 import { CalendarBlank, Clock, CheckCircle } from "../components/common/Icons";
@@ -58,6 +58,8 @@ export default function BookingDate() {
   ];
   // Match a stored English value like "Sep 15, 2026" so the highlight works either way.
   const bookedDay = (booking.date || "").split(",")[0].trim();
+  // Step disabled for now — flow starts at Sankalp details. Rest kept intact.
+  return <Navigate to={`/booking/${id}/sankalp${window.location.search}`} replace />;
   return (
     <BookingFrame active="date">
       <div className="eyebrow">{t("bd.chooseDate")}</div>

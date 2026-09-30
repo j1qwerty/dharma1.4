@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import BookingFrame from "../components/common/BookingFrame";
 import SafeImage from "../components/common/SafeImage";
 import { CheckCircle } from "../components/common/Icons";
@@ -28,6 +28,8 @@ export default function BookingPayment() {
   const family = Number(booking?.sankalp?.family) || 0;
   const addons = Array.isArray(booking.addons) ? booking.addons : [];
   const rite = shraadhTypeOf({ ...booking, pujaId: p.id });
+  // Step disabled for now — flow starts at Sankalp details. Rest kept intact.
+  return <Navigate to={`/booking/${p.id}/sankalp${window.location.search}`} replace />;
 
   const rows = [
     [t("bpay.puja"), `${p.title}${p.titleHi ? " · " + p.titleHi : ""}`],

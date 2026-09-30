@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { Navigate } from "react-router-dom";
 import BookingFrame from "../components/common/BookingFrame";
 import SafeImage from "../components/common/SafeImage";
 import { CheckCircle, Plus, VideoCamera } from "../components/common/Icons";
@@ -44,6 +45,8 @@ export default function BookingPackage() {
           "Live participation": t("bp.liveParticipation"),
         }
       : null;
+  // Step disabled for now — flow starts at Sankalp details. Rest kept intact.
+  return <Navigate to={`/booking/${booking.pujaId}/sankalp${window.location.search}`} replace />;
   const addons = ["Additional Sankalp", "Certificate", "Live participation"];
   return (
     <BookingFrame active="package">

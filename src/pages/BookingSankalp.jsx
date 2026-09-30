@@ -1,10 +1,11 @@
-import React, { useMemo } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useMemo } from "react";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import BookingFrame from "../components/common/BookingFrame";
 import Field from "../components/common/Field";
 import SankalpPreview from "../components/common/SankalpPreview";
 import SafeImage from "../components/common/SafeImage";
-import { useBooking } from "../lib/booking";
+import { useBooking, shraadhTypeOf } from "../lib/booking";
+import { SHRAADH_TYPES } from "../lib/shraadhTypes";
 import { useCheckoutProgressSync } from "../lib/cmsAdmin";
 import { pujas as defaultPujas } from "../lib/data";
 import { useLivePujas } from "../lib/cms";
@@ -13,7 +14,20 @@ import { useLanguage } from "../components/common/LanguageToggle";
 export default function BookingSankalp() {
   const { booking, update } = useBooking();
   const { id } = useParams();
+  const [params] = useSearchParams();
   const { t, lang } = useLanguage();
+  // Capture the shraadh subtype (?type=) from rite cards; clear it when the
+  // flow moves to a different puja so it never leaks across bookings.
+  useEffect(() => {
+    const type = params.get("type");
+    if (id === "shraadh" && type && SHRAADH_TYPES.some((x) => x.id === type)) {
+      if (booking.shraadhType !== type || booking.pujaId !== id) update({ pujaId: id, shraadhType: type });
+    } else if (id && id !== "shraadh" && booking.shraadhType) {
+      update({ shraadhType: null });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+  const rite = shraadhTypeOf({ ...booking, pujaId: id || booking.pujaId });
   // Persist a resumable draft at every step (refresh/tab-close/slow-net safe).
   useCheckoutProgressSync("sankalp", id);
   // Cache-first: render hardcoded pujas instantly, then refresh from Firestore
@@ -33,6 +47,20 @@ export default function BookingSankalp() {
       <div className="eyebrow">{t("bs.eyebrow")}</div>
       <h2 className="font-display mt-3 text-4xl">{t("bs.title")}</h2>
       <p className="mt-3 max-w-2xl text-sm leading-7 text-muted">{t("bs.copy")}</p>
+      {rite && (
+        <div className="mt-4 flex items-center gap-3 rounded-2xl border border-gold-400/40 bg-gold-400/8 px-4 py-3 text-xs">
+          <img src={SHRAADH_TYPES.find((x) => x.id === rite.id)?.image} alt="" className="h-9 w-9 rounded-lg object-cover flex-none" />
+          <span className="min-w-0 flex-1">
+            <span className="block text-[10px] uppercase tracking-[.14em] text-gold-600">
+              {lang === "hi" ? "श्राद्ध विधि" : "Shraadh rite"}
+            </span>
+            <span className="block font-semibold truncate">{lang === "hi" ? rite.nameHi : rite.name}</span>
+          </span>
+          <Link to="/pujas/shraadh" className="flex-none text-[11px] font-bold text-gold-600 hover:underline">
+            {lang === "hi" ? "बदलें" : "Change"}
+          </Link>
+        </div>
+      )}
       <div className="mt-6 overflow-hidden rounded-2xl">
         <SafeImage src={p.image} alt={pujaTitle} className="h-44 w-full object-cover" />
       </div>

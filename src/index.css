@@ -2568,6 +2568,13 @@ html.dark .ink-dt .decor-tone-yellow {
   line-height: 1.6;
   color: var(--muted);
 }
+/* Home strip: first 4 lines of bio, then … (Read more sits below). */
+.acharya-card-bio-dt.clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 /* --- Acharya detail profile header (photo left, content right) --- */
 .acharya-profile-dt {
   margin-top: 28px;

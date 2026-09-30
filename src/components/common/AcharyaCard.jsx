@@ -9,7 +9,7 @@ import { useLanguage } from "./LanguageToggle";
  * page); Read more link does the same. Name sits over the photo on a
  * translucent gradient.
  * ------------------------------------------------------------------ */
-export default function AcharyaCard({ a, compact = false }) {
+export default function AcharyaCard({ a, compact = false, clampBio = false }) {
   const { lang, t } = useLanguage();
   const navigate = useNavigate();
   const go = () => navigate(`/acharyas/${a.id}`);
@@ -87,7 +87,7 @@ export default function AcharyaCard({ a, compact = false }) {
             </span>
           </div>
         )}
-        {!compact && <p className="acharya-card-bio-dt">{bio}</p>}
+        {!compact && <p className={`acharya-card-bio-dt${clampBio ? " clamp-4" : ""}`}>{bio}</p>}
         <Link
           to={`/acharyas/${a.id}`}
           onClick={(e) => e.stopPropagation()}

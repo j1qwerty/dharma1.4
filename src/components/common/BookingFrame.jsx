@@ -96,14 +96,14 @@ export default function BookingFrame({ active, children, summary = true }) {
               <Link
                 className="btn-ghost-dt"
                 to={
-                  active === "date"
+                  active === "date" || active === "sankalp"
                     ? `/pujas/${p.id}`
                     : `/booking/${p.id}/${steps[Math.max(0, activeIndex - 1)][0]}`
                 }
               >
                 <ArrowLeft size={14} /> {t("booking.back")}
               </Link>
-              {active !== "payment" && (
+              {(active === "date" || active === "package") && (
                 <Link className="btn-gold-dt" to={`/booking/${p.id}/${steps[activeIndex + 1][0]}`}>
                   {t("booking.continue")} <ArrowRight size={14} />
                 </Link>
@@ -170,7 +170,7 @@ export default function BookingFrame({ active, children, summary = true }) {
                   <span className="muted-dt text-[11px] leading-5">{t("booking.priceNote")}</span>
                 </div>
               </div>
-              {active === "payment" && (
+              {(active === "payment" || active === "sankalp") && (
                 <a
                   href={waHref}
                   target="_blank"
@@ -180,7 +180,7 @@ export default function BookingFrame({ active, children, summary = true }) {
                   onClick={() => {
                     // Upsert the same draft doc (no duplicates) even when the devotee
                     // continues on WhatsApp. Outbox retries cover slow networks.
-                    saveCheckoutProgress({ booking: effectiveBooking, user, step: "payment", source: "whatsapp" }).catch(() => {});
+                    saveCheckoutProgress({ booking: effectiveBooking, user, step: active, source: "whatsapp" }).catch(() => {});
                     // Give the WhatsApp tab a beat to open before we route to confirmation.
                     setTimeout(() => nav("/booking/confirmation"), 1200);
                   }}

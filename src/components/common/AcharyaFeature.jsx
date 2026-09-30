@@ -127,7 +127,7 @@ export function AcharyaStrip({ items }) {
       >
         {rest.map((a, i) => (
           <Reveal key={a.id} delay={Math.min(i, 5) * 0.04} className="acharya-strip-item-dt">
-            <AcharyaCard a={a} />
+            <AcharyaCard a={a} clampBio />
           </Reveal>
         ))}
       </div>

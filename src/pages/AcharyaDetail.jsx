@@ -88,6 +88,9 @@ export default function AcharyaDetail() {
                   {hi ? a.traditionHi || a.tradition : a.tradition}
                 </p>
               )}
+              <p className="mt-4 text-[15px] leading-8 muted-dt">
+                {hi && a.bioHi ? a.bioHi : a.bio}
+              </p>
               <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs muted-dt">
                 {(hi ? a.placeHi || a.place : a.place) && (
                   <span className="inline-flex items-center gap-2">
@@ -110,13 +113,6 @@ export default function AcharyaDetail() {
               </div>
             </div>
           </div>
-
-          <Reveal>
-            <div className="eyebrow eyebrow-line-dt mt-14">{hi ? "परिचय" : "Profile"}</div>
-            <div className="mt-4 grid gap-4 text-[15px] leading-8 muted-dt">
-              <p>{hi && a.bioHi ? a.bioHi : a.bio}</p>
-            </div>
-          </Reveal>
 
           {qualList.length > 0 && (
             <Reveal>
