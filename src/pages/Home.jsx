@@ -17,6 +17,7 @@ import {
 import { motion, useReducedMotion } from "motion/react";
 import SectionHeading from "../components/common/SectionHeading";
 import PujaCard from "../components/common/PujaCard";
+import NavratriRecitationCards from "../components/common/NavratriRecitationCards";
 import { Reveal, ParallaxImage, Magnetic, TiltCard } from "../components/common/Motion";
 import { StoryMasonry } from "../components/common/Masonry";
 import {
@@ -334,6 +335,7 @@ export default function Home() {
                 <PujaCard p={navratriPuja} featured />
               </Reveal>
             </div>
+            <NavratriRecitationCards className="mt-12" />
           </div>
         </section>
       )}

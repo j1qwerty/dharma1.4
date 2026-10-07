@@ -13,6 +13,7 @@ import { intentions, deities, deityHi } from "../lib/data";
 import { upcomingFestivals } from "../lib/dates";
 import { useLivePujas, useLiveFestivals } from "../lib/cms";
 import PujaCard from "../components/common/PujaCard";
+import NavratriRecitationCards from "../components/common/NavratriRecitationCards";
 import { ShraadhTypeCards } from "../components/common/ShraadhTypes";
 import SafeImage from "../components/common/SafeImage";
 import SectionHeading from "../components/common/SectionHeading";
@@ -234,6 +235,7 @@ export default function Catalog() {
                   <PujaCard p={livePujas.find((p) => p.id === "navratri")} featured />
                 </Reveal>
               </div>
+              <NavratriRecitationCards className="mt-12" />
             </section>
           )}
 
