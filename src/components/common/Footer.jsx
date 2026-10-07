@@ -12,6 +12,7 @@ import Brand from "./Brand";
 import { BackToTopHalo } from "./decor";
 import { useLanguage } from "./LanguageToggle";
 import { WHATSAPP_NUMBER } from "../../lib/site";
+import { YOUTUBE_CHANNEL_URL, FACEBOOK_URL, INSTAGRAM_URL } from "../../lib/social";
 
 export default function Footer() {
   const [showTop, setShowTop] = useState(false);
@@ -56,6 +57,7 @@ export default function Footer() {
               <Link to="/pujas">{t("nav.pujas")}</Link>
               <Link to="/acharyas">{t("nav.acharyas")}</Link>
               <Link to="/stories">{t("nav.stories")}</Link>
+              <Link to="/social">{t("nav.social")}</Link>
               <Link to="/about">{t("nav.about")}</Link>
               <Link to="/dashboard">{t("nav.account")}</Link>
             </div>
@@ -72,22 +74,28 @@ export default function Footer() {
             <div className="flex gap-2">
               <a
                 className="grid h-9 w-9 place-items-center rounded-full border border-white/10 hover:border-gold-400/50 hover:text-gold-300 transition-colors"
-                href="#"
-                aria-label="Instagram"
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Dharmaa Tribe on Instagram"
               >
                 <InstagramLogo size={15} />
               </a>
               <a
                 className="grid h-9 w-9 place-items-center rounded-full border border-white/10 hover:border-gold-400/50 hover:text-gold-300 transition-colors"
-                href="#"
-                aria-label="Facebook"
+                href={FACEBOOK_URL}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Dharmaa Tribe on Facebook"
               >
                 <FacebookLogo size={15} />
               </a>
               <a
                 className="grid h-9 w-9 place-items-center rounded-full border border-white/10 hover:border-gold-400/50 hover:text-gold-300 transition-colors"
-                href="#"
-                aria-label="YouTube"
+                href={YOUTUBE_CHANNEL_URL}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Dharmaa Tribe on YouTube"
               >
                 <YoutubeLogo size={15} />
               </a>

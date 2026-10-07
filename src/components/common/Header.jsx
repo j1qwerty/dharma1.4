@@ -57,6 +57,7 @@ export default function Header() {
     ["nav.pujas", "/pujas", false],
     ["nav.acharyas", "/acharyas", false],
     ["nav.stories", "/stories", false],
+    ["nav.social", "/social", false],
     ["nav.about", "/about", false],
   ];
 

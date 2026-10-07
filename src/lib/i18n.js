@@ -7,6 +7,7 @@ export const STRINGS = {
   "nav.pujas": { en: "Pujas", hi: "पूजा सेवाएँ" },
   "nav.acharyas": { en: "Acharyas", hi: "आचार्यगण" },
   "nav.stories": { en: "Stories", hi: "धर्म-कथाएँ" },
+  "nav.social": { en: "Social", hi: "सोशल" },
   "nav.about": { en: "About", hi: "हमारे बारे में" },
   "nav.review": { en: "Review", hi: "समीक्षा" },
   "nav.account": { en: "My account", hi: "मेरी पूजाएँ" },
@@ -664,6 +665,18 @@ export const STRINGS = {
     hi: "ये सेवाएँ धार्मिक, सांस्कृतिक और आध्यात्मिक अनुभव से जुड़ी हैं।",
   },
   "footer.join": { en: "Join", hi: "जुड़ें" },
+  "footer.follow": { en: "Follow", hi: "फॉलो करें" },
+  "footer.watch": { en: "Watch", hi: "देखें" },
+
+  "social.eyebrow": { en: "Social", hi: "सोशल" },
+  "social.title": { en: "Dharmaa Tribe in motion.", hi: "धर्मा ट्राइब की झलक सोशल पर।" },
+  "social.copy": {
+    en: "Navratri Shorts, Durga Puja glimpses and devotional reels from YouTube, Facebook and Instagram. YouTube plays inline. Facebook and Instagram open in their apps.",
+    hi: "यूट्यूब, फेसबुक और इंस्टाग्राम से नवरात्रि शॉर्ट्स और भक्ति रील्स। यूट्यूब यहीं चलेगा।",
+  },
+  "social.viewAll": { en: "Open Social feed", hi: "सोशल फीड खोलें" },
+  "social.openPost": { en: "Open post", hi: "पोस्ट खोलें" },
+  "social.watchInline": { en: "Play", hi: "चलाएँ" },
 
   // WhatsApp
   "wa.label": {
