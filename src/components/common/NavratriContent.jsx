@@ -403,9 +403,9 @@ export default function NavratriContent() {
   }, [hi]);
 
   const detailBlock = (label, body) => (
-    <div>
+    <div className="min-w-0">
       <div className="text-[10px] font-bold uppercase tracking-[.16em] text-gold-600">{label}</div>
-      <p className="mt-2 text-[13px] leading-7 muted-dt">{body}</p>
+      <p className="mt-2 break-words text-[13px] leading-7 muted-dt">{body}</p>
     </div>
   );
 
@@ -523,9 +523,9 @@ export default function NavratriContent() {
             </p>
           </Reveal>
 
-          <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,300px)_1fr] lg:gap-14">
-            <div className="lg:sticky lg:top-28 lg:self-start">
-              <div className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:gap-0 lg:overflow-visible lg:pb-0">
+          <div className="mt-12 grid min-w-0 gap-8 lg:grid-cols-[minmax(0,300px)_1fr] lg:gap-14">
+            <div className="min-w-0 lg:sticky lg:top-28 lg:self-start">
+              <div className="flex min-w-0 gap-2 overflow-x-auto pb-2 lg:flex-col lg:gap-0 lg:overflow-visible lg:pb-0">
                 {RECITATIONS.map((r, i) => (
                   <button
                     key={r.id}
@@ -561,7 +561,7 @@ export default function NavratriContent() {
               </div>
             </div>
 
-            <div className="panel-dt flex h-[760px] flex-col overflow-hidden sm:h-[680px] lg:h-[620px]">
+            <div className="panel-dt flex h-[760px] w-full min-w-0 flex-col overflow-hidden sm:h-[680px] lg:h-[620px]">
               <div className="flex min-h-0 flex-1 flex-col">
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -570,7 +570,7 @@ export default function NavratriContent() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={reduce ? undefined : { opacity: 0, y: -10 }}
                     transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                    className="min-h-full overflow-y-auto p-7 sm:p-9"
+                    className="min-h-full w-full min-w-0 overflow-x-hidden overflow-y-auto p-5 sm:p-9"
                   >
                     <div className="text-[10px] font-bold uppercase tracking-[.16em] text-gold-600">
                       {pick(item.kicker, item.kickerHi)}
@@ -581,7 +581,7 @@ export default function NavratriContent() {
                     <p className="mt-5 text-sm leading-8 muted-dt">
                       {pick(item.body, item.bodyHi)}
                     </p>
-                    <div className="mt-8 grid gap-7 border-t border-dt pt-7 sm:grid-cols-2 xl:grid-cols-3">
+                    <div className="mt-8 grid min-w-0 grid-cols-1 gap-7 border-t border-dt pt-7 sm:grid-cols-2 xl:grid-cols-3">
                       {detailBlock(
                         hi ? "नवरात्रि में क्यों" : "Why during Navratri",
                         pick(item.why, item.whyHi)
