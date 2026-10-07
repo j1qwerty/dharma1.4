@@ -52,6 +52,7 @@ const StaffUserDetail = lazy(() => import("./staff/StaffUserDetail"));
 import { AdminBookings, AdminInquiries, AdminUsers } from "./admin/pages/AdminTables";
 import { StaffBookings, StaffInquiries } from "./staff/StaffTables";
 const Legal = lazy(() => import("./pages/Legal"));
+const Social = lazy(() => import("./pages/Social"));
 const DecorPreview = lazy(() => import("./pages/DecorPreview"));
 const Review = lazy(() => import("./pages/Review"));
 
@@ -186,6 +187,14 @@ function App() {
                       }
                     />
                     <Route path="/about" element={<About />} />
+                    <Route
+                      path="/social"
+                      element={
+                        <Suspense fallback={<PageFallback />}>
+                          <Social />
+                        </Suspense>
+                      }
+                    />
                     <Route path="/acharyas" element={<Acharyas />} />
                     <Route
                       path="/acharyas/:id"

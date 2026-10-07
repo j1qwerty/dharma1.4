@@ -10,10 +10,17 @@ export default function SectionHeading({ title, copy, action, soft = false }) {
         {copy && <p>{copy}</p>}
       </Reveal>
       {action && (
-        <Link className="btn-ghost-dt shrink-0" to={action.to}>
-          {action.label}
-          <ArrowUpRight size={14} />
-        </Link>
+        action.external ? (
+          <a className="btn-ghost-dt shrink-0" href={action.to} target="_blank" rel="noreferrer">
+            {action.label}
+            <ArrowUpRight size={14} />
+          </a>
+        ) : (
+          <Link className="btn-ghost-dt shrink-0" to={action.to}>
+            {action.label}
+            <ArrowUpRight size={14} />
+          </Link>
+        )
       )}
     </div>
   );
