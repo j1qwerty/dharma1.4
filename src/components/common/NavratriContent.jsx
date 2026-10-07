@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
@@ -358,10 +358,21 @@ export default function NavratriContent() {
   const hi = lang === "hi";
   const reduce = useReducedMotion();
   const [active, setActive] = useState(0);
+  const recitationPanelRef = useRef(null);
   const puja = defaultPujas.find((p) => p.id === "navratri");
   const inquiry = buildInquiryHref(puja, lang);
   const pick = (en, hiText) => (hi ? hiText : en);
   const item = RECITATIONS[active];
+  const changeRecitation = (next) => {
+    if (next === active) return;
+    setActive(next);
+    window.requestAnimationFrame(() => {
+      recitationPanelRef.current?.scrollIntoView({
+        behavior: reduce ? "auto" : "smooth",
+        block: "start",
+      });
+    });
+  };
 
   useEffect(() => {
     document.title = hi
@@ -561,7 +572,10 @@ export default function NavratriContent() {
               </div>
             </div>
 
-            <div className="panel-dt flex h-[760px] w-full min-w-0 flex-col overflow-hidden sm:h-[680px] lg:h-[620px]">
+            <div
+              ref={recitationPanelRef}
+              className="panel-dt scroll-mt-24 flex h-[760px] w-full min-w-0 flex-col overflow-hidden sm:h-[680px] lg:h-[620px]"
+            >
               <div className="flex min-h-0 flex-1 flex-col">
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -601,7 +615,7 @@ export default function NavratriContent() {
               <div className="grid grid-cols-2 border-t border-dt">
                 <button
                   type="button"
-                  onClick={() => setActive((a) => Math.max(0, a - 1))}
+                  onClick={() => changeRecitation(Math.max(0, active - 1))}
                   disabled={active === 0}
                   className="flex cursor-pointer items-center gap-2 border-r border-dt px-6 py-4 text-[12px] font-semibold transition-colors hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-35"
                 >
@@ -609,7 +623,7 @@ export default function NavratriContent() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setActive((a) => Math.min(RECITATIONS.length - 1, a + 1))}
+                  onClick={() => changeRecitation(Math.min(RECITATIONS.length - 1, active + 1))}
                   disabled={active === RECITATIONS.length - 1}
                   className="flex cursor-pointer items-center justify-end gap-2 px-6 py-4 text-[12px] font-semibold transition-colors hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-35"
                 >
