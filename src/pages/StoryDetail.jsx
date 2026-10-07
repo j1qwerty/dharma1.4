@@ -204,13 +204,12 @@ export default function StoryDetail() {
             </div>
           </main>
 
-          <aside className="lg:pt-10">
-            <div className="panel-dt p-6 sticky top-24">
+          <aside className="lg:pt-10 lg:self-start">
+            <div className="panel-dt p-6 sticky top-24 lg:flex lg:max-h-[calc(100dvh-7.5rem)] lg:flex-col">
               <div className="eyebrow">{hi ? "संबंधित पठन" : "Related reading"}</div>
-              <div className="mt-5 grid gap-1">
-                {defaultStories
+              <div className="mt-5 grid gap-1 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pr-1">
+                {liveStories
                   .filter((x) => x.id !== s.id)
-                  .slice(0, 4)
                   .map((x) => {
                     const xTitle = hi && x.titleHi ? x.titleHi : x.title;
                     return (
