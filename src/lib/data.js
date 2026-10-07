@@ -223,6 +223,17 @@ export const festivals = [
 ];
 export const stories = [
   {
+    id: "navratri-nine-nights",
+    category: "Festivals",
+    title: "Nine nights of Devi: how Navratri is actually observed",
+    titleHi: "देवी की नौ रातें: नवरात्रि कैसे मनाई जाती है",
+    read: "9 min",
+    date: "Oct 02, 2026",
+    image: "/puja/navratra.jpg",
+    excerpt: "Kalash Sthapana to Kanya Pujan to Havan: the full Sharad Navratri sequence with dates, colours and vrat rules.",
+    excerptHi: "कलश स्थापना से कन्या पूजन और हवन तक: तिथि, रंग और व्रत नियमों के साथ शारदीय नवरात्रि की पूरी विधि।",
+  },
+  {
     id: "why-sankalp",
     category: "Rituals / Puja Vidhi",
     title: "What a Sankalp really means, and why your name matters",
