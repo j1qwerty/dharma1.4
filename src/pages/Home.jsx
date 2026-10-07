@@ -39,7 +39,7 @@ import FestivalCountdown, { getUpcomingFestivals } from "../components/common/Fe
 import { AcharyaSpotlight, AcharyaStrip } from "../components/common/AcharyaFeature";
 import { intentions, social } from "../lib/data";
 import { SOCIAL_POSTS } from "../lib/social";
-import { upcomingFestivals, festivalDate } from "../lib/dates";
+import { upcomingFestivals } from "../lib/dates";
 import {
   useHomepageOverrides,
   useLivePujas,
@@ -131,16 +131,6 @@ export default function Home() {
   const trustItems = TRUST_ITEMS({ t });
   const shraadhPuja = livePujas.find((p) => p.id === "shraadh") || livePujas[0];
   const navratriPuja = livePujas.find((p) => p.id === "navratri");
-  const navratriFestivalRaw =
-    liveFestivals.find((f) => (f.name || "").toLowerCase().includes("navratri")) || null;
-  const navratriCountdown = (() => {
-    if (!navratriFestivalRaw) return null;
-    const d = festivalDate(navratriFestivalRaw, new Date());
-    if (!d) return null;
-    const nm = lang === "hi" && navratriFestivalRaw.nameHi ? navratriFestivalRaw.nameHi : navratriFestivalRaw.name;
-    const nt = lang === "hi" && navratriFestivalRaw.noteHi ? navratriFestivalRaw.noteHi : navratriFestivalRaw.note;
-    return { name: nm, note: nt, date: d };
-  })();
 
   return (
     <>
@@ -289,9 +279,19 @@ export default function Home() {
                 </h2>
                 <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
                   {lang === "hi"
-                    ? "कलश स्थापना, सप्तशती पाठ, कन्या पूजन और हवन। टाइमर पर क्लिक करके सीधे नवरात्रि पेज पर जाएँ।"
-                    : "Kalash Sthapana, Saptashati path, Kanya Pujan and Havan. Tap the countdown to open the Navratri page."}
+                    ? "कलश स्थापना, सप्तशती पाठ, कन्या पूजन और हवन। 11 अक्टूबर से शुरू।"
+                    : "Kalash Sthapana, Saptashati path, Kanya Pujan and Havan. Begins 11 Oct."}
                 </p>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {(lang === "hi"
+                    ? ["कलश स्थापना", "सप्तशती पाठ", "कन्या पूजन", "हवन"]
+                    : ["Kalash Sthapana", "Saptashati Path", "Kanya Pujan", "Havan"]
+                  ).map((x) => (
+                    <span key={x} className="rounded-full border border-dt px-3.5 py-1.5 text-[11px] font-semibold muted-dt">
+                      {x}
+                    </span>
+                  ))}
+                </div>
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Link className="btn-gold-dt" to="/pujas/navratri">
                     {lang === "hi" ? "नवरात्रि पूजा देखें" : "View Navratri puja"} <ArrowRight size={15} />
@@ -302,13 +302,7 @@ export default function Home() {
                 </div>
               </Reveal>
               <Reveal delay={0.1}>
-                <Link to="/pujas/navratri" aria-label="Open Navratri puja">
-                  {navratriCountdown ? (
-                    <FestivalCountdown festival={navratriCountdown} eyebrow={lang === "hi" ? "नवरात्रि शुरू होने में" : "Navratri begins in"} />
-                  ) : (
-                    <PujaCard p={navratriPuja} featured />
-                  )}
-                </Link>
+                <PujaCard p={navratriPuja} featured />
               </Reveal>
             </div>
           </div>
