@@ -28,6 +28,7 @@ import FaqAccordion from "../components/common/FaqAccordion";
 import { GalleryTile } from "../components/common/Lightbox";
 import { useLanguage } from "../components/common/LanguageToggle";
 import ShraadhContent from "../components/common/ShraadhContent";
+import NavratriContent from "../components/common/NavratriContent";
 import ShraadhTypes from "../components/common/ShraadhTypes";
 import PitruPakshaOnline from "../components/common/PitruPakshaOnline";
 import { buildInquiryHref, buildInquiryMessage } from "../lib/booking";
@@ -64,6 +65,7 @@ export default function PujaDetail() {
   const title = lang === "hi" && p.titleHi ? p.titleHi : p.title;
   const desc = lang === "hi" && p.descHi ? p.descHi : p.desc;
   const isShraadh = p.id === "shraadh";
+  const isNavratri = p.id === "navratri";
   const galleryImages = [
     { src: p.image, alt: `${title} ritual moment` },
     { src: stories[1].image, alt: "Ritual moment" },
@@ -155,6 +157,8 @@ export default function PujaDetail() {
       </section>
 
       {isShraadh && <ShraadhTypes />}
+
+      {isNavratri && <NavratriContent />}
 
       {isShraadh && <PitruPakshaOnline />}
 

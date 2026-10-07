@@ -1,7 +1,24 @@
 // Puja catalogue. Each puja carries an English + Hindi title/desc so the UI
 // can render in either language without branching logic in the page.
-// Shraadh stays first so Catalog + Home "dates people are booking" lead with it.
+// Navratri stays first during the Sharad Navratri window, then Shraadh.
 export const pujas = [
+  {
+    id: "navratri",
+    code: "PUJA-010",
+    title: "Sharad Navratri Devi Puja (9 Nights of Shakti)",
+    titleHi: "शारदीय नवरात्रि देवी पूजा (शक्ति के 9 दिन)",
+    deity: "Durga",
+    temple: "Shakti Peeth Seva · At Home",
+    date: "Oct 11, 2026",
+    time: "06:00 AM",
+    price: 2101,
+    tag: "Navratri Special",
+    purpose: "Protection",
+    type: "Puja",
+    image: "/puja/navratra.jpg",
+    desc: "Nine nights of Devi worship with Kalash Sthapana, Durga Saptashati path, Kanya Pujan and Havan, performed with family Sankalp.",
+    descHi: "कलश स्थापना, दुर्गा सप्तशती पाठ, कन्या पूजन और हवन के साथ नौ दिनों की देवी उपासना, पारिवारिक संकल्प सहित।",
+  },
   {
     id: "shraadh",
     code: "PUJA-009",

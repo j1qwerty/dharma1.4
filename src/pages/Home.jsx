@@ -38,7 +38,8 @@ import {
 import FestivalCountdown, { getUpcomingFestivals } from "../components/common/FestivalCountdown";
 import { AcharyaSpotlight, AcharyaStrip } from "../components/common/AcharyaFeature";
 import { intentions, social } from "../lib/data";
-import { upcomingFestivals } from "../lib/dates";
+import { SOCIAL_POSTS } from "../lib/social";
+import { upcomingFestivals, festivalDate } from "../lib/dates";
 import {
   useHomepageOverrides,
   useLivePujas,
@@ -129,6 +130,17 @@ export default function Home() {
   const [goldLine, whiteLine] = splitTitle(current.title);
   const trustItems = TRUST_ITEMS({ t });
   const shraadhPuja = livePujas.find((p) => p.id === "shraadh") || livePujas[0];
+  const navratriPuja = livePujas.find((p) => p.id === "navratri");
+  const navratriFestivalRaw =
+    liveFestivals.find((f) => (f.name || "").toLowerCase().includes("navratri")) || null;
+  const navratriCountdown = (() => {
+    if (!navratriFestivalRaw) return null;
+    const d = festivalDate(navratriFestivalRaw, new Date());
+    if (!d) return null;
+    const nm = lang === "hi" && navratriFestivalRaw.nameHi ? navratriFestivalRaw.nameHi : navratriFestivalRaw.name;
+    const nt = lang === "hi" && navratriFestivalRaw.noteHi ? navratriFestivalRaw.noteHi : navratriFestivalRaw.note;
+    return { name: nm, note: nt, date: d };
+  })();
 
   return (
     <>
@@ -260,6 +272,48 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Navratri special — above the Shraadh band, links to /pujas/navratri */}
+      {navratriPuja && (
+        <section className="site-section has-decor-dt">
+          <SectionDecor />
+          <DiyaCluster className="decor-dt decor-br hide-mobile soft-tone" />
+          <div className="container-dt">
+            <div className="grid gap-10 lg:grid-cols-[1.1fr_.9fr] items-center">
+              <Reveal>
+                <div className="eyebrow eyebrow-line-dt">
+                  {lang === "hi" ? "नवरात्रि विशेष" : "Navratri special"}
+                </div>
+                <h2 className="display-dt mt-3 text-5xl sm:text-6xl">
+                  {lang === "hi" ? "नवरात्रि पूजा बुकिंग खुली है।" : "Navratri puja bookings are open."}
+                </h2>
+                <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
+                  {lang === "hi"
+                    ? "कलश स्थापना, सप्तशती पाठ, कन्या पूजन और हवन। टाइमर पर क्लिक करके सीधे नवरात्रि पेज पर जाएँ।"
+                    : "Kalash Sthapana, Saptashati path, Kanya Pujan and Havan. Tap the countdown to open the Navratri page."}
+                </p>
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <Link className="btn-gold-dt" to="/pujas/navratri">
+                    {lang === "hi" ? "नवरात्रि पूजा देखें" : "View Navratri puja"} <ArrowRight size={15} />
+                  </Link>
+                  <Link className="btn-ghost-dt" to="/social">
+                    {lang === "hi" ? "भक्ति वीडियो" : "Devotional videos"} <ArrowUpRight size={14} />
+                  </Link>
+                </div>
+              </Reveal>
+              <Reveal delay={0.1}>
+                <Link to="/pujas/navratri" aria-label="Open Navratri puja">
+                  {navratriCountdown ? (
+                    <FestivalCountdown festival={navratriCountdown} eyebrow={lang === "hi" ? "नवरात्रि शुरू होने में" : "Navratri begins in"} />
+                  ) : (
+                    <PujaCard p={navratriPuja} featured />
+                  )}
+                </Link>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Upcoming pujas — featured Shraadh card above the festival band */}
       <section className="site-section has-decor-dt">
@@ -651,6 +705,45 @@ export default function Home() {
                 </a>
               </Reveal>
             ))}
+          </div>
+          <div className="mt-10">
+            <div className="flex items-end justify-between gap-4 flex-wrap">
+              <div className="text-sm font-bold">{t("social.viewAll")}</div>
+              <Link className="btn-ghost-dt" to="/social">
+                {t("nav.social")} <ArrowUpRight size={14} />
+              </Link>
+            </div>
+            <div
+              className="mt-4 flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory"
+              style={{ scrollbarWidth: "thin" }}
+              aria-label="Social posts slider"
+            >
+              {SOCIAL_POSTS.map((p) => (
+                <a
+                  key={p.id}
+                  href={p.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="card-dt block min-w-[240px] max-w-[240px] sm:min-w-[300px] sm:max-w-[300px] snap-start overflow-hidden flex-none"
+                >
+                  <div className="media-dt aspect-[4/5] max-h-[320px]">
+                    <ParallaxImage src={p.thumbnail} alt={p.title} className="h-full w-full" strength={8} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+                    <span className="absolute left-3 top-3 rounded-full border border-white/20 bg-black/30 px-2.5 py-1 text-[9px] font-bold text-white backdrop-blur">
+                      {p.platform} · {p.type}
+                    </span>
+                    <span className="absolute bottom-3 left-3 right-3 text-white">
+                      <span className="display-dt block text-xl leading-tight">
+                        {lang === "hi" && p.titleHi ? p.titleHi : p.title}
+                      </span>
+                      <span className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-bold text-gold-300">
+                        {t("social.openPost")} <ArrowUpRight size={12} />
+                      </span>
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </section>
