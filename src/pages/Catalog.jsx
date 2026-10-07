@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   MagnifyingGlass,
   SlidersHorizontal,
+  ArrowRight,
   ArrowUpRight,
   CheckCircle,
   X,
@@ -164,20 +165,48 @@ export default function Catalog() {
             ))}
           </div>
 
-          {/* Shraadh umbrella: four rites above the full catalogue (shraadh only). */}
-          <section className="mt-12 has-decor-dt">
-            <SectionDecor />
-            <SectionHeading
-              title={lang === "hi" ? "श्राद्ध की चार विधियाँ" : "Shradh, in four sacred paths"}
-              copy={
-                lang === "hi"
-                  ? "पितृ तर्पण, एकोद्दिष्ट, पार्वण और त्रिपिंडी — विवरण के लिए किसी भी विधि पर जाएँ।"
-                  : "Pitru Tarpan, Ekoddishta, Parvan and Tripindi — open any rite for its full details."
-              }
-              soft
-            />
-            <ShraadhTypeCards compact />
-          </section>
+          {/* Navratri special on top, same treatment as the homepage band. */}
+          {livePujas.find((p) => p.id === "navratri") && (
+            <section className="mt-12 has-decor-dt">
+              <SectionDecor />
+              <div className="grid gap-10 lg:grid-cols-[1.1fr_.9fr] items-center">
+                <Reveal>
+                  <div className="eyebrow eyebrow-line-dt">
+                    {lang === "hi" ? "नवरात्रि विशेष" : "Navratri special"}
+                  </div>
+                  <h2 className="display-dt mt-3 text-5xl sm:text-6xl">
+                    {lang === "hi" ? "नवरात्रि पूजा बुकिंग खुली है।" : "Navratri puja bookings are open."}
+                  </h2>
+                  <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
+                    {lang === "hi"
+                      ? "कलश स्थापना, सप्तशती पाठ, कन्या पूजन और हवन। 11 अक्टूबर से शुरू।"
+                      : "Kalash Sthapana, Saptashati path, Kanya Pujan and Havan. Begins 11 Oct."}
+                  </p>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {(lang === "hi"
+                      ? ["कलश स्थापना", "सप्तशती पाठ", "कन्या पूजन", "हवन"]
+                      : ["Kalash Sthapana", "Saptashati Path", "Kanya Pujan", "Havan"]
+                    ).map((x) => (
+                      <span key={x} className="rounded-full border border-dt px-3.5 py-1.5 text-[11px] font-semibold muted-dt">
+                        {x}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mt-7 flex flex-wrap gap-3">
+                    <Link className="btn-gold-dt" to="/pujas/navratri">
+                      {lang === "hi" ? "नवरात्रि पूजा देखें" : "View Navratri puja"} <ArrowRight size={15} />
+                    </Link>
+                    <Link className="btn-ghost-dt" to="/social">
+                      {lang === "hi" ? "भक्ति वीडियो" : "Devotional videos"} <ArrowUpRight size={14} />
+                    </Link>
+                  </div>
+                </Reveal>
+                <Reveal delay={0.1}>
+                  <PujaCard p={livePujas.find((p) => p.id === "navratri")} featured />
+                </Reveal>
+              </div>
+            </section>
+          )}
 
           <div className="mt-14 grid gap-12 lg:grid-cols-[220px_1fr]">
             <aside className={`${mobileFiltersOpen ? "block" : "hidden"} lg:block`}>
@@ -316,6 +345,21 @@ export default function Catalog() {
                 );
               })}
             </div>
+          </section>
+
+          {/* Shraadh umbrella: four rites below the seasonal shelves. */}
+          <section className="mt-20 has-decor-dt">
+            <SectionDecor />
+            <SectionHeading
+              title={lang === "hi" ? "श्राद्ध की चार विधियाँ" : "Shradh, in four sacred paths"}
+              copy={
+                lang === "hi"
+                  ? "पितृ तर्पण, एकोद्दिष्ट, पार्वण और त्रिपिंडी: विवरण के लिए किसी भी विधि पर जाएँ।"
+                  : "Pitru Tarpan, Ekoddishta, Parvan and Tripindi. Open any rite for its full details."
+              }
+              soft
+            />
+            <ShraadhTypeCards compact />
           </section>
         </div>
       </section>
