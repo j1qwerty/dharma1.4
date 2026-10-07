@@ -1,4 +1,4 @@
-// Central social registry — single source of truth for Social page,
+// Central social registry: single source of truth for Social page,
 // homepage slider, header nav and footer icons.
 // Video titles for YouTube Shorts verified via YouTube oEmbed on 2026-10-07.
 // Facebook / Instagram share URLs are login-walled, so titles there are
@@ -102,7 +102,7 @@ export const SOCIAL_POSTS = [
 ];
 
 export const SOCIAL_SEO = {
-  title: "Dharmaa Tribe on Social — Navratri videos, Durga Puja Shorts and reels",
+  title: "Dharmaa Tribe on Social: Navratri videos, Durga Puja Shorts and reels",
   description:
     "Watch Dharmaa Tribe on YouTube, Facebook and Instagram. Navratri Shorts, Durga Puja glimpses and devotional reels with links to book Navratri puja online.",
   keywords: [
