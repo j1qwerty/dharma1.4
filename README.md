@@ -61,5 +61,23 @@ pnpm dev      # http://localhost:5183
 pnpm build    # outputs dist/
 ```
 
-The `dist/` folder is included in the delivery zip so the production build can be previewed without re-running install. The build was executed and verified in this environment.
+## Deploy to the Contabo VPS
 
+The production React site is served at [https://dharmaatribe.com](https://dharmaatribe.com) from `/var/www/dharmaatribe.com/html`. Nginx serves the Vite static build and falls back to `index.html` for React Router routes.
+
+From PowerShell at the repository root, run:
+
+```powershell
+.\deploy-v1.ps1
+```
+
+The script builds the app, checks that the generated asset files are present, creates a tar archive, and prompts before uploading it through the `contabo` SSH alias. It syncs the build to the site’s nginx document root and verifies the homepage, JS/CSS assets, and `/pujas` route. It does not restart an application service or edit nginx configuration.
+
+Requirements: `pnpm`, `tar`, `ssh`, and `scp` on the local machine; the `contabo` SSH alias must reach the VPS, where `nginx` and `rsync` are available. The deploy uses `rsync --delete` within `/var/www/dharmaatribe.com/html` so removed files from older builds are cleaned up.
+
+Options for the script:
+
+- `-SkipBuild` deploys the existing `dist/` directory.
+- `-SkipConfirm` bypasses the interactive confirmation.
+- `-SkipVerify` skips the public HTTP checks after syncing.
+- `-Host_ <alias>` uses a different SSH host alias.

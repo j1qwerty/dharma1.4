@@ -10,7 +10,7 @@ import { useBookings } from "../lib/orders";
 const demoBookings = [
   ["Maha Rudrabhishek", "Sep 09, 2026", "Confirmed"],
   ["Ganesh Vighnaharta Puja", "Sep 10, 2026", "Confirmed"],
-  ["Mahalakshmi Dhan Akarshan", "Oct 20, 2026", "Upcoming"],
+  ["Mahalakshmi Dhan Akarshan", "Nov 08, 2026", "Upcoming"],
   ["Satyanarayan Katha", "Aug 22, 2026", "Completed"],
   ["Sankat Mochan Hanuman Seva", "Aug 03, 2026", "Completed"],
 ];

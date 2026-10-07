@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowUpRight, CalendarBlank, Clock, MapPin } from "@phosphor-icons/react";
 import { Reveal, ParallaxImage } from "./Motion";
 import FavToggle from "./FavToggle";
+import PujaTitle from "./PujaTitle";
 import { useLanguage } from "./LanguageToggle";
 import { deityHi } from "../../lib/data";
 
@@ -44,9 +45,12 @@ export default function PujaCard({ p, featured = false, index = 0, extra = null 
           <div className="absolute bottom-4 left-4 right-4 text-white">
             <div className="puja-overlay-row-dt">
               <div>
-                <h3 className="display-dt puja-overlay-title-dt">{title}</h3>
+                <h3 className="display-dt puja-overlay-title-dt">
+                  <PujaTitle puja={p} lang={lang} />
+                </h3>
                 <div className="mt-1 text-[11px] text-white/65">
-                  {deityLabel}{showTemple && p.temple ? ` · ${p.temple}` : ""}
+                  {deityLabel}
+                  {showTemple && p.temple ? ` · ${p.temple}` : ""}
                 </div>
               </div>
             </div>
@@ -54,9 +58,12 @@ export default function PujaCard({ p, featured = false, index = 0, extra = null 
         </div>
         {/* Mobile: same text below the photo (overlay hidden on small screens). */}
         <div className="puja-below-dt">
-          <h3 className="display-dt">{title}</h3>
+          <h3 className="display-dt">
+            <PujaTitle puja={p} lang={lang} />
+          </h3>
           <div className="puja-below-meta-dt">
-            {deityLabel}{showTemple && p.temple ? ` · ${p.temple}` : ""}
+            {deityLabel}
+            {showTemple && p.temple ? ` · ${p.temple}` : ""}
           </div>
         </div>
         <div className="p-4">

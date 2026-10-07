@@ -275,29 +275,58 @@ export default function Home() {
                   {lang === "hi" ? "नवरात्रि विशेष" : "Navratri special"}
                 </div>
                 <h2 className="display-dt mt-3 text-5xl sm:text-6xl">
-                  {lang === "hi" ? "नवरात्रि पूजा बुकिंग खुली है।" : "Navratri puja bookings are open."}
+                  {lang === "hi"
+                    ? "दस पाठ, आपके अपने संकल्प के लिए।"
+                    : "Ten recitations, for your own sankalpa."}
                 </h2>
                 <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
                   {lang === "hi"
-                    ? "कलश स्थापना, सप्तशती पाठ, कन्या पूजन और हवन। 11 अक्टूबर से शुरू।"
-                    : "Kalash Sthapana, Saptashati path, Kanya Pujan and Havan. Begins 11 Oct."}
+                    ? "सप्तश्लोकी दुर्गा से लेकर चंदी पाठ और संपुट तक। आप अपना संकल्प वेदाचार्य के साथ साझा करते हैं, वे उपयुक्त पाठ चुनकर विधि के अनुसार संपन्न कराते हैं। 11 अक्टूबर से।"
+                    : "From Saptashloki Durga to Chandi Path and Mantra Samputa. You share your intention with a Vedacharya, they choose the fitting recitation and perform it with traditional vidhi. Begins 11 Oct."}
                 </p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {(lang === "hi"
-                    ? ["कलश स्थापना", "सप्तशती पाठ", "कन्या पूजन", "हवन"]
-                    : ["Kalash Sthapana", "Saptashati Path", "Kanya Pujan", "Havan"]
+                    ? [
+                        "सप्तश्लोकी दुर्गा",
+                        "द्वात्रिंशन्नाम",
+                        "शतनाम स्तोत्र",
+                        "देवी कवच",
+                        "देवी अथर्वशीर्ष",
+                        "सिद्ध कुंजिका स्तोत्र",
+                        "चंदी पाठ",
+                        "नवचण्डी",
+                        "शतचण्डी",
+                        "संपुट",
+                      ]
+                    : [
+                        "Saptashloki Durga",
+                        "Dvatrimshannama",
+                        "Shatanama Stotra",
+                        "Devi Kavach",
+                        "Devi Atharvashirsha",
+                        "Siddha Kunjika Stotra",
+                        "Chandi Path",
+                        "Navachandi",
+                        "Shatachandi",
+                        "Mantra Samputa",
+                      ]
                   ).map((x) => (
-                    <span key={x} className="rounded-full border border-dt px-3.5 py-1.5 text-[11px] font-semibold muted-dt">
+                    <span
+                      key={x}
+                      className="rounded-full border border-dt px-3.5 py-1.5 text-[11px] font-semibold muted-dt"
+                    >
                       {x}
                     </span>
                   ))}
                 </div>
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Link className="btn-gold-dt" to="/pujas/navratri">
-                    {lang === "hi" ? "नवरात्रि पूजा देखें" : "View Navratri puja"} <ArrowRight size={15} />
+                    {lang === "hi" ? "नवरात्रि पाठ देखें" : "Explore Navratri recitations"}{" "}
+                    <ArrowRight size={15} />
                   </Link>
                   <Link className="btn-ghost-dt" to="/social">
-                    {lang === "hi" ? "भक्ति वीडियो" : "Devotional videos"} <ArrowUpRight size={14} />
+                    {lang === "hi" ? "भक्ति वीडियो" : "Devotional videos"}{" "}
+                    <ArrowUpRight size={14} />
                   </Link>
                 </div>
               </Reveal>

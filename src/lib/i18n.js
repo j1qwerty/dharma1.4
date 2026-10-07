@@ -45,7 +45,7 @@ export const STRINGS = {
     hi: "पर्व-विशेष और सालभर होने वाली पूजाओं में अपनी तिथि, पूजा विकल्प, मंदिर और पूरी सेवा की जानकारी पहले से जानें।",
   },
   "home.heroDate1": { en: "Ganesh Chaturthi · September 12", hi: "गणेश चतुर्थी · 12 सितंबर" },
-  "home.heroDate2": { en: "Diwali · October 20", hi: "दीपावली · 20 अक्टूबर" },
+  "home.heroDate2": { en: "Diwali · November 8", hi: "दीपावली · 8 नवंबर" },
   "home.heroExplore": { en: "Explore Pujas", hi: "पूजाएँ देखें" },
   "home.heroWatch": { en: "Watch Video", hi: "वीडियो देखें" },
   "home.trustAuthentic": { en: "Authentic Rituals", hi: "विधि-विधान से पूजा" },

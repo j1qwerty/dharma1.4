@@ -15,6 +15,7 @@ import { useLivePujas } from "../lib/cms";
 import { Reveal, ParallaxImage } from "../components/common/Motion";
 import SectionHeading from "../components/common/SectionHeading";
 import SectionCurve from "../components/common/SectionCurve";
+import PujaTitle from "../components/common/PujaTitle";
 import {
   LeafBranch,
   LotusLine,
@@ -82,8 +83,8 @@ export default function PujaDetail() {
         <div className="container-dt detail-hero-content-dt pb-16">
           <Reveal>
             <div className="eyebrow !text-gold-300">{p.tag}</div>
-            <h1 className="display-dt mt-3 max-w-4xl text-6xl sm:text-7xl lg:text-[76px]">
-              {title}
+            <h1 className="display-dt mt-3 max-w-4xl text-[clamp(32px,7vw,76px)] leading-[0.98]">
+              <PujaTitle puja={p} lang={lang} />
             </h1>
             {p.titleHi && lang === "en" && (
               <p className="mt-2 text-sm text-white/40">{p.titleHi}</p>

@@ -6,7 +6,7 @@ export const pujas = [
     id: "navratri",
     code: "PUJA-010",
     title: "Sharad Navratri Devi Puja (9 Nights of Shakti)",
-    titleHi: "शारदीय नवरात्रि देवी पूजा (शक्ति के 9 दिन)",
+    titleHi: "शारदीय नवरात्रि देवी पूजा (शक्ति की नौ रातें)",
     deity: "Durga",
     temple: "Shakti Peeth Seva · At Home",
     date: "Oct 11, 2026",
@@ -16,8 +16,8 @@ export const pujas = [
     purpose: "Protection",
     type: "Puja",
     image: "/puja/navratra.jpg",
-    desc: "Nine nights of Devi worship with Kalash Sthapana, Durga Saptashati path, Kanya Pujan and Havan, performed with family Sankalp.",
-    descHi: "कलश स्थापना, दुर्गा सप्तशती पाठ, कन्या पूजन और हवन के साथ नौ दिनों की देवी उपासना, पारिवारिक संकल्प सहित।",
+    desc: "Personalised Navratri recitations, from Saptashloki Durga to Chandi Path and Mantra Samputa, guided by your intention and performed with traditional vidhi.",
+    descHi: "सप्तश्लोकी दुर्गा से चंदी पाठ और संपुट मंत्र तक, आपके संकल्प के अनुरूप पारंपरिक विधि से संपन्न व्यक्तिगत नवरात्रि पाठ।",
   },
   {
     id: "shraadh",
@@ -81,7 +81,7 @@ export const pujas = [
     titleHi: "महालक्ष्मी धन आकर्षण",
     deity: "Lakshmi",
     temple: "Lotus Temple Seva",
-    date: "Oct 20, 2026",
+    date: "Nov 08, 2026",
     time: "06:15 PM",
     price: 1251,
     tag: "Festival",
@@ -205,7 +205,7 @@ export const festivals = [
   {
     name: "Diwali",
     nameHi: "दीवाली",
-    date: "Oct 20",
+    date: "Nov 8",
     note: "Light, Lakshmi, new beginnings",
     noteHi: "प्रकाश, लक्ष्मी, नए आरंभ",
     image:

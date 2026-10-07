@@ -144,7 +144,7 @@ export const festivals = [
   },
   {
     name: { en: 'Diwali', hi: 'दीपावली' },
-    date: { en: 'Oct 20', hi: '20 अक्टूबर' },
+    date: { en: 'Nov 8', hi: '8 नवंबर' },
     note: { en: 'Light, Lakshmi, new beginnings', hi: 'प्रकाश, लक्ष्मी और नई शुरुआत' },
   },
 ]
