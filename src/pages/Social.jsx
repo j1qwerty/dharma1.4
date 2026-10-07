@@ -164,30 +164,35 @@ export default function Social() {
                 : "Facebook share links open externally because the Facebook video pages need login. Three videos from the submitted set."
             }
           />
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-3 items-stretch">
             {fb.map((p, i) => {
               const Icon = platformIcon(p.platform);
               return (
-                <Reveal key={p.id} delay={i * 0.05}>
-                  <a href={p.url} target="_blank" rel="noreferrer" className="card-dt block overflow-hidden">
-                    <div className="media-dt aspect-[4/5] max-h-[380px]">
-                      <ParallaxImage src={p.thumbnail} alt={p.title} className="h-full w-full" strength={10} />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-                      <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 px-2.5 py-1.5 text-[9px] font-bold text-white backdrop-blur">
-                        <Icon size={13} /> Facebook
-                      </span>
-                      <span className="absolute bottom-4 left-4 right-4 text-white">
-                        <span className="display-dt block text-2xl">{hi && p.titleHi ? p.titleHi : p.title}</span>
-                        <span className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-gold-300">
-                          <Play size={12} weight="fill" /> {hi ? "फेसबुक पर देखें" : "Watch on Facebook"}
-                        </span>
-                      </span>
+                <Reveal key={p.id} delay={i * 0.05} className="h-full">
+                  <article className="card-dt flex h-full flex-col overflow-hidden">
+                    <div className="h-[440px] w-full bg-black">
+                      <iframe
+                        src={p.embed}
+                        title={p.title}
+                        className="h-full w-full border-0"
+                        loading="lazy"
+                        scrolling="no"
+                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
                     </div>
-                    <div className="p-5">
-                      <p className="text-xs leading-6 muted-dt">{hi && p.descHi ? p.descHi : p.desc}</p>
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[.15em] text-gold-600">
+                        <Icon size={14} /> Facebook · {p.type}
+                      </div>
+                      <h3 className="mt-2 text-2xl leading-tight display-dt">{hi && p.titleHi ? p.titleHi : p.title}</h3>
+                      <p className="mt-2 text-xs leading-6 muted-dt line-clamp-3">{hi && p.descHi ? p.descHi : p.desc}</p>
                       <p className="mt-2 text-[10px] muted-dt">Keywords: {(p.keywords || []).slice(0, 4).join(", ")}</p>
+                      <a href={p.url} target="_blank" rel="noreferrer" className="mt-auto inline-flex items-center gap-1.5 pt-3 text-[11px] font-bold text-gold-600">
+                        <Play size={12} weight="fill" /> {hi ? "फेसबुक पर खोलें" : "Open on Facebook"} <ArrowUpRight size={13} />
+                      </a>
                     </div>
-                  </a>
+                  </article>
                 </Reveal>
               );
             })}
@@ -210,22 +215,19 @@ export default function Social() {
           <div className="grid gap-5 lg:grid-cols-[.9fr_1.1fr] items-stretch">
             {ig.map((p) => (
               <React.Fragment key={p.id}>
-                <Reveal>
-                  <a href={p.url} target="_blank" rel="noreferrer" className="card-dt block overflow-hidden">
-                    <div className="media-dt aspect-[4/5] max-h-[520px]">
-                      <ParallaxImage src={p.thumbnail} alt={p.title} className="h-full w-full" strength={12} />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-                      <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 px-2.5 py-1.5 text-[9px] font-bold text-white backdrop-blur">
-                        <InstagramLogo size={13} /> Instagram · Reel
-                      </span>
-                      <span className="absolute bottom-4 left-4 right-4 text-white">
-                        <span className="display-dt block text-3xl">{hi && p.titleHi ? p.titleHi : p.title}</span>
-                        <span className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-gold-300">
-                          {hi ? "रील खोलें" : "Open reel"} <ArrowUpRight size={13} />
-                        </span>
-                      </span>
+                <Reveal className="h-full">
+                  <div className="card-dt h-full overflow-hidden">
+                    <div className="h-[520px] w-full bg-black">
+                      <iframe
+                        src={p.embed}
+                        title={p.title}
+                        className="h-full w-full border-0"
+                        loading="lazy"
+                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
                     </div>
-                  </a>
+                  </div>
                 </Reveal>
                 <Reveal delay={0.08}>
                   <div className="panel-dt p-6 sm:p-8 h-full">

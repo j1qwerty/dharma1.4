@@ -720,8 +720,14 @@ export default function Home() {
                   rel="noreferrer"
                   className="card-dt block min-w-[240px] max-w-[240px] sm:min-w-[300px] sm:max-w-[300px] snap-start overflow-hidden flex-none"
                 >
-                  <div className="media-dt aspect-[4/5] max-h-[320px]">
-                    <ParallaxImage src={p.thumbnail} alt={p.title} className="h-full w-full" strength={8} />
+                  <div className="relative h-[300px] w-full overflow-hidden sm:h-[320px]">
+                    <img
+                      src={p.thumbnail}
+                      alt={p.title}
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      className="h-full w-full object-cover"
+                    />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
                     <span className="absolute left-3 top-3 rounded-full border border-white/20 bg-black/30 px-2.5 py-1 text-[9px] font-bold text-white backdrop-blur">
                       {p.platform} · {p.type}
