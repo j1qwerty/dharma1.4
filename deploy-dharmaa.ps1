@@ -140,7 +140,7 @@ try {
 
     if (-not $SkipConfirm) {
         Write-Host ''
-        Write-Host "       Deploy this build to $PublicUrl?" -ForegroundColor White
+        Write-Host "       Deploy this build to ${PublicUrl}?" -ForegroundColor White
         Write-Host "         Local build: $DistDir" -ForegroundColor Gray
         Write-Host "         Remote root: $RemoteRoot" -ForegroundColor Gray
         $answer = Read-Host '       Continue [y/N]'
