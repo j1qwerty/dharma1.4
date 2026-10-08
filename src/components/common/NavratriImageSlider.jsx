@@ -63,7 +63,7 @@ export default function NavratriImageSlider() {
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[20px] bg-black sm:aspect-[16/8]">
+      <div className="relative aspect-video w-full overflow-hidden rounded-[20px] bg-black">
         <AnimatePresence initial={false}>
           <motion.img
             key={current.src}
@@ -101,7 +101,7 @@ export default function NavratriImageSlider() {
               alt=""
               loading="lazy"
               referrerPolicy="no-referrer"
-              className="aspect-[4/3] h-full w-full object-cover"
+              className="h-full w-full object-cover aspect-video"
             />
           </button>
         ))}

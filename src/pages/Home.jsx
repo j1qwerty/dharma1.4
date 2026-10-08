@@ -90,7 +90,7 @@ export default function Home() {
     {
       title: heroOverride?.title || t("home.heroSlide1Title"),
       copy: heroOverride?.copy || t("home.heroSlide1Copy"),
-      image: heroOverride?.image || "https://picsum.photos/seed/dharma-varanasi-sunset/2000/1250",
+      image: heroOverride?.image || "/puja/navratra.jpg",
       date: t("home.heroDate1"),
     },
     {
@@ -241,6 +241,47 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Navratri special with gallery slider — first section */}
+      {navratriPuja && (
+        <section className="site-section has-decor-dt">
+          <SectionDecor />
+          <DiyaCluster className="decor-dt decor-br hide-mobile soft-tone" />
+          <div className="container-dt">
+            <div className="grid gap-10 lg:grid-cols-[1.1fr_.9fr] items-center">
+              <Reveal>
+                <div className="eyebrow eyebrow-line-dt">
+                  {lang === "hi" ? "नवरात्रि विशेष" : "Navratri special"}
+                </div>
+                <h2 className="display-dt mt-3 text-5xl sm:text-6xl">
+                  {lang === "hi" ? "नवरात्रि पूजा बुकिंग खुली है।" : "Navratri puja bookings are open."}
+                </h2>
+                <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
+                  {lang === "hi"
+                    ? "कलश स्थापना, सप्तशती पाठ, कन्या पूजन और हवन। 11 अक्टूबर से शुरू।"
+                    : "Kalash Sthapana, Saptashati path, Kanya Pujan and Havan. Begins 11 Oct."}
+                </p>
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <Link className="btn-gold-dt" to="/pujas/navratri">
+                    {lang === "hi" ? "नवरात्रि पाठ देखें" : "Explore Navratri recitations"}{" "}
+                    <ArrowRight size={15} />
+                  </Link>
+                  <Link className="btn-ghost-dt" to="/social">
+                    {lang === "hi" ? "भक्ति वीडियो" : "Devotional videos"}{" "}
+                    <ArrowUpRight size={14} />
+                  </Link>
+                </div>
+              </Reveal>
+              <Reveal delay={0.1}>
+                <PujaCard p={navratriPuja} featured />
+              </Reveal>
+            </div>
+            <Reveal className="mt-10">
+              <NavratriImageSlider />
+            </Reveal>
+          </div>
+        </section>
+      )}
+
       <section className="assurance-dt has-decor-dt hidden md:block">
         <SectionDecor />
         <LeafBranch className="decor-dt decor-tl hide-mobile soft-tone" />
@@ -264,102 +305,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
-      {/* Ten recitations with image slider */}
-      <section className="site-section has-decor-dt">
-        <SectionDecor />
-        <DiyaCluster className="decor-dt decor-br hide-mobile soft-tone" />
-        <div className="container-dt">
-          <div>
-              <Reveal>
-                <div className="eyebrow eyebrow-line-dt">
-                  {lang === "hi" ? "नवरात्रि विशेष" : "Navratri special"}
-                </div>
-                <h2 className="display-dt mt-3 text-5xl sm:text-6xl">
-                  {lang === "hi" ? "दस पाठ, एक संकल्प।" : "Ten recitations, one sankalpa."}
-                </h2>
-                <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
-                  {lang === "hi"
-                    ? "सप्तश्लोकी दुर्गा से लेकर चंदी पाठ और संपुट तक। आप अपना संकल्प वेदाचार्य के साथ साझा करते हैं, वे उपयुक्त पाठ चुनकर विधि के अनुसार संपन्न कराते हैं। 11 अक्टूबर से।"
-                    : "From Saptashloki Durga to Chandi Path and Mantra Samputa. You share your intention with a Vedacharya, they choose the fitting recitation and perform it with traditional vidhi. Begins 11 Oct."}
-                </p>
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {(lang === "hi"
-                    ? [
-                        "सप्तश्लोकी दुर्गा",
-                        "द्वात्रिंशन्नाम",
-                        "शतनाम स्तोत्र",
-                        "देवी कवच",
-                        "देवी अथर्वशीर्ष",
-                        "सिद्ध कुंजिका स्तोत्र",
-                        "चंदी पाठ",
-                        "नवचण्डी",
-                        "शतचण्डी",
-                        "संपुट",
-                      ]
-                    : [
-                        "Saptashloki Durga",
-                        "Dvatrimshannama",
-                        "Shatanama Stotra",
-                        "Devi Kavach",
-                        "Devi Atharvashirsha",
-                        "Siddha Kunjika Stotra",
-                        "Chandi Path",
-                        "Navachandi",
-                        "Shatachandi",
-                        "Mantra Samputa",
-                      ]
-                  ).map((x) => (
-                    <span
-                      key={x}
-                      className="rounded-full border border-dt px-3.5 py-1.5 text-[11px] font-semibold muted-dt"
-                    >
-                      {x}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-7 flex flex-wrap gap-3">
-                  <Link className="btn-gold-dt" to="/pujas/navratri">
-                    {lang === "hi" ? "नवरात्रि पाठ देखें" : "Explore Navratri recitations"}{" "}
-                    <ArrowRight size={15} />
-                  </Link>
-                  <Link className="btn-ghost-dt" to="/social">
-                    {lang === "hi" ? "भक्ति वीडियो" : "Devotional videos"}{" "}
-                    <ArrowUpRight size={14} />
-                  </Link>
-                </div>
-              </Reveal>
-            </div>
-            <Reveal className="mt-10">
-              <NavratriImageSlider />
-            </Reveal>
-          </div>
-        </section>
-
-        {/* Navratri special with big heading plus featured puja card */}
-        {navratriPuja && (
-          <section className="site-section surface-2-dt has-decor-dt">
-            <SectionDecor />
-            <LeafBranch className="decor-dt decor-tl hide-mobile soft-tone" />
-            <div className="container-dt">
-              <div className="grid gap-10 lg:grid-cols-[1.1fr_.9fr] items-center">
-                <Reveal>
-                  <h2 className="display-dt mt-3 text-5xl sm:text-6xl">
-                    {lang === "hi" ? "नवरात्रि पूजा बुकिंग खुली है।" : "Navratri puja bookings are open."}
-                  </h2>
-                  <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
-                    {lang === "hi"
-                      ? "कलश स्थापना, सप्तशती पाठ, कन्या पूजन और हवन। 11 अक्टूबर से शुरू।"
-                      : "Kalash Sthapana, Saptashati path, Kanya Pujan and Havan. Begins 11 Oct."}
-                  </p>
-                </Reveal>
-                <Reveal delay={0.1}>
-                  <PujaCard p={navratriPuja} featured />
-                </Reveal>
-              </div>
-            </div>
-          </section>
-        )}
 
         {/* The ten recitations */}
         <section className="site-section has-decor-dt">
