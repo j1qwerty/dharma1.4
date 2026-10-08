@@ -18,6 +18,7 @@ import { motion, useReducedMotion } from "motion/react";
 import SectionHeading from "../components/common/SectionHeading";
 import PujaCard from "../components/common/PujaCard";
 import NavratriRecitationCards from "../components/common/NavratriRecitationCards";
+import NavratriImageSlider from "../components/common/NavratriImageSlider";
 import { Reveal, ParallaxImage, Magnetic, TiltCard } from "../components/common/Motion";
 import { StoryMasonry } from "../components/common/Masonry";
 import {
@@ -240,7 +241,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="assurance-dt has-decor-dt">
+      <section className="assurance-dt has-decor-dt hidden md:block">
         <SectionDecor />
         <LeafBranch className="decor-dt decor-tl hide-mobile soft-tone" />
         <div className="container-dt assurance-grid-dt">
@@ -264,21 +265,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Navratri special — above the Shraadh band, links to /pujas/navratri */}
-      {navratriPuja && (
-        <section className="site-section has-decor-dt">
-          <SectionDecor />
-          <DiyaCluster className="decor-dt decor-br hide-mobile soft-tone" />
-          <div className="container-dt">
-            <div className="grid gap-10 lg:grid-cols-[1.1fr_.9fr] items-center">
+      {/* Ten recitations with image slider */}
+      <section className="site-section has-decor-dt">
+        <SectionDecor />
+        <DiyaCluster className="decor-dt decor-br hide-mobile soft-tone" />
+        <div className="container-dt">
+          <div>
               <Reveal>
                 <div className="eyebrow eyebrow-line-dt">
                   {lang === "hi" ? "नवरात्रि विशेष" : "Navratri special"}
                 </div>
                 <h2 className="display-dt mt-3 text-5xl sm:text-6xl">
-                  {lang === "hi"
-                    ? "दस पाठ, आपके अपने संकल्प के लिए।"
-                    : "Ten recitations, for your own sankalpa."}
+                  {lang === "hi" ? "दस पाठ, एक संकल्प।" : "Ten recitations, one sankalpa."}
                 </h2>
                 <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
                   {lang === "hi"
@@ -331,14 +329,45 @@ export default function Home() {
                   </Link>
                 </div>
               </Reveal>
-              <Reveal delay={0.1}>
-                <PujaCard p={navratriPuja} featured />
-              </Reveal>
             </div>
-            <NavratriRecitationCards className="mt-12" />
+            <Reveal className="mt-10">
+              <NavratriImageSlider />
+            </Reveal>
           </div>
         </section>
-      )}
+
+        {/* Navratri special with big heading plus featured puja card */}
+        {navratriPuja && (
+          <section className="site-section surface-2-dt has-decor-dt">
+            <SectionDecor />
+            <LeafBranch className="decor-dt decor-tl hide-mobile soft-tone" />
+            <div className="container-dt">
+              <div className="grid gap-10 lg:grid-cols-[1.1fr_.9fr] items-center">
+                <Reveal>
+                  <h2 className="display-dt mt-3 text-5xl sm:text-6xl">
+                    {lang === "hi" ? "नवरात्रि पूजा बुकिंग खुली है।" : "Navratri puja bookings are open."}
+                  </h2>
+                  <p className="mt-5 max-w-xl text-sm leading-7 text-muted-dt">
+                    {lang === "hi"
+                      ? "कलश स्थापना, सप्तशती पाठ, कन्या पूजन और हवन। 11 अक्टूबर से शुरू।"
+                      : "Kalash Sthapana, Saptashati path, Kanya Pujan and Havan. Begins 11 Oct."}
+                  </p>
+                </Reveal>
+                <Reveal delay={0.1}>
+                  <PujaCard p={navratriPuja} featured />
+                </Reveal>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* The ten recitations */}
+        <section className="site-section has-decor-dt">
+          <SectionDecor />
+          <div className="container-dt">
+            <NavratriRecitationCards />
+          </div>
+        </section>
 
       {/* Upcoming pujas — featured Shraadh card above the festival band */}
       <section className="site-section has-decor-dt">
