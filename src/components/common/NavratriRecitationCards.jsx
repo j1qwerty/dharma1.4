@@ -75,7 +75,23 @@ export default function NavratriRecitationCards({ className = "" }) {
         </p>
       </Reveal>
 
-      <div className="mt-8 grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-6">
+      <Reveal className="mt-8">
+        <div className="overflow-hidden rounded-[20px]">
+          <img
+            src="/puja/navaratri/why-vadacharya-perform-navaratri-pooja.jpeg"
+            alt={
+              hi
+                ? "वेदाचार्य से नवरात्रि पूजा क्यों करवाएँ"
+                : "Why have a Vedacharya perform your Navratri Pooja"
+            }
+            loading="lazy"
+            referrerPolicy="no-referrer"
+            className="aspect-video h-full w-full object-cover"
+          />
+        </div>
+      </Reveal>
+
+      <div className="mt-6 grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-6">
         {RECITATIONS.map((r, i) => {
           const name = hi ? r.nameHi : r.name;
           const img = IMAGES[r.id];
@@ -108,17 +124,8 @@ export default function NavratriRecitationCards({ className = "" }) {
           if (last) {
             return (
               <Reveal key={r.id} className={SPANS[i]}>
-                <article className="panel-dt grid h-full min-w-0 overflow-hidden md:grid-cols-2">
-                  <div className="min-h-[220px] overflow-hidden md:min-h-[280px]">
-                    <img
-                      src="/puja/navaratri/why-vadacharya-perform-navaratri-pooja.jpeg"
-                      alt="Vedacharya performing Navratri puja with traditional vidhi"
-                      loading="lazy"
-                      referrerPolicy="no-referrer"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div className="min-w-0 p-6 sm:p-8">
+                <article className="panel-dt h-full min-w-0 p-6 text-center sm:p-10">
+                  <div className="mx-auto min-w-0 max-w-2xl">
                     <Kicker>{hi ? r.kickerHi : r.kicker}</Kicker>
                     <h3 className="display-dt mt-3 break-words text-3xl leading-tight sm:text-4xl">
                       {name}
